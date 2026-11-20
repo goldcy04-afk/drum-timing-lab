@@ -1,0 +1,2137 @@
+<!doctype html>
+<html lang="ko" data-seed-color-mode="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f4f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Drum Timing Lab · 드럼 박자 연습과 타이밍 분석</title>
+<meta name="description" content="메트로놈에 맞춰 드럼을 치면 마이크로 타격을 듣고 박마다 얼마나 빠르고 늦은지 알려주는 무료 연습 도구. 악보바다 드럼 악보 PDF를 불러와 마디별로 채점할 수 있어요.">
+<meta name="keywords" content="드럼 연습, 메트로놈, 드럼 박자, 타이밍 연습, 드럼 악보, 리듬 연습">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Drum Timing Lab · 드럼 박자 연습과 타이밍 분석">
+<meta property="og:description" content="메트로놈에 맞춰 치면 박마다 얼마나 빠르고 늦은지 알려줘요. 악보 PDF로 마디별 채점도 돼요.">
+<meta property="og:locale" content="ko_KR">
+<script>
+  // 휴대폰(기기) 라이트/다크 설정을 따라감. SEED 토큰은 이 속성을 보고 색을 바꿈
+  (function () {
+    var q = matchMedia('(prefers-color-scheme: dark)');
+    function set() { document.documentElement.setAttribute('data-seed-user-color-scheme', q.matches ? 'dark' : 'light'); window.dispatchEvent(new Event('themechange')); }
+    set();
+    if (q.addEventListener) q.addEventListener('change', set); else q.addListener(set);
+  })();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/*! SEED Design 디자인 토큰 (@seed-design/css 3.4.0, base.min.css)
+ * SEED Design — Copyright 2025 주식회사 당근마켓
+ * Licensed under the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
+ * 원본: https://github.com/daangn/seed-design · 이 앱은 토큰(색·글자·간격)만 사용하며 당근마켓 브랜드 리소스는 쓰지 않음 */
+:root{--seed-safe-area-top:var(--native-safe-area-inset-top,0px);--seed-safe-area-bottom:var(--native-safe-area-inset-bottom,0px);--seed-safe-area-left:var(--native-safe-area-inset-left,0px);--seed-safe-area-right:var(--native-safe-area-inset-right,0px)}@supports (left:constant(safe-area-inset-left)){:root{--seed-safe-area-top:var(--native-safe-area-inset-top,constant(safe-area-inset-top));--seed-safe-area-bottom:var(--native-safe-area-inset-bottom,constant(safe-area-inset-bottom));--seed-safe-area-left:var(--native-safe-area-inset-left,constant(safe-area-inset-left));--seed-safe-area-right:var(--native-safe-area-inset-right,constant(safe-area-inset-right))}}@supports (left:env(safe-area-inset-left)){:root{--seed-safe-area-top:var(--native-safe-area-inset-top,env(safe-area-inset-top));--seed-safe-area-bottom:var(--native-safe-area-inset-bottom,env(safe-area-inset-bottom));--seed-safe-area-left:var(--native-safe-area-inset-left,env(safe-area-inset-left));--seed-safe-area-right:var(--native-safe-area-inset-right,env(safe-area-inset-right))}}:root{--seed-font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--seed-font-size-multiplier:1;--seed-font-size-limit-min:.8;--seed-font-size-limit-max:1.5;--seed-line-height-limit-min:.8;--seed-line-height-limit-max:1.5;--seed-static-font-scale:1;--seed-feedback-scale:1;--seed-feedback-scale-transition:scale var(--seed-duration-pressed-scale) var(--seed-timing-function-pressed-scale)}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}[data-seed-platform=ios]{--seed-font-size-limit-max:1.35;--seed-line-height-limit-max:1.35}@supports (font:-apple-system-body){html[data-seed-platform=ios][data-seed-font-scaling=enabled]{--seed-font-size-multiplier:.9412;font:-apple-system-body}}.seed-loading-indicator{display:inline-flex;position:absolute}.seed-icon,.seed-prefix-icon,.seed-suffix-icon{flex-shrink:0;justify-content:center;align-items:center;display:inline-flex}.seed-icon{width:var(--seed-icon-size);height:var(--seed-icon-size);color:var(--seed-icon-color,currentColor);font-size:var(--seed-icon-font-size,inherit);font-weight:var(--seed-icon-font-weight,inherit);vertical-align:middle}.seed-prefix-icon{width:var(--seed-prefix-icon-size);height:var(--seed-prefix-icon-size);color:var(--seed-prefix-icon-color,currentColor);font-size:var(--seed-prefix-icon-font-size,inherit);font-weight:var(--seed-prefix-icon-font-weight,inherit);vertical-align:middle;margin-left:var(--seed-prefix-icon-margin-left,0);margin-right:var(--seed-prefix-icon-margin-right,0);margin-top:var(--seed-prefix-icon-margin-top,0);margin-bottom:var(--seed-prefix-icon-margin-bottom,0);align-self:var(--seed-prefix-icon-align-self);justify-self:var(--seed-prefix-icon-justify-self)}.seed-suffix-icon{width:var(--seed-suffix-icon-size);height:var(--seed-suffix-icon-size);color:var(--seed-suffix-icon-color,currentColor);font-size:var(--seed-suffix-icon-font-size,inherit);font-weight:var(--seed-suffix-icon-font-weight,inherit);vertical-align:middle;margin-left:var(--seed-suffix-icon-margin-left,0);margin-right:var(--seed-suffix-icon-margin-right,0);margin-top:var(--seed-suffix-icon-margin-top,0);margin-bottom:var(--seed-suffix-icon-margin-bottom,0);align-self:var(--seed-suffix-icon-align-self);justify-self:var(--seed-suffix-icon-justify-self)}.seed-count{font-size:var(--seed-count-font-size);line-height:var(--seed-count-line-height);font-weight:var(--seed-count-font-weight);color:var(--seed-count-color)}.seed-box{--seed-box-background:initial;--seed-box-color:initial;background:var(--seed-box-background);color:var(--seed-box-color);--seed-box-border-style:solid;--seed-box-border-color:initial;border-style:var(--seed-box-border-style);border-color:var(--seed-box-border-color);--seed-box-border-width:0;--seed-box-border-top-width:var(--seed-box-border-width);--seed-box-border-bottom-width:var(--seed-box-border-width);--seed-box-border-left-width:var(--seed-box-border-width);--seed-box-border-right-width:var(--seed-box-border-width);border-top-width:var(--seed-box-border-top-width);border-bottom-width:var(--seed-box-border-bottom-width);border-left-width:var(--seed-box-border-left-width);border-right-width:var(--seed-box-border-right-width);--seed-box-padding-base:0;--seed-box-padding-sm:var(--seed-box-padding-base,initial);--seed-box-padding-md:var(--seed-box-padding-sm,initial);--seed-box-padding-lg:var(--seed-box-padding-md,initial);--seed-box-padding-xl:var(--seed-box-padding-lg,initial);--seed-box-padding:var(--seed-box-padding-base,initial);--seed-box-padding-y-base:var(--seed-box-padding);--seed-box-padding-y-sm:var(--seed-box-padding-y-base,initial);--seed-box-padding-y-md:var(--seed-box-padding-y-sm,initial);--seed-box-padding-y-lg:var(--seed-box-padding-y-md,initial);--seed-box-padding-y-xl:var(--seed-box-padding-y-lg,initial);--seed-box-padding-y:var(--seed-box-padding-y-base,initial);--seed-box-padding-x-base:var(--seed-box-padding);--seed-box-padding-x-sm:var(--seed-box-padding-x-base,initial);--seed-box-padding-x-md:var(--seed-box-padding-x-sm,initial);--seed-box-padding-x-lg:var(--seed-box-padding-x-md,initial);--seed-box-padding-x-xl:var(--seed-box-padding-x-lg,initial);--seed-box-padding-x:var(--seed-box-padding-x-base,initial);--seed-box-padding-bottom-base:var(--seed-box-padding-y);--seed-box-padding-bottom-sm:var(--seed-box-padding-bottom-base,initial);--seed-box-padding-bottom-md:var(--seed-box-padding-bottom-sm,initial);--seed-box-padding-bottom-lg:var(--seed-box-padding-bottom-md,initial);--seed-box-padding-bottom-xl:var(--seed-box-padding-bottom-lg,initial);--seed-box-padding-bottom:var(--seed-box-padding-bottom-base,initial);--seed-box-padding-top-base:var(--seed-box-padding-y);--seed-box-padding-top-sm:var(--seed-box-padding-top-base,initial);--seed-box-padding-top-md:var(--seed-box-padding-top-sm,initial);--seed-box-padding-top-lg:var(--seed-box-padding-top-md,initial);--seed-box-padding-top-xl:var(--seed-box-padding-top-lg,initial);--seed-box-padding-top:var(--seed-box-padding-top-base,initial);--seed-box-padding-left-base:var(--seed-box-padding-x);--seed-box-padding-left-sm:var(--seed-box-padding-left-base,initial);--seed-box-padding-left-md:var(--seed-box-padding-left-sm,initial);--seed-box-padding-left-lg:var(--seed-box-padding-left-md,initial);--seed-box-padding-left-xl:var(--seed-box-padding-left-lg,initial);--seed-box-padding-left:var(--seed-box-padding-left-base,initial);--seed-box-padding-right-base:var(--seed-box-padding-x);--seed-box-padding-right-sm:var(--seed-box-padding-right-base,initial);--seed-box-padding-right-md:var(--seed-box-padding-right-sm,initial);--seed-box-padding-right-lg:var(--seed-box-padding-right-md,initial);--seed-box-padding-right-xl:var(--seed-box-padding-right-lg,initial);--seed-box-padding-right:var(--seed-box-padding-right-base,initial);padding-top:var(--seed-box-padding-top);padding-bottom:var(--seed-box-padding-bottom);padding-left:var(--seed-box-padding-left);padding-right:var(--seed-box-padding-right);--seed-box-bleed-bottom-base:0px;--seed-box-bleed-bottom-sm:var(--seed-box-bleed-bottom-base,initial);--seed-box-bleed-bottom-md:var(--seed-box-bleed-bottom-sm,initial);--seed-box-bleed-bottom-lg:var(--seed-box-bleed-bottom-md,initial);--seed-box-bleed-bottom-xl:var(--seed-box-bleed-bottom-lg,initial);--seed-box-bleed-bottom:var(--seed-box-bleed-bottom-base,initial);--seed-box-bleed-top-base:0px;--seed-box-bleed-top-sm:var(--seed-box-bleed-top-base,initial);--seed-box-bleed-top-md:var(--seed-box-bleed-top-sm,initial);--seed-box-bleed-top-lg:var(--seed-box-bleed-top-md,initial);--seed-box-bleed-top-xl:var(--seed-box-bleed-top-lg,initial);--seed-box-bleed-top:var(--seed-box-bleed-top-base,initial);--seed-box-bleed-left-base:0px;--seed-box-bleed-left-sm:var(--seed-box-bleed-left-base,initial);--seed-box-bleed-left-md:var(--seed-box-bleed-left-sm,initial);--seed-box-bleed-left-lg:var(--seed-box-bleed-left-md,initial);--seed-box-bleed-left-xl:var(--seed-box-bleed-left-lg,initial);--seed-box-bleed-left:var(--seed-box-bleed-left-base,initial);--seed-box-bleed-right-base:0px;--seed-box-bleed-right-sm:var(--seed-box-bleed-right-base,initial);--seed-box-bleed-right-md:var(--seed-box-bleed-right-sm,initial);--seed-box-bleed-right-lg:var(--seed-box-bleed-right-md,initial);--seed-box-bleed-right-xl:var(--seed-box-bleed-right-lg,initial);--seed-box-bleed-right:var(--seed-box-bleed-right-base,initial);--seed-box-margin-base:initial;--seed-box-margin-sm:var(--seed-box-margin-base,initial);--seed-box-margin-md:var(--seed-box-margin-sm,initial);--seed-box-margin-lg:var(--seed-box-margin-md,initial);--seed-box-margin-xl:var(--seed-box-margin-lg,initial);--seed-box-margin:var(--seed-box-margin-base,initial);--seed-box-margin-y-base:var(--seed-box-margin,initial);--seed-box-margin-y-sm:var(--seed-box-margin-y-base,initial);--seed-box-margin-y-md:var(--seed-box-margin-y-sm,initial);--seed-box-margin-y-lg:var(--seed-box-margin-y-md,initial);--seed-box-margin-y-xl:var(--seed-box-margin-y-lg,initial);--seed-box-margin-y:var(--seed-box-margin-y-base,initial);--seed-box-margin-x-base:var(--seed-box-margin,initial);--seed-box-margin-x-sm:var(--seed-box-margin-x-base,initial);--seed-box-margin-x-md:var(--seed-box-margin-x-sm,initial);--seed-box-margin-x-lg:var(--seed-box-margin-x-md,initial);--seed-box-margin-x-xl:var(--seed-box-margin-x-lg,initial);--seed-box-margin-x:var(--seed-box-margin-x-base,initial);--seed-box-margin-top-base:var(--seed-box-margin-y,initial);--seed-box-margin-top-sm:var(--seed-box-margin-top-base,initial);--seed-box-margin-top-md:var(--seed-box-margin-top-sm,initial);--seed-box-margin-top-lg:var(--seed-box-margin-top-md,initial);--seed-box-margin-top-xl:var(--seed-box-margin-top-lg,initial);--seed-box-margin-top:var(--seed-box-margin-top-base,initial);--seed-box-margin-bottom-base:var(--seed-box-margin-y,initial);--seed-box-margin-bottom-sm:var(--seed-box-margin-bottom-base,initial);--seed-box-margin-bottom-md:var(--seed-box-margin-bottom-sm,initial);--seed-box-margin-bottom-lg:var(--seed-box-margin-bottom-md,initial);--seed-box-margin-bottom-xl:var(--seed-box-margin-bottom-lg,initial);--seed-box-margin-bottom:var(--seed-box-margin-bottom-base,initial);--seed-box-margin-left-base:var(--seed-box-margin-x,initial);--seed-box-margin-left-sm:var(--seed-box-margin-left-base,initial);--seed-box-margin-left-md:var(--seed-box-margin-left-sm,initial);--seed-box-margin-left-lg:var(--seed-box-margin-left-md,initial);--seed-box-margin-left-xl:var(--seed-box-margin-left-lg,initial);--seed-box-margin-left:var(--seed-box-margin-left-base,initial);--seed-box-margin-right-base:var(--seed-box-margin-x,initial);--seed-box-margin-right-sm:var(--seed-box-margin-right-base,initial);--seed-box-margin-right-md:var(--seed-box-margin-right-sm,initial);--seed-box-margin-right-lg:var(--seed-box-margin-right-md,initial);--seed-box-margin-right-xl:var(--seed-box-margin-right-lg,initial);--seed-box-margin-right:var(--seed-box-margin-right-base,initial);margin-top:var(--seed-box-margin-top,calc(var(--seed-box-bleed-top) * -1));margin-bottom:var(--seed-box-margin-bottom,calc(var(--seed-box-bleed-bottom) * -1));margin-left:var(--seed-box-margin-left,calc(var(--seed-box-bleed-left) * -1));margin-right:var(--seed-box-margin-right,calc(var(--seed-box-bleed-right) * -1));--seed-box-min-height-base:auto;--seed-box-min-height-sm:var(--seed-box-min-height-base,initial);--seed-box-min-height-md:var(--seed-box-min-height-sm,initial);--seed-box-min-height-lg:var(--seed-box-min-height-md,initial);--seed-box-min-height-xl:var(--seed-box-min-height-lg,initial);--seed-box-min-height:var(--seed-box-min-height-base,initial);--seed-box-max-height-base:none;--seed-box-max-height-sm:var(--seed-box-max-height-base,initial);--seed-box-max-height-md:var(--seed-box-max-height-sm,initial);--seed-box-max-height-lg:var(--seed-box-max-height-md,initial);--seed-box-max-height-xl:var(--seed-box-max-height-lg,initial);--seed-box-max-height:var(--seed-box-max-height-base,initial);--seed-box-height-base:auto;--seed-box-height-sm:var(--seed-box-height-base,initial);--seed-box-height-md:var(--seed-box-height-sm,initial);--seed-box-height-lg:var(--seed-box-height-md,initial);--seed-box-height-xl:var(--seed-box-height-lg,initial);--seed-box-height:var(--seed-box-height-base,initial);--seed-box-min-width-base:auto;--seed-box-min-width-sm:var(--seed-box-min-width-base,initial);--seed-box-min-width-md:var(--seed-box-min-width-sm,initial);--seed-box-min-width-lg:var(--seed-box-min-width-md,initial);--seed-box-min-width-xl:var(--seed-box-min-width-lg,initial);--seed-box-min-width:var(--seed-box-min-width-base,initial);--seed-box-max-width-base:none;--seed-box-max-width-sm:var(--seed-box-max-width-base,initial);--seed-box-max-width-md:var(--seed-box-max-width-sm,initial);--seed-box-max-width-lg:var(--seed-box-max-width-md,initial);--seed-box-max-width-xl:var(--seed-box-max-width-lg,initial);--seed-box-max-width:var(--seed-box-max-width-base,initial);--seed-box-width-base:auto;--seed-box-width-sm:var(--seed-box-width-base,initial);--seed-box-width-md:var(--seed-box-width-sm,initial);--seed-box-width-lg:var(--seed-box-width-md,initial);--seed-box-width-xl:var(--seed-box-width-lg,initial);--seed-box-width:var(--seed-box-width-base,initial);min-height:var(--seed-box-min-height);max-height:var(--seed-box-max-height);height:var(--seed-box-height);min-width:var(--seed-box-min-width);max-width:var(--seed-box-max-width);width:var(--seed-box-width);--seed-box-top:initial;--seed-box-bottom:initial;--seed-box-left:initial;--seed-box-right:initial;top:var(--seed-box-top);bottom:var(--seed-box-bottom);left:var(--seed-box-left);right:var(--seed-box-right);--seed-box-border-radius:initial;--seed-box-border-bottom-left-radius:var(--seed-box-border-radius);--seed-box-border-bottom-right-radius:var(--seed-box-border-radius);--seed-box-border-top-left-radius:var(--seed-box-border-radius);--seed-box-border-top-right-radius:var(--seed-box-border-radius);border-bottom-left-radius:var(--seed-box-border-bottom-left-radius);border-bottom-right-radius:var(--seed-box-border-bottom-right-radius);border-top-left-radius:var(--seed-box-border-top-left-radius);border-top-right-radius:var(--seed-box-border-top-right-radius);--seed-box-box-shadow:initial;box-shadow:var(--seed-box-box-shadow);--seed-box-display-base:block;--seed-box-display-sm:var(--seed-box-display-base,initial);--seed-box-display-md:var(--seed-box-display-sm,initial);--seed-box-display-lg:var(--seed-box-display-md,initial);--seed-box-display-xl:var(--seed-box-display-lg,initial);--seed-box-display:var(--seed-box-display-base,initial);--seed-box-position:initial;display:var(--seed-box-display);position:var(--seed-box-position);--seed-box-unstable-transform:initial;transform:var(--seed-box-unstable-transform);--seed-box-z-index:initial;z-index:var(--seed-box-z-index);--seed-box-overflow-x:initial;--seed-box-overflow-y:initial;overflow-x:var(--seed-box-overflow-x);overflow-y:var(--seed-box-overflow-y);--seed-box-flex-grow:initial;--seed-box-flex-shrink:initial;flex-grow:var(--seed-box-flex-grow);flex-shrink:var(--seed-box-flex-shrink);--seed-box-flex-direction-base:row;--seed-box-flex-direction-sm:var(--seed-box-flex-direction-base,initial);--seed-box-flex-direction-md:var(--seed-box-flex-direction-sm,initial);--seed-box-flex-direction-lg:var(--seed-box-flex-direction-md,initial);--seed-box-flex-direction-xl:var(--seed-box-flex-direction-lg,initial);--seed-box-flex-direction:var(--seed-box-flex-direction-base,initial);--seed-box-flex-wrap:initial;--seed-box-justify-content:initial;--seed-box-justify-self:auto;--seed-box-align-items:stretch;--seed-box-align-content:stretch;--seed-box-align-self:auto;--seed-box-gap-base:0px;--seed-box-gap-sm:var(--seed-box-gap-base,initial);--seed-box-gap-md:var(--seed-box-gap-sm,initial);--seed-box-gap-lg:var(--seed-box-gap-md,initial);--seed-box-gap-xl:var(--seed-box-gap-lg,initial);--seed-box-gap:var(--seed-box-gap-base,initial);flex-direction:var(--seed-box-flex-direction);flex-wrap:var(--seed-box-flex-wrap);justify-content:var(--seed-box-justify-content);justify-self:var(--seed-box-justify-self);align-items:var(--seed-box-align-items);align-content:var(--seed-box-align-content);align-self:var(--seed-box-align-self);gap:var(--seed-box-gap);--seed-box-grid-column:initial;grid-column:var(--seed-box-grid-column);--seed-box-grid-row:initial;grid-row:var(--seed-box-grid-row)}.seed-box[data-has-active-bg]:is(:active,[data-active]){background:var(--seed-box-background--active)}.seed-grid{--seed-grid-columns-base:none;--seed-grid-columns-sm:var(--seed-grid-columns-base,initial);--seed-grid-columns-md:var(--seed-grid-columns-sm,initial);--seed-grid-columns-lg:var(--seed-grid-columns-md,initial);--seed-grid-columns-xl:var(--seed-grid-columns-lg,initial);--seed-grid-columns:var(--seed-grid-columns-base,initial);grid-template-columns:var(--seed-grid-columns);--seed-grid-rows-base:none;--seed-grid-rows-sm:var(--seed-grid-rows-base,initial);--seed-grid-rows-md:var(--seed-grid-rows-sm,initial);--seed-grid-rows-lg:var(--seed-grid-rows-md,initial);--seed-grid-rows-xl:var(--seed-grid-rows-lg,initial);--seed-grid-rows:var(--seed-grid-rows-base,initial);grid-template-rows:var(--seed-grid-rows);--seed-grid-auto-flow:initial;grid-auto-flow:var(--seed-grid-auto-flow);--seed-grid-auto-columns:initial;grid-auto-columns:var(--seed-grid-auto-columns);--seed-grid-auto-rows:initial;grid-auto-rows:var(--seed-grid-auto-rows);--seed-grid-justify-items:stretch;justify-items:var(--seed-grid-justify-items)}.seed-consistent-width:before{content:attr(data-text);visibility:hidden;height:0;font-weight:var(--seed-font-weight-regular);display:block}.seed-consistent-width:after{content:attr(data-text);visibility:hidden;height:0;font-weight:var(--seed-font-weight-bold);display:block}.seed-scale-feedback{--seed-dynamic-scale-basis:max(var(--seed-element-height), var(--seed-element-width) / 4, 24);--seed-dynamic-scale:calc((var(--seed-dynamic-scale-basis) - 2) / var(--seed-dynamic-scale-basis));--seed-feedback-scale:var(--seed-dynamic-scale,1);--seed-content-scale:1;scale:1}@media (prefers-reduced-motion:reduce){.seed-scale-feedback{--seed-feedback-scale:1}}.seed-content-scale{display:inherit;flex-direction:inherit;flex-wrap:inherit;align-items:inherit;align-content:inherit;justify-content:inherit;justify-items:inherit;gap:inherit;grid-template-columns:inherit;grid-template-rows:inherit;grid-template-areas:inherit;grid-auto-flow:inherit;grid-auto-columns:inherit;grid-auto-rows:inherit;min-width:0;min-height:0;scale:var(--seed-content-scale);transition:var(--seed-feedback-scale-transition);flex:auto;grid-area:1/1/-1/-1;place-self:stretch stretch}:root,[data-seed-color-mode=system]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root,[data-seed-color-mode=system]{--lightningcss-light: ;--lightningcss-dark:initial}}[data-seed-color-mode=light-only]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light only}[data-seed-color-mode=dark-only]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark only}:root{--seed-dimension-x0_5:2px;--seed-dimension-x1:4px;--seed-dimension-x1_5:6px;--seed-dimension-x2:8px;--seed-dimension-x2_5:10px;--seed-dimension-x3:12px;--seed-dimension-x3_5:14px;--seed-dimension-x4:16px;--seed-dimension-x4_5:18px;--seed-dimension-x5:20px;--seed-dimension-x6:24px;--seed-dimension-x7:28px;--seed-dimension-x8:32px;--seed-dimension-x9:36px;--seed-dimension-x10:40px;--seed-dimension-x12:48px;--seed-dimension-x13:52px;--seed-dimension-x14:56px;--seed-dimension-x16:64px;--seed-dimension-spacing-x-between-chips:var(--seed-dimension-x2);--seed-dimension-spacing-x-global-gutter:var(--seed-dimension-x4);--seed-dimension-spacing-y-component-default:var(--seed-dimension-x3);--seed-dimension-spacing-y-nav-to-title:var(--seed-dimension-x5);--seed-dimension-spacing-y-screen-bottom:var(--seed-dimension-x14);--seed-dimension-spacing-y-between-text:var(--seed-dimension-x1_5);--seed-duration-d1:50ms;--seed-duration-d2:.1s;--seed-duration-d3:.15s;--seed-duration-d4:.2s;--seed-duration-d5:.25s;--seed-duration-d6:.3s;--seed-duration-color-transition:var(--seed-duration-d3);--seed-duration-pressed-scale:var(--seed-duration-d3);--seed-font-size-t1:clamp(calc(var(--seed-font-size-t1-static) * var(--seed-font-size-limit-min,1)), calc(.6875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t1-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t2:clamp(calc(var(--seed-font-size-t2-static) * var(--seed-font-size-limit-min,1)), calc(.75rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t2-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t3:clamp(calc(var(--seed-font-size-t3-static) * var(--seed-font-size-limit-min,1)), calc(.8125rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t3-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t4:clamp(calc(var(--seed-font-size-t4-static) * var(--seed-font-size-limit-min,1)), calc(.875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t4-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t5:clamp(calc(var(--seed-font-size-t5-static) * var(--seed-font-size-limit-min,1)), calc(1rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t5-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t6:clamp(calc(var(--seed-font-size-t6-static) * var(--seed-font-size-limit-min,1)), calc(1.125rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t6-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t7:clamp(calc(var(--seed-font-size-t7-static) * var(--seed-font-size-limit-min,1)), calc(1.25rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t7-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t8:clamp(calc(var(--seed-font-size-t8-static) * var(--seed-font-size-limit-min,1)), calc(1.375rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t8-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t9:clamp(calc(var(--seed-font-size-t9-static) * var(--seed-font-size-limit-min,1)), calc(1.5rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t9-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t10:clamp(calc(var(--seed-font-size-t10-static) * var(--seed-font-size-limit-min,1)), calc(1.625rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t10-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t11:clamp(calc(var(--seed-font-size-t11-static) * var(--seed-font-size-limit-min,1)), calc(1.75rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t11-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t12:clamp(calc(var(--seed-font-size-t12-static) * var(--seed-font-size-limit-min,1)), calc(2rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t12-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t13:clamp(calc(var(--seed-font-size-t13-static) * var(--seed-font-size-limit-min,1)), calc(2.5rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t13-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t14:clamp(calc(var(--seed-font-size-t14-static) * var(--seed-font-size-limit-min,1)), calc(3rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-font-size-t14-static) * var(--seed-font-size-limit-max,1)));--seed-font-size-t1-static:calc(11px / var(--seed-static-font-scale,1));--seed-font-size-t2-static:calc(12px / var(--seed-static-font-scale,1));--seed-font-size-t3-static:calc(13px / var(--seed-static-font-scale,1));--seed-font-size-t4-static:calc(14px / var(--seed-static-font-scale,1));--seed-font-size-t5-static:calc(16px / var(--seed-static-font-scale,1));--seed-font-size-t6-static:calc(18px / var(--seed-static-font-scale,1));--seed-font-size-t7-static:calc(20px / var(--seed-static-font-scale,1));--seed-font-size-t8-static:calc(22px / var(--seed-static-font-scale,1));--seed-font-size-t9-static:calc(24px / var(--seed-static-font-scale,1));--seed-font-size-t10-static:calc(26px / var(--seed-static-font-scale,1));--seed-font-size-t11-static:calc(28px / var(--seed-static-font-scale,1));--seed-font-size-t12-static:calc(32px / var(--seed-static-font-scale,1));--seed-font-size-t13-static:calc(40px / var(--seed-static-font-scale,1));--seed-font-size-t14-static:calc(48px / var(--seed-static-font-scale,1));--seed-font-weight-regular:400;--seed-font-weight-medium:500;--seed-font-weight-bold:700;--seed-line-height-t1:clamp(calc(var(--seed-line-height-t1-static) * var(--seed-line-height-limit-min,1)), calc(.9375rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t1-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t2:clamp(calc(var(--seed-line-height-t2-static) * var(--seed-line-height-limit-min,1)), calc(1rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t2-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t3:clamp(calc(var(--seed-line-height-t3-static) * var(--seed-line-height-limit-min,1)), calc(1.125rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t3-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t4:clamp(calc(var(--seed-line-height-t4-static) * var(--seed-line-height-limit-min,1)), calc(1.1875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t4-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t5:clamp(calc(var(--seed-line-height-t5-static) * var(--seed-line-height-limit-min,1)), calc(1.375rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t5-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t6:clamp(calc(var(--seed-line-height-t6-static) * var(--seed-line-height-limit-min,1)), calc(1.5rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t6-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t7:clamp(calc(var(--seed-line-height-t7-static) * var(--seed-line-height-limit-min,1)), calc(1.6875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t7-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t8:clamp(calc(var(--seed-line-height-t8-static) * var(--seed-line-height-limit-min,1)), calc(1.875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t8-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t9:clamp(calc(var(--seed-line-height-t9-static) * var(--seed-line-height-limit-min,1)), calc(2rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t9-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t10:clamp(calc(var(--seed-line-height-t10-static) * var(--seed-line-height-limit-min,1)), calc(2.1875rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t10-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t11:clamp(calc(var(--seed-line-height-t11-static) * var(--seed-line-height-limit-min,1)), calc(2.375rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t11-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t12:clamp(calc(var(--seed-line-height-t12-static) * var(--seed-line-height-limit-min,1)), calc(2.625rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t12-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t13:clamp(calc(var(--seed-line-height-t13-static) * var(--seed-line-height-limit-min,1)), calc(3.25rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t13-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t14:clamp(calc(var(--seed-line-height-t14-static) * var(--seed-line-height-limit-min,1)), calc(3.75rem * var(--seed-font-size-multiplier,1)), calc(var(--seed-line-height-t14-static) * var(--seed-line-height-limit-max,1)));--seed-line-height-t1-static:calc(15px / var(--seed-static-font-scale,1));--seed-line-height-t2-static:calc(16px / var(--seed-static-font-scale,1));--seed-line-height-t3-static:calc(18px / var(--seed-static-font-scale,1));--seed-line-height-t4-static:calc(19px / var(--seed-static-font-scale,1));--seed-line-height-t5-static:calc(22px / var(--seed-static-font-scale,1));--seed-line-height-t6-static:calc(24px / var(--seed-static-font-scale,1));--seed-line-height-t7-static:calc(27px / var(--seed-static-font-scale,1));--seed-line-height-t8-static:calc(30px / var(--seed-static-font-scale,1));--seed-line-height-t9-static:calc(32px / var(--seed-static-font-scale,1));--seed-line-height-t10-static:calc(35px / var(--seed-static-font-scale,1));--seed-line-height-t11-static:calc(38px / var(--seed-static-font-scale,1));--seed-line-height-t12-static:calc(42px / var(--seed-static-font-scale,1));--seed-line-height-t13-static:calc(52px / var(--seed-static-font-scale,1));--seed-line-height-t14-static:calc(60px / var(--seed-static-font-scale,1));--seed-radius-r0_5:2px;--seed-radius-r1:4px;--seed-radius-r1_5:6px;--seed-radius-r2:8px;--seed-radius-r2_5:10px;--seed-radius-r3:12px;--seed-radius-r3_5:14px;--seed-radius-r4:16px;--seed-radius-r5:20px;--seed-radius-r6:24px;--seed-radius-full:9999px;--seed-timing-function-linear:cubic-bezier(0, 0, 1, 1);--seed-timing-function-easing:cubic-bezier(.35, 0, .35, 1);--seed-timing-function-enter:cubic-bezier(0, 0, .15, 1);--seed-timing-function-exit:cubic-bezier(.35, 0, 1, 1);--seed-timing-function-enter-expressive:cubic-bezier(.03, .4, .1, 1);--seed-timing-function-exit-expressive:cubic-bezier(.35, 0, .95, .55);--seed-timing-function-pressed-scale:cubic-bezier(0, 0, .15, 1)}:root,:root[data-seed-color-mode=system][data-seed-user-color-scheme=light],:root[data-seed-color-mode=light-only],:root [data-seed-color-mode=light-only]{--seed-color-palette-gray-00:#fff;--seed-color-palette-gray-100:#f7f8f9;--seed-color-palette-gray-200:#f3f4f5;--seed-color-palette-gray-300:#eeeff1;--seed-color-palette-gray-400:#dcdee3;--seed-color-palette-gray-500:#d1d3d8;--seed-color-palette-gray-600:#b0b3ba;--seed-color-palette-gray-700:#868b94;--seed-color-palette-gray-800:#555d6d;--seed-color-palette-gray-900:#2a3038;--seed-color-palette-gray-1000:#1a1c20;--seed-color-palette-gray-alpha-100:#00204008;--seed-color-palette-gray-alpha-200:#14273b0d;--seed-color-palette-gray-alpha-300:#000f2d11;--seed-color-palette-gray-alpha-400:#000f3323;--seed-color-palette-gray-alpha-500:#05102b2f;--seed-color-palette-gray-alpha-600:#000a204f;--seed-color-palette-gray-alpha-700:#000b1e79;--seed-color-palette-gray-alpha-800:#010d25ab;--seed-color-palette-gray-alpha-900:#000711d5;--seed-color-palette-gray-alpha-1000:#000207e5;--seed-color-palette-carrot-100:#fff2ec;--seed-color-palette-carrot-200:#ffe8db;--seed-color-palette-carrot-300:#ffd5c0;--seed-color-palette-carrot-400:#ffb999;--seed-color-palette-carrot-500:#ff9364;--seed-color-palette-carrot-600:#f60;--seed-color-palette-carrot-700:#e14d00;--seed-color-palette-carrot-800:#b93901;--seed-color-palette-carrot-900:#862b00;--seed-color-palette-carrot-1000:#471601;--seed-color-palette-blue-100:#eff6ff;--seed-color-palette-blue-200:#e2edfc;--seed-color-palette-blue-300:#cbdffa;--seed-color-palette-blue-400:#aacefd;--seed-color-palette-blue-500:#85b8fd;--seed-color-palette-blue-600:#5e98fe;--seed-color-palette-blue-700:#217cf9;--seed-color-palette-blue-800:#135fcd;--seed-color-palette-blue-900:#0b4596;--seed-color-palette-blue-1000:#032451;--seed-color-palette-red-100:#fdf0f0;--seed-color-palette-red-200:#fde7e7;--seed-color-palette-red-300:#fed4d2;--seed-color-palette-red-400:#feb7b3;--seed-color-palette-red-500:#fe928d;--seed-color-palette-red-600:#fc6a66;--seed-color-palette-red-700:#fa342c;--seed-color-palette-red-800:#ca1d13;--seed-color-palette-red-900:#921708;--seed-color-palette-red-1000:#4a1209;--seed-color-palette-green-100:#edfaf6;--seed-color-palette-green-200:#d9f6e9;--seed-color-palette-green-300:#b9e9d2;--seed-color-palette-green-400:#7ddcb3;--seed-color-palette-green-500:#42c593;--seed-color-palette-green-600:#10ab7d;--seed-color-palette-green-700:#079171;--seed-color-palette-green-800:#00745f;--seed-color-palette-green-900:#075445;--seed-color-palette-green-1000:#0a2b24;--seed-color-palette-yellow-100:#fff7de;--seed-color-palette-yellow-200:#fdefb9;--seed-color-palette-yellow-300:#fbdc65;--seed-color-palette-yellow-400:#e9c647;--seed-color-palette-yellow-500:#d4ab28;--seed-color-palette-yellow-600:#c49725;--seed-color-palette-yellow-700:#9b7821;--seed-color-palette-yellow-800:#755b22;--seed-color-palette-yellow-900:#4f3e1f;--seed-color-palette-yellow-1000:#2c2512;--seed-color-palette-purple-100:#f5f3fe;--seed-color-palette-purple-200:#efeafe;--seed-color-palette-purple-300:#e1d8ff;--seed-color-palette-purple-400:#d0c0ff;--seed-color-palette-purple-500:#b8a1ff;--seed-color-palette-purple-600:#9f84fb;--seed-color-palette-purple-700:#8969ea;--seed-color-palette-purple-800:#6d50cb;--seed-color-palette-purple-900:#50379b;--seed-color-palette-purple-1000:#29175d;--seed-color-palette-static-black:#000;--seed-color-palette-static-black-alpha-100:#00000007;--seed-color-palette-static-black-alpha-200:#0000000c;--seed-color-palette-static-black-alpha-300:#00000010;--seed-color-palette-static-black-alpha-400:#00000021;--seed-color-palette-static-black-alpha-500:#0000002c;--seed-color-palette-static-black-alpha-600:#0000004c;--seed-color-palette-static-black-alpha-700:#00000074;--seed-color-palette-static-black-alpha-800:#000000a2;--seed-color-palette-static-black-alpha-900:#000000d0;--seed-color-palette-static-black-alpha-1000:#000000e3;--seed-color-palette-static-white:#fff;--seed-color-palette-static-white-alpha-50:#ffffff0d;--seed-color-palette-static-white-alpha-100:#ffffff17;--seed-color-palette-static-white-alpha-200:#ffffff20;--seed-color-palette-static-white-alpha-300:#ffffff2e;--seed-color-palette-static-white-alpha-400:#ffffff3d;--seed-color-palette-static-white-alpha-500:#ffffff60;--seed-color-palette-static-white-alpha-600:#ffffff8b;--seed-color-palette-static-white-alpha-700:#ffffffb3;--seed-color-palette-static-white-alpha-800:#ffffffde;--seed-color-palette-static-white-alpha-900:#ffffffea;--seed-color-palette-static-white-alpha-1000:#fffffff4;--seed-color-fg-brand:var(--seed-color-palette-carrot-600);--seed-color-fg-brand-contrast:var(--seed-color-palette-carrot-700);--seed-color-fg-critical:var(--seed-color-palette-red-700);--seed-color-fg-critical-contrast:var(--seed-color-palette-red-900);--seed-color-fg-disabled:var(--seed-color-palette-gray-500);--seed-color-fg-informative:var(--seed-color-palette-blue-700);--seed-color-fg-informative-contrast:var(--seed-color-palette-blue-900);--seed-color-fg-neutral:var(--seed-color-palette-gray-1000);--seed-color-fg-neutral-inverted:var(--seed-color-palette-gray-00);--seed-color-fg-neutral-muted:var(--seed-color-palette-gray-800);--seed-color-fg-neutral-subtle:var(--seed-color-palette-gray-700);--seed-color-fg-on-brand-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-critical-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-informative-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-neutral-solid:var(--seed-color-palette-gray-00);--seed-color-fg-on-positive-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-warning-solid:var(--seed-color-palette-static-black-alpha-900);--seed-color-fg-placeholder:var(--seed-color-palette-gray-600);--seed-color-fg-positive:var(--seed-color-palette-green-700);--seed-color-fg-positive-contrast:var(--seed-color-palette-green-900);--seed-color-fg-warning:var(--seed-color-palette-yellow-700);--seed-color-fg-warning-contrast:var(--seed-color-palette-yellow-900);--seed-color-bg-brand-solid:var(--seed-color-palette-carrot-600);--seed-color-bg-brand-solid-pressed:var(--seed-color-palette-carrot-700);--seed-color-bg-brand-weak:var(--seed-color-palette-carrot-100);--seed-color-bg-brand-weak-pressed:var(--seed-color-palette-carrot-200);--seed-color-bg-critical-solid:var(--seed-color-palette-red-700);--seed-color-bg-critical-solid-pressed:var(--seed-color-palette-red-800);--seed-color-bg-critical-weak:var(--seed-color-palette-red-100);--seed-color-bg-critical-weak-pressed:var(--seed-color-palette-red-200);--seed-color-bg-disabled:var(--seed-color-palette-gray-200);--seed-color-bg-informative-solid:var(--seed-color-palette-blue-700);--seed-color-bg-informative-solid-pressed:var(--seed-color-palette-blue-800);--seed-color-bg-informative-weak:var(--seed-color-palette-blue-100);--seed-color-bg-informative-weak-pressed:var(--seed-color-palette-blue-200);--seed-color-bg-layer-basement:var(--seed-color-palette-gray-200);--seed-color-bg-layer-default:var(--seed-color-palette-gray-00);--seed-color-bg-layer-default-pressed:var(--seed-color-palette-gray-100);--seed-color-bg-layer-floating:var(--seed-color-palette-gray-00);--seed-color-bg-layer-floating-pressed:var(--seed-color-palette-gray-100);--seed-color-bg-magic-weak:#f9f2ee;--seed-color-bg-neutral-inverted:var(--seed-color-palette-gray-900);--seed-color-bg-neutral-inverted-pressed:var(--seed-color-palette-gray-800);--seed-color-bg-neutral-muted:var(--seed-color-palette-gray-100);--seed-color-bg-neutral-solid:var(--seed-color-palette-gray-900);--seed-color-bg-neutral-solid-pressed:var(--seed-color-palette-gray-800);--seed-color-bg-neutral-solid-muted:var(--seed-color-palette-gray-800);--seed-color-bg-neutral-solid-muted-pressed:var(--seed-color-palette-gray-900);--seed-color-bg-neutral-subtle:var(--seed-color-palette-gray-00);--seed-color-bg-neutral-weak:var(--seed-color-palette-gray-200);--seed-color-bg-neutral-weak-alpha:var(--seed-color-palette-gray-alpha-200);--seed-color-bg-neutral-weak-alpha-pressed:var(--seed-color-palette-gray-alpha-300);--seed-color-bg-neutral-weak-pressed:var(--seed-color-palette-gray-300);--seed-color-bg-overlay:var(--seed-color-palette-static-black-alpha-700);--seed-color-bg-overlay-muted:var(--seed-color-palette-static-black-alpha-500);--seed-color-bg-positive-solid:var(--seed-color-palette-green-700);--seed-color-bg-positive-solid-pressed:var(--seed-color-palette-green-800);--seed-color-bg-positive-weak:var(--seed-color-palette-green-100);--seed-color-bg-positive-weak-pressed:var(--seed-color-palette-green-200);--seed-color-bg-transparent:#0000;--seed-color-bg-transparent-pressed:var(--seed-color-palette-static-black-alpha-100);--seed-color-bg-transparent-selected:var(--seed-color-palette-static-black-alpha-200);--seed-color-bg-transparent-selected-pressed:var(--seed-color-palette-static-black-alpha-300);--seed-color-bg-warning-solid:var(--seed-color-palette-yellow-300);--seed-color-bg-warning-solid-pressed:var(--seed-color-palette-yellow-400);--seed-color-bg-warning-weak:var(--seed-color-palette-yellow-100);--seed-color-bg-warning-weak-pressed:var(--seed-color-palette-yellow-200);--seed-color-stroke-brand-solid:var(--seed-color-palette-carrot-700);--seed-color-stroke-brand-weak:var(--seed-color-palette-carrot-300);--seed-color-stroke-critical-solid:var(--seed-color-palette-red-700);--seed-color-stroke-critical-weak:var(--seed-color-palette-red-300);--seed-color-stroke-focus-ring:var(--seed-color-palette-blue-600);--seed-color-stroke-informative-solid:var(--seed-color-palette-blue-700);--seed-color-stroke-informative-weak:var(--seed-color-palette-blue-300);--seed-color-stroke-neutral-contrast:var(--seed-color-palette-gray-1000);--seed-color-stroke-neutral-muted:var(--seed-color-palette-static-black-alpha-300);--seed-color-stroke-neutral-solid:var(--seed-color-palette-gray-800);--seed-color-stroke-neutral-subtle:var(--seed-color-palette-static-black-alpha-200);--seed-color-stroke-neutral-weak:var(--seed-color-palette-gray-alpha-400);--seed-color-stroke-positive-solid:var(--seed-color-palette-green-700);--seed-color-stroke-positive-weak:var(--seed-color-palette-green-300);--seed-color-stroke-warning-solid:var(--seed-color-palette-yellow-700);--seed-color-stroke-warning-weak:var(--seed-color-palette-yellow-300);--seed-color-manner-temp-l1-bg:#f1f2f3;--seed-color-manner-temp-l1-text:#757b85;--seed-color-manner-temp-l10-bg:#ffebee;--seed-color-manner-temp-l10-text:#cb0123;--seed-color-manner-temp-l2-bg:#f8f4ec;--seed-color-manner-temp-l2-text:#ab863f;--seed-color-manner-temp-l3-bg:#fff5e5;--seed-color-manner-temp-l3-text:#e08a00;--seed-color-manner-temp-l4-bg:#fff3e5;--seed-color-manner-temp-l4-text:#f57e00;--seed-color-manner-temp-l5-bg:#fff1e5;--seed-color-manner-temp-l5-text:#ff7300;--seed-color-manner-temp-l6-bg:#fff0e5;--seed-color-manner-temp-l6-text:#f60;--seed-color-manner-temp-l7-bg:#ffefe5;--seed-color-manner-temp-l7-text:#ff5100;--seed-color-manner-temp-l8-bg:#ffeee5;--seed-color-manner-temp-l8-text:#f30;--seed-color-manner-temp-l9-bg:#fdeded;--seed-color-manner-temp-l9-text:#e82c45;--seed-color-banner-blue:#e1f7ff;--seed-color-banner-cool-gray:#ebf1f5;--seed-color-banner-green:#f0fbe5;--seed-color-banner-orange:#fff2e1;--seed-color-banner-pink:#ffebf1;--seed-color-banner-purple:#f5ecff;--seed-color-banner-red:#ffecee;--seed-color-banner-teal:#e6faf6;--seed-color-banner-warm-gray:#f2f0ee;--seed-color-banner-yellow:#fffae1;--seed-gradient-fade-mask:#0000 0%, #00000003 8%, #00000005 16%, #0000000d 22%, #00000014 29.0%, #00000021 35%, #0000002e 41%, #00000040 47%, #00000052 53%, #0006 59%, #0000007a 65%, #00000094 71%, #000000ab 78%, #000000c7 84%, #000000e3 92%, #000 100%;--seed-gradient-glow-magic:#fef6f7 0%, #fef0e7 80%, #f9f7f5 100%;--seed-gradient-glow-magic-pressed:#fbf0f2 0%, #ffe8db 80%, #f5f2ef 100%;--seed-gradient-highlight-magic:#f60 20%, #d25aca 100%;--seed-gradient-highlight-magic-pressed:#e14f00 20%, #ae58bf 100%;--seed-gradient-shimmer-magic:#fff9f500 0%, #fff9f5cc 46%, #fff9f5cc 54%, #fff9f500 100%;--seed-gradient-shimmer-neutral:#fff0 0%, #ffffffab 46%, #ffffffab 54%, #fff0 100%;--seed-shadow-s1:0px 1px 4px 0px #00000014;--seed-shadow-s2:0px 2px 10px 0px #0000001a;--seed-shadow-s3:0px 4px 16px 0px #0000001f}:root[data-seed-color-mode=system][data-seed-user-color-scheme=dark],:root[data-seed-color-mode=dark-only],:root [data-seed-color-mode=dark-only]{--seed-color-palette-gray-00:#000;--seed-color-palette-gray-100:#16171b;--seed-color-palette-gray-200:#1d2025;--seed-color-palette-gray-300:#2b2e35;--seed-color-palette-gray-400:#393d46;--seed-color-palette-gray-500:#5b606a;--seed-color-palette-gray-600:#868b94;--seed-color-palette-gray-700:#b0b3ba;--seed-color-palette-gray-800:#dcdee3;--seed-color-palette-gray-900:#e9eaec;--seed-color-palette-gray-1000:#f3f4f5;--seed-color-palette-gray-alpha-100:#d0d9ff1b;--seed-color-palette-gray-alpha-200:#c8ddff25;--seed-color-palette-gray-alpha-300:#cfddff35;--seed-color-palette-gray-alpha-400:#d0deff46;--seed-color-palette-gray-alpha-500:#dbe7ff6a;--seed-color-palette-gray-alpha-600:#e7efff94;--seed-color-palette-gray-alpha-700:#f1f5ffba;--seed-color-palette-gray-alpha-800:#f7f9ffe3;--seed-color-palette-gray-alpha-900:#fcfdffec;--seed-color-palette-gray-alpha-1000:#fdfefff5;--seed-color-palette-carrot-100:#31241f;--seed-color-palette-carrot-200:#4b291c;--seed-color-palette-carrot-300:#6b311c;--seed-color-palette-carrot-400:#923600;--seed-color-palette-carrot-500:#bd4201;--seed-color-palette-carrot-600:#e65200;--seed-color-palette-carrot-700:#f60;--seed-color-palette-carrot-800:#ff9e65;--seed-color-palette-carrot-900:#eecebc;--seed-color-palette-carrot-1000:#f4eeea;--seed-color-palette-blue-100:#202742;--seed-color-palette-blue-200:#1e3352;--seed-color-palette-blue-300:#1a4275;--seed-color-palette-blue-400:#0f559e;--seed-color-palette-blue-500:#1964d8;--seed-color-palette-blue-600:#1e82eb;--seed-color-palette-blue-700:#41a2f9;--seed-color-palette-blue-800:#83bcf9;--seed-color-palette-blue-900:#b9d7fb;--seed-color-palette-blue-1000:#e5f0fe;--seed-color-palette-red-100:#322323;--seed-color-palette-red-200:#4f2624;--seed-color-palette-red-300:#742826;--seed-color-palette-red-400:#a12621;--seed-color-palette-red-500:#ca2319;--seed-color-palette-red-600:#f73526;--seed-color-palette-red-700:#ff6e60;--seed-color-palette-red-800:#ffa299;--seed-color-palette-red-900:#f8c5c3;--seed-color-palette-red-1000:#fdf2f2;--seed-color-palette-green-100:#202926;--seed-color-palette-green-200:#20362e;--seed-color-palette-green-300:#20493b;--seed-color-palette-green-400:#19604c;--seed-color-palette-green-500:#117956;--seed-color-palette-green-600:#1b946d;--seed-color-palette-green-700:#22b27f;--seed-color-palette-green-800:#35ce9a;--seed-color-palette-green-900:#93e5c0;--seed-color-palette-green-1000:#d4f6ef;--seed-color-palette-yellow-100:#302819;--seed-color-palette-yellow-200:#413218;--seed-color-palette-yellow-300:#543e15;--seed-color-palette-yellow-400:#714e15;--seed-color-palette-yellow-500:#91601b;--seed-color-palette-yellow-600:#b6720d;--seed-color-palette-yellow-700:#ca901c;--seed-color-palette-yellow-800:#dab156;--seed-color-palette-yellow-900:#e5d49b;--seed-color-palette-yellow-1000:#f7f0cd;--seed-color-palette-purple-100:#28213b;--seed-color-palette-purple-200:#3b2873;--seed-color-palette-purple-300:#443081;--seed-color-palette-purple-400:#5a3bb1;--seed-color-palette-purple-500:#764fd9;--seed-color-palette-purple-600:#8e6bee;--seed-color-palette-purple-700:#a78df0;--seed-color-palette-purple-800:#beadf2;--seed-color-palette-purple-900:#d9cefa;--seed-color-palette-purple-1000:#f0edfc;--seed-color-palette-static-black:#000;--seed-color-palette-static-black-alpha-100:#00000007;--seed-color-palette-static-black-alpha-200:#0000000c;--seed-color-palette-static-black-alpha-300:#00000010;--seed-color-palette-static-black-alpha-400:#00000021;--seed-color-palette-static-black-alpha-500:#0000002c;--seed-color-palette-static-black-alpha-600:#0000004c;--seed-color-palette-static-black-alpha-700:#00000074;--seed-color-palette-static-black-alpha-800:#000000a2;--seed-color-palette-static-black-alpha-900:#000000d0;--seed-color-palette-static-black-alpha-1000:#000000e3;--seed-color-palette-static-white:#fff;--seed-color-palette-static-white-alpha-50:#ffffff0d;--seed-color-palette-static-white-alpha-100:#ffffff17;--seed-color-palette-static-white-alpha-200:#ffffff20;--seed-color-palette-static-white-alpha-300:#ffffff2e;--seed-color-palette-static-white-alpha-400:#ffffff3d;--seed-color-palette-static-white-alpha-500:#ffffff60;--seed-color-palette-static-white-alpha-600:#ffffff8b;--seed-color-palette-static-white-alpha-700:#ffffffb3;--seed-color-palette-static-white-alpha-800:#ffffffde;--seed-color-palette-static-white-alpha-900:#ffffffea;--seed-color-palette-static-white-alpha-1000:#fffffff4;--seed-color-fg-brand:var(--seed-color-palette-carrot-700);--seed-color-fg-brand-contrast:var(--seed-color-palette-carrot-700);--seed-color-fg-critical:var(--seed-color-palette-red-700);--seed-color-fg-critical-contrast:var(--seed-color-palette-red-900);--seed-color-fg-disabled:var(--seed-color-palette-gray-500);--seed-color-fg-informative:var(--seed-color-palette-blue-700);--seed-color-fg-informative-contrast:var(--seed-color-palette-blue-900);--seed-color-fg-neutral:var(--seed-color-palette-gray-1000);--seed-color-fg-neutral-inverted:var(--seed-color-palette-gray-100);--seed-color-fg-neutral-muted:var(--seed-color-palette-gray-800);--seed-color-fg-neutral-subtle:var(--seed-color-palette-gray-700);--seed-color-fg-on-brand-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-critical-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-informative-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-neutral-solid:var(--seed-color-palette-gray-100);--seed-color-fg-on-positive-solid:var(--seed-color-palette-static-white);--seed-color-fg-on-warning-solid:var(--seed-color-palette-static-black-alpha-900);--seed-color-fg-placeholder:var(--seed-color-palette-gray-600);--seed-color-fg-positive:var(--seed-color-palette-green-700);--seed-color-fg-positive-contrast:var(--seed-color-palette-green-900);--seed-color-fg-warning:var(--seed-color-palette-yellow-700);--seed-color-fg-warning-contrast:var(--seed-color-palette-yellow-900);--seed-color-bg-brand-solid:var(--seed-color-palette-carrot-700);--seed-color-bg-brand-solid-pressed:var(--seed-color-palette-carrot-800);--seed-color-bg-brand-weak:var(--seed-color-palette-carrot-100);--seed-color-bg-brand-weak-pressed:var(--seed-color-palette-carrot-200);--seed-color-bg-critical-solid:var(--seed-color-palette-red-600);--seed-color-bg-critical-solid-pressed:var(--seed-color-palette-red-700);--seed-color-bg-critical-weak:var(--seed-color-palette-red-100);--seed-color-bg-critical-weak-pressed:var(--seed-color-palette-red-200);--seed-color-bg-disabled:var(--seed-color-palette-gray-300);--seed-color-bg-informative-solid:var(--seed-color-palette-blue-600);--seed-color-bg-informative-solid-pressed:var(--seed-color-palette-blue-700);--seed-color-bg-informative-weak:var(--seed-color-palette-blue-100);--seed-color-bg-informative-weak-pressed:var(--seed-color-palette-blue-200);--seed-color-bg-layer-basement:var(--seed-color-palette-gray-00);--seed-color-bg-layer-default:var(--seed-color-palette-gray-100);--seed-color-bg-layer-default-pressed:var(--seed-color-palette-gray-300);--seed-color-bg-layer-floating:var(--seed-color-palette-gray-200);--seed-color-bg-layer-floating-pressed:var(--seed-color-palette-gray-300);--seed-color-bg-magic-weak:#201f1f;--seed-color-bg-neutral-inverted:var(--seed-color-palette-gray-1000);--seed-color-bg-neutral-inverted-pressed:var(--seed-color-palette-gray-800);--seed-color-bg-neutral-muted:var(--seed-color-palette-gray-200);--seed-color-bg-neutral-solid:var(--seed-color-palette-gray-1000);--seed-color-bg-neutral-solid-pressed:var(--seed-color-palette-gray-800);--seed-color-bg-neutral-solid-muted:var(--seed-color-palette-gray-400);--seed-color-bg-neutral-solid-muted-pressed:var(--seed-color-palette-gray-500);--seed-color-bg-neutral-subtle:var(--seed-color-palette-gray-100);--seed-color-bg-neutral-weak:var(--seed-color-palette-gray-300);--seed-color-bg-neutral-weak-alpha:var(--seed-color-palette-gray-alpha-200);--seed-color-bg-neutral-weak-alpha-pressed:var(--seed-color-palette-gray-alpha-300);--seed-color-bg-neutral-weak-pressed:var(--seed-color-palette-gray-400);--seed-color-bg-overlay:var(--seed-color-palette-static-black-alpha-700);--seed-color-bg-overlay-muted:var(--seed-color-palette-static-black-alpha-500);--seed-color-bg-positive-solid:var(--seed-color-palette-green-500);--seed-color-bg-positive-solid-pressed:var(--seed-color-palette-green-600);--seed-color-bg-positive-weak:var(--seed-color-palette-green-100);--seed-color-bg-positive-weak-pressed:var(--seed-color-palette-green-200);--seed-color-bg-transparent:#fff0;--seed-color-bg-transparent-pressed:var(--seed-color-palette-static-white-alpha-50);--seed-color-bg-transparent-selected:var(--seed-color-palette-static-white-alpha-100);--seed-color-bg-transparent-selected-pressed:var(--seed-color-palette-static-white-alpha-200);--seed-color-bg-warning-solid:var(--seed-color-palette-yellow-800);--seed-color-bg-warning-solid-pressed:var(--seed-color-palette-yellow-900);--seed-color-bg-warning-weak:var(--seed-color-palette-yellow-100);--seed-color-bg-warning-weak-pressed:var(--seed-color-palette-yellow-200);--seed-color-stroke-brand-solid:var(--seed-color-palette-carrot-700);--seed-color-stroke-brand-weak:var(--seed-color-palette-carrot-300);--seed-color-stroke-critical-solid:var(--seed-color-palette-red-700);--seed-color-stroke-critical-weak:var(--seed-color-palette-red-300);--seed-color-stroke-focus-ring:var(--seed-color-palette-blue-600);--seed-color-stroke-informative-solid:var(--seed-color-palette-blue-700);--seed-color-stroke-informative-weak:var(--seed-color-palette-blue-300);--seed-color-stroke-neutral-contrast:var(--seed-color-palette-gray-1000);--seed-color-stroke-neutral-muted:var(--seed-color-palette-static-white-alpha-100);--seed-color-stroke-neutral-solid:var(--seed-color-palette-gray-800);--seed-color-stroke-neutral-subtle:var(--seed-color-palette-static-white-alpha-50);--seed-color-stroke-neutral-weak:var(--seed-color-palette-gray-alpha-400);--seed-color-stroke-positive-solid:var(--seed-color-palette-green-700);--seed-color-stroke-positive-weak:var(--seed-color-palette-green-300);--seed-color-stroke-warning-solid:var(--seed-color-palette-yellow-700);--seed-color-stroke-warning-weak:var(--seed-color-palette-yellow-300);--seed-color-manner-temp-l1-bg:#292929;--seed-color-manner-temp-l1-text:#b8b8b9;--seed-color-manner-temp-l10-bg:#34040a;--seed-color-manner-temp-l10-text:#fb6f82;--seed-color-manner-temp-l2-bg:#332605;--seed-color-manner-temp-l2-text:#f5db97;--seed-color-manner-temp-l3-bg:#372b01;--seed-color-manner-temp-l3-text:#fdda65;--seed-color-manner-temp-l4-bg:#372301;--seed-color-manner-temp-l4-text:#fbbe55;--seed-color-manner-temp-l5-bg:#371f01;--seed-color-manner-temp-l5-text:#faac4b;--seed-color-manner-temp-l6-bg:#351b03;--seed-color-manner-temp-l6-text:#fc9855;--seed-color-manner-temp-l7-bg:#371701;--seed-color-manner-temp-l7-text:#f97a25;--seed-color-manner-temp-l8-bg:#380f00;--seed-color-manner-temp-l8-text:#fe6a34;--seed-color-manner-temp-l9-bg:#380500;--seed-color-manner-temp-l9-text:#fe6a5d;--seed-color-banner-blue:#0d2a3a;--seed-color-banner-cool-gray:#242c33;--seed-color-banner-green:#1e361c;--seed-color-banner-orange:#42230a;--seed-color-banner-pink:#3b172c;--seed-color-banner-purple:#2e1e45;--seed-color-banner-red:#3a0f15;--seed-color-banner-teal:#143633;--seed-color-banner-warm-gray:#2f2b27;--seed-color-banner-yellow:#3e2b00;--seed-gradient-fade-mask:#0000 0%, #00000003 8%, #00000005 16%, #0000000d 22%, #00000014 29.0%, #00000021 35%, #0000002e 41%, #00000040 47%, #00000052 53%, #0006 59%, #0000007a 65%, #00000094 71%, #000000ab 78%, #000000c7 84%, #000000e3 92%, #000 100%;--seed-gradient-glow-magic:#2d252d 0%, #3a312b 80%, #333232 100%;--seed-gradient-glow-magic-pressed:#3e333e 0%, #51453e 80%, #434242 100%;--seed-gradient-highlight-magic:#f60 20%, #d25aca 100%;--seed-gradient-highlight-magic-pressed:#ff9e65 20%, #e89bee 100%;--seed-gradient-shimmer-magic:#fff9f500 0%, #fff9f51a 46%, #fff9f51a 54%, #fff9f500 100%;--seed-gradient-shimmer-neutral:#fff0 0%, #ffffff1a 46%, #ffffff1a 54%, #fff0 100%;--seed-shadow-s1:0px 1px 4px 0px #00000080;--seed-shadow-s2:0px 2px 10px 0px #000000ad;--seed-shadow-s3:0px 4px 16px 0px #000c}:root{--seed-scale-s95:.95;--seed-scale-s97:.97;--seed-scale-s98:.98}@media (prefers-reduced-motion:reduce){:root{--seed-scale-s95:1;--seed-scale-s97:1;--seed-scale-s98:1}}@keyframes seed-enter{0%{opacity:var(--seed-enter-opacity,1);transform:translate3d(var(--seed-enter-translate-x,0), var(--seed-enter-translate-y,0), 0) scale3d(var(--seed-enter-scale,1), var(--seed-enter-scale,1), var(--seed-enter-scale,1)) rotate(var(--seed-enter-rotate,0))}}@keyframes seed-exit{to{opacity:var(--seed-exit-opacity,1);transform:translate3d(var(--seed-exit-translate-x,0), var(--seed-exit-translate-y,0), 0) scale3d(var(--seed-exit-scale,1), var(--seed-exit-scale,1), var(--seed-exit-scale,1)) rotate(var(--seed-exit-rotate,0))}}@keyframes rotate{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes slide-x{0%{transform:translate(-100%)}to{transform:translate(100%)}}@keyframes progress-circle-head{0%{stroke-dasharray:0 1000%}75%{stroke-dasharray:var(--circumference), 1000%}to{stroke-dasharray:var(--circumference), 1000%}}@keyframes progress-circle-tail{0%{stroke-dashoffset:0}33.33%{stroke-dashoffset:0}to{stroke-dashoffset:calc(var(--circumference) * -1)}}@keyframes fade-in{0%{opacity:0}to{opacity:1}}@keyframes fade-out{to{opacity:0}}@keyframes caret-blink{50%{opacity:0}}@keyframes drawer-slide-from-bottom{0%{transform:translate3d(0, var(--initial-transform,100%), 0)}to{transform:translate3d(0, var(--snap-point-height,0), 0)}}@keyframes drawer-slide-to-bottom{to{transform:translate3d(0, var(--initial-transform,100%), 0)}}@media (min-width:480px){.seed-box{--seed-box-padding:var(--seed-box-padding-sm,initial);--seed-box-padding-y:var(--seed-box-padding-y-sm,initial);--seed-box-padding-x:var(--seed-box-padding-x-sm,initial);--seed-box-padding-bottom:var(--seed-box-padding-bottom-sm,initial);--seed-box-padding-top:var(--seed-box-padding-top-sm,initial);--seed-box-padding-left:var(--seed-box-padding-left-sm,initial);--seed-box-padding-right:var(--seed-box-padding-right-sm,initial);--seed-box-bleed-bottom:var(--seed-box-bleed-bottom-sm,initial);--seed-box-bleed-top:var(--seed-box-bleed-top-sm,initial);--seed-box-bleed-left:var(--seed-box-bleed-left-sm,initial);--seed-box-bleed-right:var(--seed-box-bleed-right-sm,initial);--seed-box-margin:var(--seed-box-margin-sm,initial);--seed-box-margin-y:var(--seed-box-margin-y-sm,initial);--seed-box-margin-x:var(--seed-box-margin-x-sm,initial);--seed-box-margin-top:var(--seed-box-margin-top-sm,initial);--seed-box-margin-bottom:var(--seed-box-margin-bottom-sm,initial);--seed-box-margin-left:var(--seed-box-margin-left-sm,initial);--seed-box-margin-right:var(--seed-box-margin-right-sm,initial);--seed-box-min-height:var(--seed-box-min-height-sm,initial);--seed-box-max-height:var(--seed-box-max-height-sm,initial);--seed-box-height:var(--seed-box-height-sm,initial);--seed-box-min-width:var(--seed-box-min-width-sm,initial);--seed-box-max-width:var(--seed-box-max-width-sm,initial);--seed-box-width:var(--seed-box-width-sm,initial);--seed-box-display:var(--seed-box-display-sm,initial);--seed-box-flex-direction:var(--seed-box-flex-direction-sm,initial);--seed-box-gap:var(--seed-box-gap-sm,initial)}.seed-grid{--seed-grid-columns:var(--seed-grid-columns-sm,initial);--seed-grid-rows:var(--seed-grid-rows-sm,initial)}}@media (min-width:768px){.seed-box{--seed-box-padding:var(--seed-box-padding-md,initial);--seed-box-padding-y:var(--seed-box-padding-y-md,initial);--seed-box-padding-x:var(--seed-box-padding-x-md,initial);--seed-box-padding-bottom:var(--seed-box-padding-bottom-md,initial);--seed-box-padding-top:var(--seed-box-padding-top-md,initial);--seed-box-padding-left:var(--seed-box-padding-left-md,initial);--seed-box-padding-right:var(--seed-box-padding-right-md,initial);--seed-box-bleed-bottom:var(--seed-box-bleed-bottom-md,initial);--seed-box-bleed-top:var(--seed-box-bleed-top-md,initial);--seed-box-bleed-left:var(--seed-box-bleed-left-md,initial);--seed-box-bleed-right:var(--seed-box-bleed-right-md,initial);--seed-box-margin:var(--seed-box-margin-md,initial);--seed-box-margin-y:var(--seed-box-margin-y-md,initial);--seed-box-margin-x:var(--seed-box-margin-x-md,initial);--seed-box-margin-top:var(--seed-box-margin-top-md,initial);--seed-box-margin-bottom:var(--seed-box-margin-bottom-md,initial);--seed-box-margin-left:var(--seed-box-margin-left-md,initial);--seed-box-margin-right:var(--seed-box-margin-right-md,initial);--seed-box-min-height:var(--seed-box-min-height-md,initial);--seed-box-max-height:var(--seed-box-max-height-md,initial);--seed-box-height:var(--seed-box-height-md,initial);--seed-box-min-width:var(--seed-box-min-width-md,initial);--seed-box-max-width:var(--seed-box-max-width-md,initial);--seed-box-width:var(--seed-box-width-md,initial);--seed-box-display:var(--seed-box-display-md,initial);--seed-box-flex-direction:var(--seed-box-flex-direction-md,initial);--seed-box-gap:var(--seed-box-gap-md,initial)}.seed-grid{--seed-grid-columns:var(--seed-grid-columns-md,initial);--seed-grid-rows:var(--seed-grid-rows-md,initial)}}@media (min-width:1280px){.seed-box{--seed-box-padding:var(--seed-box-padding-lg,initial);--seed-box-padding-y:var(--seed-box-padding-y-lg,initial);--seed-box-padding-x:var(--seed-box-padding-x-lg,initial);--seed-box-padding-bottom:var(--seed-box-padding-bottom-lg,initial);--seed-box-padding-top:var(--seed-box-padding-top-lg,initial);--seed-box-padding-left:var(--seed-box-padding-left-lg,initial);--seed-box-padding-right:var(--seed-box-padding-right-lg,initial);--seed-box-bleed-bottom:var(--seed-box-bleed-bottom-lg,initial);--seed-box-bleed-top:var(--seed-box-bleed-top-lg,initial);--seed-box-bleed-left:var(--seed-box-bleed-left-lg,initial);--seed-box-bleed-right:var(--seed-box-bleed-right-lg,initial);--seed-box-margin:var(--seed-box-margin-lg,initial);--seed-box-margin-y:var(--seed-box-margin-y-lg,initial);--seed-box-margin-x:var(--seed-box-margin-x-lg,initial);--seed-box-margin-top:var(--seed-box-margin-top-lg,initial);--seed-box-margin-bottom:var(--seed-box-margin-bottom-lg,initial);--seed-box-margin-left:var(--seed-box-margin-left-lg,initial);--seed-box-margin-right:var(--seed-box-margin-right-lg,initial);--seed-box-min-height:var(--seed-box-min-height-lg,initial);--seed-box-max-height:var(--seed-box-max-height-lg,initial);--seed-box-height:var(--seed-box-height-lg,initial);--seed-box-min-width:var(--seed-box-min-width-lg,initial);--seed-box-max-width:var(--seed-box-max-width-lg,initial);--seed-box-width:var(--seed-box-width-lg,initial);--seed-box-display:var(--seed-box-display-lg,initial);--seed-box-flex-direction:var(--seed-box-flex-direction-lg,initial);--seed-box-gap:var(--seed-box-gap-lg,initial)}.seed-grid{--seed-grid-columns:var(--seed-grid-columns-lg,initial);--seed-grid-rows:var(--seed-grid-rows-lg,initial)}}@media (min-width:1440px){.seed-box{--seed-box-padding:var(--seed-box-padding-xl,initial);--seed-box-padding-y:var(--seed-box-padding-y-xl,initial);--seed-box-padding-x:var(--seed-box-padding-x-xl,initial);--seed-box-padding-bottom:var(--seed-box-padding-bottom-xl,initial);--seed-box-padding-top:var(--seed-box-padding-top-xl,initial);--seed-box-padding-left:var(--seed-box-padding-left-xl,initial);--seed-box-padding-right:var(--seed-box-padding-right-xl,initial);--seed-box-bleed-bottom:var(--seed-box-bleed-bottom-xl,initial);--seed-box-bleed-top:var(--seed-box-bleed-top-xl,initial);--seed-box-bleed-left:var(--seed-box-bleed-left-xl,initial);--seed-box-bleed-right:var(--seed-box-bleed-right-xl,initial);--seed-box-margin:var(--seed-box-margin-xl,initial);--seed-box-margin-y:var(--seed-box-margin-y-xl,initial);--seed-box-margin-x:var(--seed-box-margin-x-xl,initial);--seed-box-margin-top:var(--seed-box-margin-top-xl,initial);--seed-box-margin-bottom:var(--seed-box-margin-bottom-xl,initial);--seed-box-margin-left:var(--seed-box-margin-left-xl,initial);--seed-box-margin-right:var(--seed-box-margin-right-xl,initial);--seed-box-min-height:var(--seed-box-min-height-xl,initial);--seed-box-max-height:var(--seed-box-max-height-xl,initial);--seed-box-height:var(--seed-box-height-xl,initial);--seed-box-min-width:var(--seed-box-min-width-xl,initial);--seed-box-max-width:var(--seed-box-max-width-xl,initial);--seed-box-width:var(--seed-box-width-xl,initial);--seed-box-display:var(--seed-box-display-xl,initial);--seed-box-flex-direction:var(--seed-box-flex-direction-xl,initial);--seed-box-gap:var(--seed-box-gap-xl,initial)}.seed-grid{--seed-grid-columns:var(--seed-grid-columns-xl,initial);--seed-grid-rows:var(--seed-grid-rows-xl,initial)}}
+</style>
+<style>
+  /* ===== 앱 스타일: SEED 토큰 위에 앱 전용 값만 얹음. 휴대폰 라이트/다크 설정을 따라감 ===== */
+  :root {
+    --bg: var(--seed-color-bg-layer-basement);
+    --card: var(--seed-color-bg-layer-default);
+    --well: var(--seed-color-bg-neutral-weak);
+    --well-press: var(--seed-color-bg-neutral-weak-pressed);
+    --line: var(--seed-color-stroke-neutral-muted);
+    --line-hi: var(--seed-color-stroke-neutral-weak);
+    --fg: var(--seed-color-fg-neutral);
+    --sub: var(--seed-color-fg-neutral-muted);
+    --faint: var(--seed-color-fg-neutral-subtle);
+    --blue: var(--seed-color-bg-informative-solid);
+    --blue-press: var(--seed-color-bg-informative-solid-pressed);
+    --on-blue: var(--seed-color-fg-on-informative-solid);
+    --blue-fg: var(--seed-color-fg-informative);
+    --blue-weak: var(--seed-color-bg-informative-weak);
+    --late: var(--seed-color-fg-critical);
+    --good: var(--seed-color-fg-positive);
+    --early: #0a97c2;
+    --warn: var(--seed-color-fg-warning);
+    --mark: #f5b400;
+    --beat-on: var(--seed-color-fg-neutral);
+    --beat-on-text: var(--seed-color-bg-layer-default);
+    --ui: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    --dock-h: 0px;
+    /* 그래프 색 (캔버스가 읽어감) */
+    --cv-track: var(--seed-color-bg-neutral-weak);
+    --cv-zone: rgba(7, 145, 113, .16);
+    --cv-zone2: rgba(7, 145, 113, .08);
+    --cv-center: var(--seed-color-fg-neutral);
+    --cv-good: var(--seed-color-fg-positive);
+    --cv-late: var(--seed-color-fg-critical);
+    --cv-early: var(--early);
+    --cv-sub: var(--seed-color-fg-neutral-subtle);
+    --cv-fg: var(--seed-color-fg-neutral);
+    --cv-grid: var(--seed-color-stroke-neutral-weak);
+    --cv-line: var(--seed-color-fg-informative);
+  }
+  :root[data-seed-user-color-scheme="dark"] {
+    --early: #4fc3ff;
+    --cv-zone: rgba(34, 178, 127, .22);
+    --cv-zone2: rgba(34, 178, 127, .12);
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:var(--ui); font-size:15px; line-height:1.55; word-break:keep-all; font-feature-settings:"tnum"; }
+  [hidden] { display:none !important; }
+
+  .app { max-width:600px; margin:0 auto; padding:12px 16px calc(96px + var(--dock-h) + env(safe-area-inset-bottom)); }
+  .app.wide { max-width:960px; }
+
+  /* 화면 머리말 */
+  .screen-head { padding:24px 4px 18px; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+  .screen-head h1 { font-size:26px; font-weight:700; letter-spacing:-.03em; line-height:1.3; margin:0; }
+  .screen-head p { margin:6px 0 0; color:var(--sub); font-size:15px; }
+  .screen-head .btn { background:var(--card); flex-shrink:0; }
+  .screen-head .btn:hover { background:var(--well-press); }
+
+  /* 카드 */
+  .card { background:var(--card); border-radius:22px; padding:22px; margin-bottom:12px; }
+  .card > h2 { font-size:17px; font-weight:700; letter-spacing:-.02em; margin:0 0 4px; }
+  .card > h2 + .hint { margin-bottom:14px; }
+  .card-row { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .divider { height:1px; background:var(--line); margin:18px 0; }
+  .hint { font-size:13.5px; color:var(--sub); line-height:1.6; margin:0; }
+  .faint { color:var(--faint); }
+
+  /* 버튼 */
+  button, .btn { font:inherit; font-weight:600; font-size:15px; border:0; border-radius:12px; padding:11px 16px; cursor:pointer; color:var(--fg); background:var(--well); transition:background .12s, transform .08s; }
+  button:hover, .btn:hover { background:var(--well-press); }
+  button:active, .btn:active { transform:scale(.97); }
+  button:disabled { color:var(--faint); cursor:default; transform:none; }
+  button:focus-visible, input:focus-visible, .tab:focus-visible, label.btn:focus-within { outline:2px solid var(--seed-color-stroke-focus-ring, var(--blue)); outline-offset:2px; }
+  button.primary, .btn.primary { background:var(--blue); color:var(--on-blue); }
+  button.primary:hover, .btn.primary:hover { background:var(--blue-press); }
+  button.text { background:none; color:var(--blue-fg); padding:8px 4px; }
+  button.text:hover { background:none; text-decoration:underline; }
+  label { color:var(--sub); font-size:14px; }
+  input[type=number] { width:64px; padding:9px 6px; font:inherit; font-weight:600; text-align:center; background:var(--well); color:var(--fg); border:0; border-radius:10px; }
+  input[type=range] { width:100%; height:22px; margin:0; background:transparent; -webkit-appearance:none; appearance:none; }
+  input[type=range]::-webkit-slider-runnable-track { height:6px; background:var(--well); border-radius:3px; }
+  input[type=range]::-moz-range-track { height:6px; background:var(--well); border-radius:3px; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; margin-top:-8px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); border:0; }
+  input[type=range]::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); border:0; }
+  input[type=checkbox] { accent-color:var(--blue); width:18px; height:18px; vertical-align:-3px; margin-right:6px; }
+  canvas { width:100%; height:auto; display:block; background:var(--well); border-radius:12px; }
+
+  /* 하단 주 버튼 영역 + 탭 바 */
+  .dock { position:fixed; left:0; right:0; bottom:calc(60px + env(safe-area-inset-bottom)); z-index:20; pointer-events:none; }
+  .dock-inner { max-width:600px; margin:0 auto; padding:14px 16px 10px; display:flex; gap:8px; pointer-events:auto; background:linear-gradient(to top, var(--bg) 70%, transparent); }
+  .dock button { flex:1; padding:16px; font-size:17px; border-radius:16px; }
+  .dock button.primary { flex:2; }
+  .dock button:not(.primary) { background:var(--card); box-shadow:0 0 0 1px var(--line) inset; }
+  button.primary:disabled { background:var(--well); color:var(--faint); }
+  .tabbar { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--card); border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom); }
+  .tabbar-inner { max-width:600px; margin:0 auto; display:grid; grid-template-columns:repeat(3, 1fr); }
+  .tab { background:none; border-radius:0; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 0 7px; color:var(--faint); font-size:11.5px; font-weight:600; }
+  .tab:hover { background:none; color:var(--sub); }
+  .tab:active { transform:none; }
+  .tab svg { width:24px; height:24px; }
+  .tab[aria-selected="true"] { color:var(--fg); }
+
+  /* 연습: 템포 */
+  .tempo { text-align:center; padding:6px 0 2px; }
+  #bpmLabel { font-size:72px; font-weight:700; letter-spacing:-.05em; line-height:1; }
+  .tempo small { display:block; font-size:14px; font-weight:600; color:var(--faint); margin-top:4px; }
+  .steppers { display:flex; justify-content:center; gap:8px; margin-top:18px; }
+  .bpmBtn { min-width:58px; padding:10px 0; border-radius:999px; font-size:15px; touch-action:manipulation; user-select:none; }
+  .sig { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:14px; }
+
+  /* 박자 표시등 */
+  .beats { display:flex; justify-content:center; flex-wrap:wrap; gap:clamp(10px, 3vw, 20px); margin-top:22px; padding:22px 8px; background:var(--well); border-radius:18px; counter-reset:beat; }
+  .dot { width:clamp(44px, 13vw, 64px); aspect-ratio:1; border-radius:50%; display:grid; place-items:center; background:var(--card); transition:transform .06s; }
+  .dot::after { counter-increment:beat; content:counter(beat); font-size:clamp(15px, 3.8vw, 19px); font-weight:700; color:var(--faint); }
+  .dot.acc::after { color:var(--blue-fg); }
+  .dot.on { background:var(--beat-on); transform:scale(1.08); }
+  .dot.on::after { color:var(--beat-on-text); }
+  .dot.on.acc { background:var(--blue); }
+  .dot.on.acc::after { color:var(--on-blue); }
+
+  /* 방금 친 타격 */
+  .hitline { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:4px 12px; margin-bottom:12px; }
+  .big { font-weight:700; }
+  #last { font-size:32px !important; line-height:1.15; letter-spacing:-.03em; }
+  #last.late { color:var(--late); } #last.early { color:var(--early); } #last.ok { color:var(--good); }
+
+  /* 마이크 */
+  .input { display:grid; grid-template-columns:76px 1fr; align-items:center; gap:14px 12px; }
+  .meter { height:8px; background:var(--well); border-radius:4px; overflow:hidden; position:relative; }
+  .meter > div { height:100%; width:0; background:var(--blue); border-radius:4px; }
+  .meter > i { position:absolute; top:0; bottom:0; width:2px; background:var(--mark); }
+  #status { grid-column:1 / -1; font-size:13px; color:var(--sub); }
+
+  /* 결과 요약 */
+  #headline { font-size:22px; font-weight:700; line-height:1.4; letter-spacing:-.03em; margin:0 0 6px; }
+  #headline.late { color:var(--late); } #headline.early { color:var(--early); } #headline.ok { color:var(--good); } #headline.warn { color:var(--warn); }
+  #summaryText { font-size:14px; }
+  .stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:16px; }
+  .stat { background:var(--well); border-radius:16px; padding:14px; }
+  .stat b { display:block; font-weight:700; font-size:24px; line-height:1.15; letter-spacing:-.03em; }
+  .stat span { display:block; font-size:12px; color:var(--sub); margin-top:6px; line-height:1.45; }
+  #beatText:not(:empty) { margin-top:10px; }
+
+  /* 분석: 구분 버튼 */
+  .seg { display:flex; gap:4px; padding:4px; background:var(--well); border-radius:14px; margin-bottom:18px; }
+  .seg button { flex:1; background:none; padding:9px 6px; border-radius:10px; color:var(--sub); font-size:14px; }
+  .seg button:hover { background:none; color:var(--fg); }
+  .seg button[aria-selected="true"] { background:var(--card); color:var(--fg); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .caption { display:block; font-size:13px; color:var(--sub); margin:16px 0 8px; }
+  .drift { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 12px; }
+  .drift b { font-weight:700; font-size:26px; letter-spacing:-.03em; }
+  .drift span { font-size:13px; color:var(--sub); }
+  .tools { display:flex; gap:8px; margin-top:16px; }
+
+  /* 설정: 시간 보정 */
+  .tag { font-size:12.5px; font-weight:600; padding:3px 10px; border-radius:999px; background:var(--well); color:var(--sub); }
+  .precise { display:grid; gap:14px; }
+  .precise .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  #deviceInfo { white-space:pre-line; font-size:13px; color:var(--sub); }
+
+  /* 악보 */
+  .file-btn { position:relative; display:inline-flex; overflow:hidden; }
+  .file-btn input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+  .empty { text-align:center; padding:34px 10px 26px; }
+  .empty svg { width:56px; height:56px; color:var(--faint); }
+  .empty b { display:block; font-size:18px; margin:14px 0 6px; letter-spacing:-.02em; }
+  .empty .btn { display:inline-block; margin-top:18px; padding:14px 22px; font-size:16px; }
+  .score-title { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin-bottom:16px; }
+  .score-title b { font-size:20px; letter-spacing:-.02em; }
+  .score-row { display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; }
+  #scoreMsg { margin-top:12px; min-height:1.6em; }
+  #scoreMsg.err { color:var(--late); }
+  .score-pages { display:grid; gap:12px; }
+  .score-page { position:relative; background:#fff; border-radius:16px; overflow:hidden; }
+  .score-page canvas { display:block; width:100%; height:auto; background:#fff; border-radius:0; }
+  .mb { position:absolute; border:1.5px solid transparent; border-radius:4px; cursor:pointer; padding:0; background:none; }
+  .mb:hover { border-color:rgba(33,124,249,.55); background:none; }
+  .mb:active { transform:none; }
+  .mb .n { position:absolute; left:2px; top:1px; font-size:10.5px; font-weight:700; color:#1767d6; background:rgba(255,255,255,.9); padding:0 3px; border-radius:3px; line-height:1.5; }
+  .mb .r { position:absolute; right:2px; bottom:1px; font-size:10.5px; font-weight:700; padding:0 4px; border-radius:3px; line-height:1.5; color:#fff; }
+  .mb.sel { background:rgba(33,124,249,.09); border-color:rgba(33,124,249,.45); }
+  .mb.cur { background:rgba(33,124,249,.2); border:2.5px solid #217cf9; }
+  .mb.good { background:rgba(7,145,113,.14); border-color:rgba(7,145,113,.75); }
+  .mb.good .r { background:#079171; }
+  .mb.ok { background:rgba(240,170,0,.18); border-color:rgba(214,146,0,.85); }
+  .mb.ok .r { background:#c48a00; }
+  .mb.bad { background:rgba(250,52,44,.13); border-color:rgba(230,40,40,.8); }
+  .mb.bad .r { background:#e0322b; }
+  .mb:focus-visible { outline:2px solid #217cf9; outline-offset:1px; }
+  #scoreResult:empty { display:none; }
+  .score-legend { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12.5px; color:var(--sub); margin-top:12px; }
+  .score-legend i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+  .weak { margin:14px 0 0; padding:0; list-style:none; display:grid; gap:8px; }
+  .weak li { display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; font-size:14px; }
+  .weak button { padding:7px 12px; font-size:13px; border-radius:999px; }
+
+  details.calib { padding:0; }
+  details.calib > summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 22px; }
+  details.calib > summary::-webkit-details-marker { display:none; }
+  details.calib > summary:focus-visible { outline:2px solid var(--seed-color-stroke-focus-ring, var(--blue)); outline-offset:-2px; border-radius:22px; }
+  .calib-title { display:flex; align-items:center; gap:10px; }
+  .calib-title b { font-size:17px; letter-spacing:-.02em; }
+  details.calib .toggle { font-size:14px; font-weight:600; color:var(--blue-fg); }
+  details.calib .toggle::after { content:"펼치기"; }
+  details.calib[open] .toggle::after { content:"접기"; }
+  .calib-body { padding:0 22px 22px; }
+  .beta { display:inline-block; vertical-align:middle; margin-left:6px; font-size:12px; line-height:18px; font-weight:600; padding:1px 7px; border-radius:6px; background:var(--ds-bg2); color:var(--ds-t2); letter-spacing:0; }
+  p.about { text-align:center; font-size:12px; margin:20px 8px 0; }
+  .about a { color:var(--blue-fg); }
+
+  @media (max-width:420px) {
+    .app { padding-left:12px; padding-right:12px; }
+    .card { padding:20px 18px; border-radius:20px; }
+    #bpmLabel { font-size:64px; }
+    .stat { padding:12px 10px; }
+    .stat b { font-size:20px; }
+    .screen-head h1 { font-size:24px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after { transition:none !important; }
+  }
+</style>
+
+<style>
+  /* ================================================================
+     디자인 시스템 v2 — "연습실 계기판"
+     색은 실행(파랑)과 타이밍 의미(정박·빠름·늦음)에만 씀.
+     글자 7단계 / 간격 4의 배수 / 모서리 6·10·원형 / 그림자·그라데이션 없음
+     ================================================================ */
+  :root {
+    --ds-bg:#FFFFFF; --ds-bg2:#F4F5F7; --ds-line:#E6E8EB;
+    --ds-t1:#16181C; --ds-t2:#5B616B; --ds-t3:#8D939C;
+    --ds-accent:#2F6FEB; --ds-accent-press:#2459C7; --ds-on-accent:#FFFFFF;
+    --ds-ontime:#0E9F6E; --ds-early:#6E56CF; --ds-late:#E5484D; --ds-mark:#D99A00;
+    --ds-zone:rgba(14,159,110,.16); --ds-zone2:rgba(14,159,110,.08);
+    --r-sm:6px; --r-md:10px;
+    /* 아직 개편 전인 화면(악보·분석)도 같은 색을 쓰도록 기존 이름을 새 값에 연결 */
+    --bg:var(--ds-bg2); --card:var(--ds-bg); --well:var(--ds-bg2); --well-press:var(--ds-line);
+    --line:var(--ds-line); --line-hi:var(--ds-line);
+    --fg:var(--ds-t1); --sub:var(--ds-t2); --faint:var(--ds-t3);
+    --blue:var(--ds-accent); --blue-press:var(--ds-accent-press); --on-blue:var(--ds-on-accent); --blue-fg:var(--ds-accent);
+    --good:var(--ds-ontime); --early:var(--ds-early); --late:var(--ds-late); --warn:var(--ds-mark); --mark:var(--ds-mark);
+    --cv-track:var(--ds-line); --cv-zone:var(--ds-zone); --cv-zone2:var(--ds-zone2); --cv-center:var(--ds-t1);
+    --cv-good:var(--ds-ontime); --cv-late:var(--ds-late); --cv-early:var(--ds-early);
+    --cv-sub:var(--ds-t3); --cv-fg:var(--ds-t1); --cv-grid:var(--ds-line); --cv-line:var(--ds-accent);
+  }
+  :root[data-seed-user-color-scheme="dark"] {
+    --ds-bg:#0E0F11; --ds-bg2:#18191C; --ds-line:#26282C;
+    --ds-t1:#F2F3F5; --ds-t2:#A9AEB6; --ds-t3:#6E737B;
+    --ds-accent:#4C8DFF; --ds-accent-press:#3B7AEE; --ds-on-accent:#FFFFFF;
+    --ds-ontime:#34C38F; --ds-early:#9B87F5; --ds-late:#FF6369; --ds-mark:#F5B642;
+    --ds-zone:rgba(52,195,143,.20); --ds-zone2:rgba(52,195,143,.10);
+  }
+
+  /* 공통 */
+  body { font-size:15px; line-height:22px; }
+  .app { padding-left:20px; padding-right:20px; padding-bottom:calc(156px + env(safe-area-inset-bottom)); }   /* 아래 버튼(76) + 탭 바(57) 높이만큼 비워서 마지막 항목이 가려지지 않게 */
+  body[data-screen="practice"] { background:var(--ds-bg); }
+  button, .btn { border-radius:var(--r-md); }
+  button.primary, .btn.primary { background:var(--ds-accent); color:var(--ds-on-accent); }
+  button.primary:hover, .btn.primary:hover { background:var(--ds-accent-press); }
+  input[type=number], select { border-radius:var(--r-md); }
+  input[type=range]::-webkit-slider-thumb { box-shadow:0 0 0 1px var(--ds-line); }
+  input[type=range]::-moz-range-thumb { box-shadow:0 0 0 1px var(--ds-line); }
+  .ic { width:24px; height:24px; flex:none; }
+  .ic-sm { width:16px; height:16px; }
+  .cap { font-size:13px; line-height:18px; color:var(--ds-t2); margin:8px 0 0; }
+  .cap.faint { color:var(--ds-t3); }
+
+  /* 아래 버튼 · 탭 바: 단색 바탕 + 1px 선, 그라데이션 없음 */
+  .dock-inner { background:var(--ds-bg); border-top:1px solid var(--ds-line); padding:12px 20px; }
+  .dock button { padding:0; height:52px; border-radius:var(--r-md); font-size:16px; font-weight:600; }
+  .tabbar { background:var(--ds-bg); border-top:1px solid var(--ds-line); }
+  .tab { color:var(--ds-t3); font-size:11px; line-height:14px; font-weight:500; gap:4px; padding:8px 0 6px; }
+  .tab[aria-selected="true"] { color:var(--ds-t1); font-weight:600; }
+  .tab .ic { width:24px; height:24px; }
+
+  /* ===== 연습 화면 ===== */
+  .p-head { padding:20px 0 4px; }
+  .p-head h1 { font-size:24px; line-height:32px; font-weight:700; letter-spacing:-.02em; margin:0; }
+
+  .status-row { display:flex; align-items:center; gap:8px; min-height:44px; font-size:13px; line-height:18px; color:var(--ds-t2); }
+  .st-dot { width:8px; height:8px; border-radius:50%; background:var(--ds-t3); flex:none; }
+  .st-dot.on { background:var(--ds-ontime); }
+  .st-sep { display:inline-block; width:1px; height:10px; background:var(--ds-line); margin:0 8px; vertical-align:-1px; }
+  .btn-sm { margin-left:auto; height:32px; padding:0 12px; border-radius:var(--r-sm); font-size:13px; font-weight:600; background:var(--ds-bg2); color:var(--ds-t1); }
+  .btn-sm:hover { background:var(--ds-line); }
+
+  .tempo-block { text-align:center; padding:12px 0 28px; }
+  .bpm-line { display:inline-flex; align-items:baseline; gap:6px; }
+  .p #bpmLabel { font-size:64px; line-height:68px; font-weight:700; letter-spacing:-.04em; color:var(--ds-t1); }
+  .bpm-line .unit { font-size:13px; font-weight:600; color:var(--ds-t3); }
+  .stepper { display:flex; justify-content:center; margin:16px auto 0; width:max-content; background:var(--ds-bg2); border-radius:var(--r-md); overflow:hidden; }
+  .p .bpmBtn { width:64px; min-width:0; height:40px; padding:0; border-radius:0; background:transparent; font-size:15px; font-weight:600; color:var(--ds-t1); }
+  .p .bpmBtn + .bpmBtn { box-shadow:inset 1px 0 0 var(--ds-line); }
+  .p .bpmBtn:hover { background:var(--ds-line); }
+  .p .bpmBtn:active { transform:none; background:var(--ds-line); }
+  .sig-sel { display:inline-flex; align-items:center; gap:8px; margin-top:12px; font-size:13px; color:var(--ds-t2); }
+  .sig-sel select { font:inherit; font-size:15px; font-weight:600; color:var(--ds-t1); background:var(--ds-bg2); border:0; padding:6px 8px; border-radius:var(--r-sm); }
+
+  .p .beats { margin-top:24px; padding:0; background:none; border-radius:0; gap:clamp(10px, 3.5vw, 16px); }
+  .p .dot { width:clamp(40px, 12vw, 52px); background:var(--ds-bg2); }
+  .p .dot::after { font-size:15px; font-weight:600; color:var(--ds-t3); }
+  .p .dot.acc::after { color:var(--ds-accent); }
+  .p .dot.on { background:var(--ds-t1); transform:scale(1.06); }
+  .p .dot.on::after { color:var(--ds-bg); }
+  .p .dot.on.acc { background:var(--ds-accent); }
+  .p .dot.on.acc::after { color:var(--ds-on-accent); }
+
+  .band { height:8px; background:var(--ds-bg2); margin:0 -20px; }
+  .rule { height:1px; background:var(--ds-line); }
+
+  .sec { padding:24px 0; }
+  .sec-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+  .sec-head h2 { font-size:18px; line-height:26px; font-weight:600; letter-spacing:-.01em; margin:0; }
+  .link { display:inline-flex; align-items:center; gap:2px; background:none; padding:4px 0; font-size:14px; font-weight:500; color:var(--ds-t2); border-radius:var(--r-sm); }
+  .link:hover { background:none; color:var(--ds-t1); }
+
+  .p #last { font-size:28px !important; line-height:32px; font-weight:700; letter-spacing:-.02em; margin-bottom:12px; color:var(--ds-t1); }
+  .p #last.late { color:var(--ds-late); } .p #last.early { color:var(--ds-early); } .p #last.ok { color:var(--ds-ontime); }
+  .p #bar { background:var(--ds-bg2); border-radius:var(--r-md); }
+
+  .p #headline { font-size:18px; line-height:26px; font-weight:600; color:var(--ds-t1); margin:0; letter-spacing:-.01em; }
+  .p #headline.late, .p #headline.early, .p #headline.ok, .p #headline.warn { color:var(--ds-t1); }
+  .p #headline::before { content:""; display:none; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:2px; }
+  .p #headline.late::before { display:inline-block; background:var(--ds-late); }
+  .p #headline.early::before { display:inline-block; background:var(--ds-early); }
+  .p #headline.ok::before { display:inline-block; background:var(--ds-ontime); }
+  .p #headline.warn::before { display:inline-block; background:var(--ds-mark); }
+  .p #summaryText:empty { display:none; }
+
+  .metrics { display:grid; grid-template-columns:repeat(3, 1fr); margin-top:16px; border-top:1px solid var(--ds-line); border-bottom:1px solid var(--ds-line); }
+  .metric { padding:14px 0 14px 16px; }
+  .metric:first-child { padding-left:0; }
+  .metric + .metric { box-shadow:inset 1px 0 0 var(--ds-line); }
+  .metric b { display:block; font-size:28px; line-height:32px; font-weight:700; letter-spacing:-.02em; color:var(--ds-t1); }
+  .metric span { display:block; font-size:13px; line-height:18px; color:var(--ds-t2); margin-top:2px; }
+
+  .list-sec { padding-bottom:8px; }
+  .list-sec .sec-head { margin-bottom:4px; }
+  .row-dis { border-bottom:1px solid var(--ds-line); }
+  .row-dis:last-child { border-bottom:0; }
+  .row-dis > summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:56px; cursor:pointer; }
+  .row-dis > summary::-webkit-details-marker { display:none; }
+  .row-dis > summary:focus-visible { outline:2px solid var(--ds-accent); outline-offset:2px; border-radius:var(--r-sm); }
+  .row-label { font-size:15px; color:var(--ds-t1); }
+  .row-value { display:inline-flex; align-items:center; gap:8px; font-size:15px; color:var(--ds-t2); }
+  .row-value .chev { width:20px; height:20px; color:var(--ds-t3); transition:transform .15s; }
+  .row-dis[open] .chev { transform:rotate(180deg); }
+  .row-body { display:grid; gap:12px; padding:0 0 20px; }
+  .row-body .cap { margin:0; }
+  .field { font-size:13px; color:var(--ds-t2); }
+  .meter.mini { display:inline-block; width:88px; height:6px; background:var(--ds-bg2); border-radius:3px; overflow:hidden; position:relative; }
+  .meter.mini > span { display:block; height:100%; width:0; background:var(--ds-accent); }
+  .meter.mini > i { position:absolute; top:0; bottom:0; width:2px; background:var(--ds-mark); }
+  .p #status { font-size:13px; color:var(--ds-t2); }
+  .p .precise { gap:12px; }
+  .p .precise .hint { font-size:13px; line-height:18px; color:var(--ds-t2); }
+  .p .precise button { height:40px; padding:0 14px; font-size:14px; background:var(--ds-bg2); color:var(--ds-t1); }
+  .p .precise button:hover { background:var(--ds-line); }
+  .p #deviceInfo { font-size:13px; line-height:18px; }
+
+  @media (max-width:420px) {
+    .app { padding-left:20px; padding-right:20px; }
+    .p #bpmLabel { font-size:64px; }
+  }
+</style>
+</head>
+<body>
+<input type="file" id="scoreFile" accept="application/pdf" aria-label="악보 PDF 불러오기" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+<main class="app" id="app">
+
+  <!-- ===== 연습 ===== -->
+  <section class="screen p" id="screen-practice" aria-labelledby="h-practice">
+    <header class="p-head">
+      <h1 id="h-practice">연습</h1>
+    </header>
+
+    <!-- 상태 줄: 마이크와 보정 상태를 늘 보이게 -->
+    <div class="status-row" role="status">
+      <span class="st-dot" id="micDot" aria-hidden="true"></span>
+      <span class="st-text"><span id="micState">마이크 꺼짐</span><span class="st-sep" aria-hidden="true"></span><span id="calMirror">보정 전</span></span>
+      <button id="btnMic" class="btn-sm">마이크 켜기</button>
+    </div>
+
+    <!-- 템포 -->
+    <div class="tempo-block">
+      <div class="bpm-line"><span id="bpmLabel">100</span><span class="unit">BPM</span></div>
+      <div class="stepper" role="group" aria-label="템포 조절" title="꾹 누르고 있으면 계속 바뀌어요 (40~220)">
+        <button class="bpmBtn" data-d="-5" aria-label="BPM 5 내리기">−5</button>
+        <button class="bpmBtn" data-d="-1" aria-label="BPM 1 내리기">−1</button>
+        <button class="bpmBtn" data-d="1" aria-label="BPM 1 올리기">+1</button>
+        <button class="bpmBtn" data-d="5" aria-label="BPM 5 올리기">+5</button>
+      </div>
+      <label class="sig-sel">박자
+        <select id="beats" aria-label="한 마디 박 수"><option value="1">1/4</option><option value="2">2/4</option><option value="3">3/4</option><option value="4" selected>4/4</option><option value="5">5/4</option><option value="6">6/4</option><option value="7">7/4</option><option value="8">8/4</option><option value="9">9/4</option><option value="10">10/4</option><option value="11">11/4</option><option value="12">12/4</option></select>
+      </label>
+      <div class="beats" id="beatDots" aria-hidden="true"></div>
+    </div>
+
+    <div class="band" aria-hidden="true"></div>
+
+    <!-- 방금 친 타격 -->
+    <section class="sec" aria-labelledby="h-hit">
+      <div class="sec-head"><h2 id="h-hit">방금 친 타격</h2></div>
+      <div class="hit-value"><div class="big" id="last">—</div></div>
+      <canvas id="bar" width="720" height="110"></canvas>
+      <p class="cap" id="barHint">방금 친 타격</p>
+    </section>
+
+    <div class="rule" aria-hidden="true"></div>
+
+    <!-- 이번 연습 -->
+    <section class="sec" aria-labelledby="h-session">
+      <div class="sec-head">
+        <h2 id="h-session">이번 연습</h2>
+        <button class="link" type="button" data-go="analysis">자세히<svg class="ic ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <p id="headline">메트로놈을 켜고 8번 이상 치면 결과가 나와요.</p>
+      <p class="cap" id="summaryText"></p>
+      <div class="metrics">
+        <div class="metric"><b id="sStab">—</b><span>안정성</span></div>
+        <div class="metric"><b id="sAcc">—</b><span id="sAccLbl">정확도</span></div>
+        <div class="metric"><b id="sN">0</b><span>타격 수</span></div>
+      </div>
+      <p class="cap faint">안정성은 작을수록 일정하게 친 거예요. 정확도는 기준에서 ±20ms 안에 든 타격 비율이에요.</p>
+    </section>
+
+    <div class="band" aria-hidden="true"></div>
+
+    <!-- 설정 리스트 -->
+    <section class="sec list-sec" aria-labelledby="h-setup">
+      <div class="sec-head"><h2 id="h-setup">측정 설정</h2></div>
+      <details class="row-dis" id="micRow">
+        <summary>
+          <span class="row-label">마이크 감지</span>
+          <span class="row-value"><span class="meter mini"><span id="level"></span><i id="thrMark"></i></span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
+        <div class="row-body">
+          <p class="cap">칠 때만 입력 레벨이 노란 선을 넘도록 감지 기준을 맞춰요. 메트로놈은 이어폰으로 들어야 클릭 소리가 타격으로 잡히지 않아요.</p>
+          <label class="field" for="thr">감지 기준</label>
+          <input type="range" id="thr" min="0.002" max="0.3" step="0.002" value="0.02" aria-label="감지 기준 (높을수록 큰 소리만 잡아요)">
+          <p class="cap" id="status">마이크 꺼짐</p>
+        </div>
+      </details>
+      <details class="row-dis" id="calibCard">
+        <summary>
+          <span class="row-label">시간 보정</span>
+          <span class="row-value"><span id="calState">보정 전</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
+        <div class="row-body">
+          <div class="precise">
+        <p class="hint">보정하지 않아도 안정성, 박별 차이, 내 평균 기준 정확도는 정확해요. 보정하면 박자 기준으로 얼마나 빠르고 늦은지까지 알 수 있어요. 한 번만 하면 장치별로 저장돼요.</p>
+        <div class="row">
+          <label>지연 보정(ms) <input type="number" id="offset" value="0" step="1"></label>
+        </div>
+        <div class="row">
+          <button id="btnLoop">루프백 보정</button>
+          <button id="btnCalib">직접 치기 보정</button>
+        </div>
+        <p class="hint">루프백 보정은 이어폰이나 스피커에서 나는 소리를 컴퓨터에 달린 마이크가 다시 듣게 해서 지연을 재요. 소리 나는 쪽을 컴퓨터 마이크 가까이 대세요. 마이크를 먼저 켜 주세요.</p>
+        <div id="deviceInfo"></div>
+        <label><input type="checkbox" id="btFlag">블루투스 이어폰 사용 중</label>
+      </div>
+        </div>
+      </details>
+    </section>
+  </section>
+
+  <!-- ===== 악보 ===== -->
+  <section class="screen" id="screen-score" aria-labelledby="h-score" hidden>
+    <header class="screen-head">
+      <div>
+        <h1 id="h-score">악보 연습 <span class="beta">베타</span></h1>
+        <p>악보를 보면서 따라 치면 마디별로 채점해요.</p>
+      </div>
+      <label class="btn" for="scoreFile" id="scoreFileBtn" hidden>다른 악보</label>
+    </header>
+
+    <div class="card" id="scoreBox">
+      <div id="scoreEmpty">
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 12h6M10 15h6M10 18h4"/></svg>
+          <b>악보 PDF를 불러와 주세요</b>
+          <p class="hint">악보바다에서 받은 드럼 악보 PDF를 읽을 수 있어요.<br>PDF는 이 기기 안에서만 읽고 어디로도 보내지 않아요.</p>
+          <label class="btn primary" for="scoreFile" id="scoreFileBig" tabindex="0">PDF 불러오기</label>
+          <p class="hint" id="scoreStatus" style="margin-top:12px"></p>
+        </div>
+      </div>
+      <div id="scoreLoaded" hidden>
+        <div class="score-title"><b id="scoreName"></b><span class="hint" id="scoreInfo"></span></div>
+        <div class="score-row">
+          <label>구간 <input type="number" id="rangeFrom" min="1"> ~ <input type="number" id="rangeTo" min="1"> 마디</label>
+        </div>
+        <div class="score-row" style="margin-top:10px">
+          <button id="btnRangeAll">곡 전체</button>
+          <button id="btnScoreTempo">악보 템포로</button>
+        </div>
+        <p class="hint" style="margin-top:12px">악보에서 마디를 누르면 구간 시작, 한 번 더 누르면 구간 끝이 정해져요. 곡 전체를 고르면 도돌이표와 1·2번 괄호 순서대로 진행해요.</p>
+        <p class="hint" id="scoreMsg" role="status"></p>
+      </div>
+    </div>
+
+    <div class="card" id="scoreResultCard" hidden>
+      <div id="scoreResult"></div>
+    </div>
+
+    <div class="score-pages" id="scorePages"></div>
+  </section>
+
+  <!-- ===== 분석 ===== -->
+  <section class="screen" id="screen-analysis" aria-labelledby="h-analysis" hidden>
+    <header class="screen-head">
+      <div>
+        <h1 id="h-analysis">분석</h1>
+        <p>연습 탭에서 친 기록을 자세히 살펴봐요.</p>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>박별 분석</h2>
+      <p class="hint">각 박이 내 평균보다 빠른지 늦은지 비교해요. 시간 보정을 하지 않아도 정확해요.</p>
+      <canvas id="beatChart" width="720" height="200"></canvas>
+      <p class="hint" id="beatText"></p>
+    </div>
+
+    <div class="card" id="detailBox">
+      <div class="seg" role="tablist" aria-label="자세한 통계">
+        <button role="tab" id="tabBtn-dist" aria-controls="tab-dist" aria-selected="true">오차 분포</button>
+        <button role="tab" id="tabBtn-flow" aria-controls="tab-flow" aria-selected="false" tabindex="-1">흐름</button>
+        <button role="tab" id="tabBtn-data" aria-controls="tab-data" aria-selected="false" tabindex="-1">데이터</button>
+      </div>
+      <div class="panel" id="tab-dist" role="tabpanel" aria-labelledby="tabBtn-dist">
+        <div class="drift"><b id="sTend">—</b><span id="sTendLbl">평균 쏠림</span></div>
+        <span class="caption" id="histLbl">오차 분포</span>
+        <canvas id="hist" width="720" height="240"></canvas>
+      </div>
+      <div class="panel" id="tab-flow" role="tabpanel" aria-labelledby="tabBtn-flow" hidden>
+        <span class="caption" style="margin-top:0">타격별 오차 추이 (최근 60타). 점이 위로 가면 늦게, 아래로 가면 빠르게 친 거예요.</span>
+        <canvas id="series" width="720" height="200"></canvas>
+      </div>
+      <div class="panel" id="tab-data" role="tabpanel" aria-labelledby="tabBtn-data" hidden>
+        <p class="hint">지금까지 친 기록을 CSV 파일로 저장하면 엑셀이나 파이썬으로 직접 분석할 수 있어요. 타격마다 시각, BPM, 몇 번째 박인지, 오차가 들어 있어요.</p>
+        <div class="tools">
+          <button id="btnCsv">CSV 저장</button>
+          <button id="btnClear">기록 초기화</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint faint about">Drum Timing Lab · PDF 판독: pdf.js (Apache License 2.0) · 디자인 토큰: SEED Design (Apache License 2.0, Copyright 2025 주식회사 당근마켓) · 아이콘: Lucide (ISC License)</p>
+  </section>
+
+</main>
+
+<!-- 하단 주 버튼 -->
+<div class="dock" id="dock-practice">
+  <div class="dock-inner">
+    <button id="btnMetro" class="primary">시작</button>
+  </div>
+</div>
+<div class="dock" id="dock-score" hidden>
+  <div class="dock-inner">
+    <button id="btnScoreStart" class="primary" disabled>채점하며 연습 시작</button>
+  </div>
+</div>
+
+<!-- 탭 바 -->
+<nav class="tabbar" aria-label="화면 이동">
+  <div class="tabbar-inner" role="tablist">
+    <button class="tab" role="tab" data-tab="practice" aria-selected="true">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 2 8 8"/><path d="m22 2-8 8"/><ellipse cx="12" cy="9" rx="10" ry="5"/><path d="M7 13.4v7.9"/><path d="M12 14v8"/><path d="M17 13.4v7.9"/><path d="M2 9v8a10 5 0 0 0 20 0V9"/></svg>
+      연습
+    </button>
+    <button class="tab" role="tab" data-tab="score" aria-selected="false">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v8.4"/><path d="M8 18v-7.7L16 9v7"/><circle cx="14" cy="16" r="2"/><circle cx="6" cy="18" r="2"/></svg>
+      악보
+    </button>
+    <button class="tab" role="tab" data-tab="analysis" aria-selected="false">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21v-6"/><path d="M12 21V3"/><path d="M19 21V9"/></svg>
+      분석
+    </button>
+  </div>
+</nav>
+
+<script>
+// ===== 상태 =====
+let ctx = null, micStream = null, workletNode = null;
+let bpm = 100, beatsPerBar = 4;
+let metroOn = false, timerId = null;
+let nextBeatTime = 0, beatCount = 0;
+const beatLog = [];            // {time, index}  최근 스케줄된 박자 시각
+// hits에는 보정 전 원시 오차(rawMs)만 저장하고, 보정값(offset)은 화면에 그릴 때 빼요.
+// 그래서 보정을 나중에 해도 이미 친 기록이 함께 정정돼요.
+const hits = [];               // {id, time, bpm, beatInBar, rawMs, rms}
+const recentHits = [];         // 타이밍 바에 표시할 최근 타격 {h, t}
+const GOOD_MS = 20;            // 정박(또는 내 평균)으로 인정하는 범위(±ms)
+let isCalibrated = false;      // 시간 보정을 했는지 (저장된 값 사용, 루프백, 직접 입력 포함)
+let latestRms = 0, avgRms = 0, prevRms = 0, lastOnset = -1;
+
+const $ = id => document.getElementById(id);
+
+// ===== UI 기본 =====
+function renderDots() {
+  const box = $('beatDots'); box.innerHTML = '';
+  for (let i = 0; i < beatsPerBar; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' acc' : '');
+    box.appendChild(d);
+  }
+}
+renderDots();
+function setBpm(v) {
+  if (window.scoreSession && window.scoreSession.active) return;   // 악보 채점 중에는 템포 고정
+  bpm = Math.max(40, Math.min(220, v)); $('bpmLabel').textContent = bpm;
+}
+document.querySelectorAll('.bpmBtn').forEach(btn => {
+  const d = +btn.dataset.d;
+  let delay = null, rep = null;
+  const stop = () => { clearTimeout(delay); clearInterval(rep); };
+  btn.addEventListener('pointerdown', () => {
+    setBpm(bpm + d);
+    delay = setTimeout(() => { rep = setInterval(() => setBpm(bpm + d), 90); }, 450);   // 꾹 누르면 반복
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+});
+$('beats').onchange = e => {
+  if (window.scoreSession && window.scoreSession.active) { e.target.value = beatsPerBar; return; } beatsPerBar = Math.max(1, Math.min(12, +e.target.value || 4)); renderDots(); beatCount = 0; drawBeats(); };
+$('thr').oninput = updateThrMark;
+function updateThrMark() { $('thrMark').style.left = Math.min(100, (+$('thr').value * 8) * 100) + '%'; }
+updateThrMark();
+
+function ensureCtx() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+  if (ctx.state === 'suspended') ctx.resume();
+}
+
+// ===== 메트로놈 (lookahead 스케줄러) =====
+function scheduleClick(time, index) {
+  const accent = (index % beatsPerBar) === 0;
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.frequency.value = accent ? 1200 : 800;
+  g.gain.setValueAtTime(0.0001, time);
+  g.gain.exponentialRampToValueAtTime(0.6, time + 0.002);
+  g.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
+  osc.connect(g).connect(ctx.destination);
+  osc.start(time); osc.stop(time + 0.06);
+  // 화면 점등은 소리 시점에 맞춰 setTimeout
+  const delay = Math.max(0, (time - ctx.currentTime) * 1000);
+  setTimeout(() => {
+    const dots = $('beatDots').children;
+    for (const d of dots) d.classList.remove('on');
+    const dot = dots[index % beatsPerBar]; if (dot) dot.classList.add('on');
+  }, delay);
+}
+
+function scheduler() {
+  while (nextBeatTime < ctx.currentTime + 0.12) {
+    scheduleClick(nextBeatTime, beatCount);
+    beatLog.push({ time: nextBeatTime, index: beatCount });
+    if (beatLog.length > 64) beatLog.shift();
+    nextBeatTime += 60 / bpm;
+    beatCount++;
+  }
+}
+
+function startMetro() {
+  ensureCtx();
+  beatCount = 0; beatLog.length = 0;
+  nextBeatTime = ctx.currentTime + 0.1;
+  timerId = setInterval(scheduler, 25);
+  metroOn = true; $('btnMetro').textContent = '정지';
+}
+function stopMetro() {
+  clearInterval(timerId); metroOn = false;
+  if (window.onMetroStop) window.onMetroStop();       // 악보 채점 중이면 채점을 끝냄
+  $('btnMetro').textContent = '시작';
+  for (const d of $('beatDots').children) d.classList.remove('on');
+}
+$('btnMetro').onclick = () => metroOn ? stopMetro() : startMetro();
+
+// ===== 마이크 + 소리(타격) 감지 =====
+const workletSrc = `
+class RmsProc extends AudioWorkletProcessor {
+  process(inputs) {
+    const ch = inputs[0][0];
+    if (ch) {
+      let s = 0; for (let i = 0; i < ch.length; i++) s += ch[i] * ch[i];
+      this.port.postMessage({ t: currentTime, rms: Math.sqrt(s / ch.length) });
+    }
+    return true;
+  }
+}
+registerProcessor('rms-proc', RmsProc);`;
+
+let blocks = 0, micMode = '', calibrating = false, calibRaw = [];
+function setStatus(msg) { $('status').textContent = msg; }
+
+// 직접 치기 보정: 클릭에 맞춰 8번 친 원시 오차의 중앙값 = 시스템 지연 (연주 습관이 섞일 수 있어 보조 수단)
+function finishCalib() {
+  const s = [...calibRaw].sort((a, b) => a - b), n = s.length;
+  const med = n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
+  const sd = Math.sqrt(s.reduce((a, b) => a + (b - med) ** 2, 0) / n);
+  calibrating = false;
+  if (sd > 25) {                             // 품질 검사: 너무 들쭉날쭉하면 거절
+    flash('직접 치기 보정 실패: 타격이 너무 들쭉날쭉해요 (±' + sd.toFixed(0) + 'ms). 다시 해보거나 루프백 보정을 쓰세요.');
+    return;
+  }
+  $('offset').value = Math.round(med);
+  setCalibrated(true);
+  flash('직접 치기 보정 완료: ' + Math.round(med) + 'ms 반영 (저장되지 않아요. 연주 습관이 섞일 수 있어서 루프백 보정이 더 정확해요)');
+}
+$('btnCalib').onclick = () => {
+  if (!micStream) { setStatus('먼저 마이크를 켜주세요'); return; }
+  if (!metroOn) startMetro();
+  calibRaw = []; calibrating = true;
+};
+window.addEventListener('unhandledrejection', e => setStatus('오류: ' + ((e.reason && e.reason.message) || e.reason)));
+window.addEventListener('error', e => setStatus('오류: ' + e.message));
+
+// ===== 상태 메시지 / 장치 프로파일 / 루프백 보정 =====
+let flashMsg = '', flashUntil = 0, loop = null, loopMsg = '';
+let devKey = '', deviceNote = '', inLabelCache = '', outLabelCache = '';
+function flash(msg, ms = 9000) { flashMsg = msg; flashUntil = Date.now() + ms; setStatus(msg); }
+
+const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
+const BT_RE = /bluetooth|블루투스|airpods|buds|beats|hands-?free/i;   // 장치 이름으로 블루투스 추정 (체크박스로 수정 가능)
+const loadProfiles = () => { try { return JSON.parse(localStorage.getItem('dtl_profiles') || '{}'); } catch (e) { return {}; } };
+function saveProfile(key, offset, bt) {
+  try { const p = loadProfiles(); p[key] = { offset, ts: Date.now(), bt }; localStorage.setItem('dtl_profiles', JSON.stringify(p)); } catch (e) {}
+}
+
+function setCalibrated(v) { isCalibrated = v; refreshAll(); }
+$('offset').oninput = () => setCalibrated(true);      // 직접 입력해도 보정한 것으로 보고, 기존 기록도 함께 정정
+
+function renderDeviceInfo() {
+  let t = '입력: ' + (inLabelCache || '알 수 없음') + ' · 출력: ' + (outLabelCache || '알 수 없음') + '\n' + deviceNote;
+  if ($('btFlag').checked) t += '\n블루투스 이어폰은 연결할 때마다 지연이 달라질 수 있어요. 연습을 시작할 때 루프백 보정을 다시 하길 권장해요. 지연이 흔들리는 만큼 "안정성" 수치가 실제보다 나쁘게 나올 수 있어요.';
+  if (BT_RE.test(inLabelCache)) t += '\n블루투스 마이크는 지연과 음질 문제가 커요. 노트북이나 유선 마이크를 입력으로 쓰세요.';
+  $('deviceInfo').textContent = t;
+}
+$('btFlag').onchange = renderDeviceInfo;
+
+// 입력/출력 장치 이름으로 저장된 보정값을 찾고, 없으면 브라우저 추정값을 사용
+async function refreshDevice() {
+  const tr = micStream.getAudioTracks()[0];
+  const prevKey = devKey;
+  inLabelCache = tr.label || ''; outLabelCache = '';
+  try {
+    const devs = await navigator.mediaDevices.enumerateDevices();
+    const outs = devs.filter(d => d.kind === 'audiooutput');
+    const def = outs.find(d => d.deviceId === 'default') || outs[0];
+    outLabelCache = def ? def.label : '';
+  } catch (e) {}
+  devKey = inLabelCache + ' | ' + outLabelCache;
+  if (prevKey && prevKey !== devKey) { hits.length = 0; recentHits.length = 0; }   // 장치가 바뀌면 이전 기록은 지연이 달라서 초기화
+  $('btFlag').checked = BT_RE.test(outLabelCache);
+
+  const inLat = (tr.getSettings && tr.getSettings().latency) || 0;
+  const est = Math.round(((ctx.outputLatency || 0) + (ctx.baseLatency || 0) + inLat) * 1000);
+  const p = loadProfiles()[devKey];
+  if (p) {
+    $('offset').value = p.offset;
+    deviceNote = '저장된 보정값 ' + p.offset + 'ms 사용 중 (' + new Date(p.ts).toLocaleDateString('ko-KR') + ' 루프백)';
+  } else {
+    if (est > 0) $('offset').value = est;
+    deviceNote = '브라우저 추정값 ' + est + 'ms 사용 중 (보정 전) — 정확하게 하려면 "루프백 보정"을 한 번 해주세요. 장치별로 저장돼요.';
+  }
+  renderDeviceInfo();
+  setCalibrated(!!p);
+}
+
+// 루프백 보정: 클릭음을 내보내고 마이크로 다시 잡아서 (출력+입력) 지연을 직접 측정. 사람이 치지 않으므로 연주 습관이 섞이지 않음
+function playLoopClick(time) {
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.frequency.value = 1800;
+  g.gain.setValueAtTime(0.0001, time);
+  g.gain.exponentialRampToValueAtTime(1.0, time + 0.002);
+  g.gain.exponentialRampToValueAtTime(0.0001, time + 0.03);
+  osc.connect(g).connect(ctx.destination);
+  osc.start(time); osc.stop(time + 0.04);
+}
+function startLoopback() {
+  if (!micStream) { setStatus('먼저 마이크를 켜주세요'); return; }
+  if (loop) return;
+  ensureCtx();
+  if (metroOn) stopMetro();
+  calibrating = false;
+  const N = 10, gap = 0.7, T0 = ctx.currentTime + 1.0;
+  loop = { T0, clicks: Array.from({ length: N }, (_, i) => T0 + i * gap), blocks: [] };
+  loop.clicks.forEach(T => playLoopClick(T));
+  loopMsg = '루프백 측정 중… 소리가 나는 이어폰(또는 스피커)을 컴퓨터 마이크 가까이 대고 약 9초간 조용히 계세요';
+  setStatus(loopMsg);
+  setTimeout(finishLoopback, (1.0 + N * gap + 0.8) * 1000);
+}
+function finishLoopback() {
+  const L = loop; loop = null;
+  const noise = Math.max(0, ...L.blocks.filter(b => b.t < L.T0 - 0.1).map(b => b.rms));
+  const thr = Math.max(noise * 3, 0.003);
+  let lats = [];
+  L.clicks.forEach(T => {
+    const hit = L.blocks.find(b => b.t >= T && b.t < T + 0.6 && b.rms > thr);
+    if (hit) lats.push((hit.t - T) * 1000);
+  });
+  if (lats.length < 6) { flash('클릭 소리가 마이크에 잘 안 잡혔어요 (' + lats.length + '/10). 소리 나는 쪽을 마이크에 더 가까이 대고 볼륨을 올려 다시 해보세요.'); return; }
+  const med0 = median(lats);
+  lats = lats.filter(x => Math.abs(x - med0) <= 40);       // 튀는 값 제거
+  if (lats.length < 6) { flash('측정값이 너무 흩어져 있어요. 주변 소음을 줄이고 다시 해보세요.'); return; }
+  const med = median(lats);
+  const sd = Math.sqrt(lats.reduce((a, b) => a + (b - med) ** 2, 0) / lats.length);
+  if (sd > 12) { flash('측정이 불안정해요 (±' + sd.toFixed(0) + 'ms). 주변 소음을 줄이고 다시 해보세요.'); return; }
+  const off = Math.round(med);
+  $('offset').value = off;
+  saveProfile(devKey, off, $('btFlag').checked);
+  deviceNote = '저장된 보정값 ' + off + 'ms 사용 중 (' + new Date().toLocaleDateString('ko-KR') + ' 루프백)';
+  renderDeviceInfo();
+  setCalibrated(true);
+  flash('루프백 보정 완료: 시스템 지연 ' + off + 'ms (측정 ' + lats.length + '회, 퍼짐 ±' + sd.toFixed(1) + 'ms). 이 장치 조합으로 저장했어요.');
+}
+$('btnLoop').onclick = startLoopback;
+
+async function startMic() {
+  ensureCtx();
+  setStatus('마이크 권한 요청 중… (브라우저 팝업에서 "허용"을 눌러주세요)');
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+    });
+  } catch (e) {
+    setStatus('마이크 접근 실패: ' + e.name + ' — ' + e.message + ' (주소창 왼쪽 자물쇠/마이크 아이콘에서 권한 확인)');
+    return;
+  }
+
+  const src = ctx.createMediaStreamSource(micStream);
+  const mute = ctx.createGain(); mute.gain.value = 0;      // 마이크 소리가 스피커로 나가지 않게
+  mute.connect(ctx.destination);
+
+  try {
+    const url = URL.createObjectURL(new Blob([workletSrc], { type: 'application/javascript' }));
+    await ctx.audioWorklet.addModule(url);
+    workletNode = new AudioWorkletNode(ctx, 'rms-proc');
+    workletNode.port.onmessage = e => { blocks++; onBlock(e.data.t, e.data.rms); };
+    src.connect(workletNode).connect(mute);
+    micMode = 'worklet';
+  } catch (e) {
+    console.warn('AudioWorklet 실패, 대체 방식 사용:', e);
+    const an = ctx.createAnalyser(); an.fftSize = 256;
+    src.connect(an); an.connect(mute);
+    const buf = new Float32Array(an.fftSize);
+    setInterval(() => {
+      an.getFloatTimeDomainData(buf);
+      let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+      blocks++; onBlock(ctx.currentTime, Math.sqrt(s / buf.length));
+    }, 5);
+    micMode = 'analyser';
+  }
+
+  const label = micStream.getAudioTracks()[0].label || '기본 마이크';
+  await refreshDevice();                     // 장치 이름 확인 → 저장된 보정값 또는 추정값 적용
+  navigator.mediaDevices.addEventListener('devicechange', () => { refreshDevice(); });   // 이어폰을 바꾸면 자동으로 다시 확인
+  $('btnMic').textContent = '마이크 켜짐'; $('btnMic').disabled = true;
+  requestAnimationFrame(drawLevel);
+
+  setInterval(() => {
+    if (loop) setStatus(loopMsg);
+    else if (calibrating) setStatus('보정 중 ' + calibRaw.length + '/8 — 클릭 소리에 최대한 정확히 맞춰 쳐주세요');
+    else if (flashUntil > Date.now()) setStatus(flashMsg);
+    else if (blocks === 0) setStatus('마이크 신호가 들어오지 않아요 (AudioContext: ' + ctx.state + ', 방식: ' + micMode + ')');
+    else setStatus('' + label + ' · 방식: ' + micMode + ' · 현재 레벨 ' + latestRms.toFixed(3) +
+      ' · 임계값 ' + (+$('thr').value).toFixed(3) + ' · 감지 ' + hits.length + '회' +
+      (latestRms === 0 ? ' (레벨이 계속 0이면 OS 설정에서 입력 장치/볼륨 확인)' : ''));
+  }, 400);
+}
+$('btnMic').onclick = startMic;
+
+// 블록(약 3ms)마다 호출되는 간단한 에너지 기반 onset 감지
+function onBlock(t, rms) {
+  latestRms = Math.max(latestRms * 0.9, rms);
+  if (loop) { loop.blocks.push({ t, rms }); return; }      // 루프백 측정 중에는 타격 감지 대신 신호만 기록
+  const thr = Math.max(+$('thr').value, avgRms * 4);
+  if (rms > thr && rms > prevRms && t - lastOnset > 0.08) {
+    lastOnset = t;
+    onHit(t, rms);
+  }
+  avgRms = avgRms * 0.995 + rms * 0.005;
+  prevRms = rms;
+}
+
+function onHit(t, rms) {
+  // 악보 채점 중에는 타격을 악보 채점으로만 보냄 (박 단위 통계에 섞이지 않게)
+  if (window.scoreSession && window.scoreSession.active && !calibrating) { window.scoreSession.onHit(t); return; }
+  let rawMs = null, beatInBar = null;
+  if (metroOn && beatLog.length) {
+    let best = beatLog[0];
+    for (const b of beatLog) if (Math.abs(b.time - t) < Math.abs(best.time - t)) best = b;
+    rawMs = (t - best.time) * 1000;
+    beatInBar = (best.index % beatsPerBar) + 1;
+    if (calibrating) {                       // 보정 중에는 기록에 넣지 않고 원시 오차만 모음
+      calibRaw.push(rawMs);
+      if (calibRaw.length >= 8) finishCalib();
+      return;
+    }
+  }
+  const h = { id: hits.length + 1, time: +t.toFixed(4), bpm, beatInBar, rawMs, rms: +rms.toFixed(4) };
+  hits.push(h);
+  if (rawMs !== null) {
+    recentHits.push({ h, t: performance.now() });
+    if (recentHits.length > 16) recentHits.shift();
+  }
+  updateStats(); drawCharts();
+  if (rawMs !== null) {
+    const rel = errOf(h) - center();
+    const el = $('last');
+    const word = Math.abs(rel) <= 10 ? (isCalibrated ? '정박' : '평균 근처') : rel > 0 ? '늦음' : '빠름';
+    el.textContent = (rel >= 0 ? '+' : '') + rel.toFixed(0) + ' ms ' + word;
+    el.className = 'big ' + (Math.abs(rel) <= 10 ? 'ok' : rel > 0 ? 'late' : 'early');
+    el.style.fontSize = '34px';
+  }
+}
+
+// ===== 오차 계산 =====
+// 오차 = 원시 오차 - 보정값. 보정 전에는 "내 평균(중앙값)"을 기준(0)으로 삼아서 보정 없이도 의미 있게 보여줘요.
+const off = () => +$('offset').value || 0;
+const errOf = h => h.rawMs === null ? null : h.rawMs - off();
+const validErrors = () => hits.filter(h => h.rawMs !== null).map(errOf);
+const meanOf = a => a.reduce((x, y) => x + y, 0) / a.length;
+const center = () => { if (isCalibrated) return 0; const v = validErrors(); return v.length ? median(v) : 0; };
+
+function refreshLabels() {
+  $('calState').textContent = isCalibrated ? '보정됨' : '보정 전';
+  $('sTendLbl').textContent = isCalibrated ? '평균 쏠림: 박자보다 평균적으로 빠르게 치는지 늦게 치는지예요.'
+    : '평균 쏠림: 박자보다 평균적으로 빠르게 치는지 늦게 치는지예요. 시간 보정 전이라 컴퓨터 지연이 섞여 있어서 참고용이에요.';
+  $('sAccLbl').textContent = '정확도';
+  $('histLbl').textContent = isCalibrated ? '오차 분포 (초록 = 정박 ±20ms, 점선 = 내 평균)' : '오차 분포 (내 평균 기준: 초록 = 평균 ±20ms)';
+  $('barHint').textContent = isCalibrated ? '가운데가 정박이에요. 초록 구간은 정박 ±20ms예요.' : '가운데가 내 평균이에요. 초록 구간은 평균 ±20ms예요. 시간 보정을 하면 정박 기준으로 바뀌어요.';
+}
+
+// ===== 통계 =====
+function setHeadline(text, tone) { $('headline').textContent = text; $('headline').className = tone || ''; }
+
+function updateStats() {
+  refreshLabels();
+  const e = validErrors(), n = e.length;
+  $('sN').textContent = hits.length;
+  if (!n) {
+    ['sTend', 'sStab', 'sAcc'].forEach(i => $(i).textContent = '—');
+    setHeadline(hits.length ? '메트로놈을 켠 상태에서 쳐야 박자와 비교할 수 있어요.' : '메트로놈을 켜고 8번 이상 치면 결과가 나와요.');
+    $('summaryText').textContent = '';
+    return;
+  }
+  const c = center();
+  const mean = meanOf(e);
+  const sd = Math.sqrt(e.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+  const acc = e.filter(v => Math.abs(v - c) <= GOOD_MS).length / n * 100;
+  const sign = mean >= 0 ? '+' : '';
+  const dir = Math.abs(mean) < 5 ? '정박' : mean > 0 ? '늦음' : '빠름';
+
+  $('sTend').textContent = sign + mean.toFixed(0) + 'ms' + (isCalibrated ? ' ' + dir : '');
+  $('sStab').textContent = '±' + sd.toFixed(0) + 'ms';
+  $('sAcc').textContent = acc.toFixed(0) + '%';
+
+  const stab = sd < 15 ? '타격 간격이 아주 일정해요.'
+    : sd < 25 ? '타격 간격은 보통 수준으로 일정해요.' : '타격 간격이 들쭉날쭉해요.';
+  const bs = beatStats();
+  const ms = v => Math.abs(v).toFixed(0) + 'ms';
+
+  // 한 줄 결론: 지금 가장 먼저 고칠 것 하나만 골라서 보여줘요
+  if (n < 8) {
+    setHeadline((8 - n) + '번 더 치면 결과가 나와요.');
+    $('summaryText').textContent = '';
+  } else if (bs.enough >= 2 && Math.abs(bs.best.m) >= 8) {
+    const late = bs.best.m > 0;
+    setHeadline(bs.best.b + '박이 내 평균보다 ' + ms(bs.best.m) + ' ' + (late ? '늦게' : '빠르게') + ' 들어가요.', late ? 'late' : 'early');
+    $('summaryText').textContent = '이 박을 의식해서 연습해 보세요. ' + stab;
+  } else if (sd >= 25) {
+    setHeadline('타격 간격이 들쭉날쭉해요.', 'warn');
+    $('summaryText').textContent = '템포를 낮추고 일정한 간격을 만드는 데 집중해 보세요.';
+  } else if (isCalibrated && Math.abs(mean) >= 8) {
+    setHeadline('평균적으로 박자보다 ' + ms(mean) + ' ' + (mean > 0 ? '늦게' : '빠르게') + ' 치고 있어요.', mean > 0 ? 'late' : 'early');
+    $('summaryText').textContent = '한쪽으로 쏠리는 습관부터 고치면 정확도가 가장 빨리 올라요. ' + stab;
+  } else {
+    setHeadline(sd < 15 ? '모든 박이 고르고 일정해요.' : '박마다 고르게 치고 있어요.', 'ok');
+    $('summaryText').textContent = stab + (sd < 15 ? ' 템포를 조금 올려 봐도 좋아요.' : '');
+  }
+}
+
+// ===== 자세히 보기 탭 =====
+const TABS = ['dist', 'flow', 'data'];
+function selectTab(name) {
+  TABS.forEach(t => {
+    const on = t === name, btn = $('tabBtn-' + t);
+    btn.setAttribute('aria-selected', on); btn.tabIndex = on ? 0 : -1;
+    $('tab-' + t).hidden = !on;
+  });
+  drawCharts();                                   // 새로 보인 그래프를 실제 크기에 맞춰 다시 그림
+}
+TABS.forEach((t, i) => {
+  const btn = $('tabBtn-' + t);
+  btn.onclick = () => selectTab(t);
+  btn.onkeydown = ev => {                        // 좌우 화살표로 탭 이동
+    if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+    const next = TABS[(i + (ev.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length];
+    selectTab(next); $('tabBtn-' + next).focus();
+  };
+});
+
+// ===== 그래프 =====
+// 그래프 색은 CSS 테마 변수(--cv-*)에서 읽음 → 라이트/다크가 바뀌면 다시 읽고 다시 그림
+const CV = {};
+function readPalette() {
+  const p = document.createElement('i'); p.style.display = 'none'; document.body.appendChild(p);
+  for (const k of ['track', 'zone', 'zone2', 'center', 'good', 'late', 'early', 'sub', 'fg', 'grid', 'line']) { p.style.color = `var(--cv-${k})`; CV[k] = getComputedStyle(p).color; }
+  p.remove();
+}
+readPalette();
+window.addEventListener('themechange', () => { readPalette(); if (typeof refreshAll === 'function') refreshAll(); });
+// 고해상도 화면에서도 선명하게: 실제 표시 크기 × 화면 배율로 그리고, 그리는 좌표는 기존(720px 기준) 그대로 써요
+const LOG = { bar: [720, 110], hist: [720, 240], series: [720, 200] };
+function hd(c, W, H) {
+  const css = c.clientWidth || W;
+  const k = Math.min(4, Math.max(1, (css / W) * (window.devicePixelRatio || 1)));
+  const bw = Math.round(W * k), bh = Math.round(H * k);
+  if (c.width !== bw || c.height !== bh) { c.width = bw; c.height = bh; }
+  const g = c.getContext('2d');
+  g.setTransform(bw / W, 0, 0, bh / H, 0, 0);
+  return g;
+}
+// 실시간 타이밍 바: 가운데가 기준(정박 또는 내 평균), 왼쪽 빠름 / 오른쪽 늦음
+const BAR_RANGE = 50;   // 바에 표시하는 범위 ±50ms (넘으면 끝에 붙음)
+function drawBar() {
+  const c = $('bar'), [W, H] = LOG.bar, g = hd(c, W, H);
+  g.clearRect(0, 0, W, H);
+  const X = ms => W / 2 + Math.max(-BAR_RANGE, Math.min(BAR_RANGE, ms)) / BAR_RANGE * (W / 2 - 18);
+  const cy = H / 2 - 8, ctr = center();
+  g.fillStyle = CV.track; g.fillRect(14, cy - 16, W - 28, 32);
+  g.fillStyle = CV.zone;
+  g.fillRect(X(-GOOD_MS), cy - 16, X(GOOD_MS) - X(-GOOD_MS), 32);
+  g.fillStyle = CV.center; g.fillRect(W / 2 - 1, cy - 24, 2, 48);
+
+  const now = performance.now();
+  recentHits.forEach((r, i) => {
+    const a = Math.max(0, 1 - (now - r.t) / 8000);      // 8초에 걸쳐 흐려짐
+    if (a <= 0) return;
+    const rel = errOf(r.h) - ctr;
+    const newest = i === recentHits.length - 1;
+    g.globalAlpha = a;
+    g.fillStyle = Math.abs(rel) <= GOOD_MS ? CV.good : (rel > 0 ? CV.late : CV.early);
+    g.beginPath(); g.arc(X(rel), cy, newest ? 12 : 7, 0, Math.PI * 2); g.fill();
+  });
+  g.globalAlpha = 1;
+
+  // 화면에서 실제로 12px로 보이도록 글자 크기를 표시 비율에 맞춤 (디자인 시스템 Micro)
+  const shown = (c.clientWidth || W) / W;
+  g.fillStyle = CV.sub; g.font = `500 ${Math.round(12 / shown)}px "Pretendard Variable", Pretendard, sans-serif`;
+  g.textAlign = 'left';   g.fillText('← 빠름', 14, H - 8);
+  g.textAlign = 'center'; g.fillText(isCalibrated ? '정박' : '내 평균', W / 2, H - 8);
+  g.textAlign = 'right';  g.fillText('늦음 →', W - 14, H - 8);
+  g.textAlign = 'left';
+}
+
+// 오차 분포: 20ms 폭 8칸 (양 끝은 그 밖의 값 전부), 가운데 ±20ms가 초록 구간
+const HB_EDGES = [-60, -40, -20, 0, 20, 40, 60];
+const binOf = e => { let i = 0; while (i < HB_EDGES.length && e >= HB_EDGES[i]) i++; return i; };
+function drawHist() {
+  const c = $('hist'), [W, H] = LOG.hist, g = hd(c, W, H);
+  g.clearRect(0, 0, W, H);
+  const ctr = center();
+  const e = validErrors().map(v => v - ctr), n = e.length;
+  const bins = new Array(8).fill(0);
+  e.forEach(v => bins[binOf(v)]++);
+  const mx = Math.max(1, ...bins);
+  const X = v => (Math.max(-80, Math.min(80, v)) + 80) / 160 * W;
+  const top = 34, bottom = H - 26;
+
+  bins.forEach((cnt, i) => {
+    const lo = i === 0 ? -80 : HB_EDGES[i - 1], hi = i === 7 ? 80 : HB_EDGES[i];
+    const mid = (lo + hi) / 2;
+    g.fillStyle = Math.abs(mid) <= GOOD_MS ? CV.good : (mid < 0 ? CV.early : CV.late);
+    const h = (cnt / mx) * (bottom - top);
+    g.fillRect(X(lo) + 3, bottom - h, X(hi) - X(lo) - 6, h);
+    if (cnt) {
+      g.fillStyle = CV.fg; g.font = '15px "Pretendard Variable", Pretendard, sans-serif'; g.textAlign = 'center';
+      g.fillText(Math.round(cnt / n * 100) + '%', (X(lo) + X(hi)) / 2, bottom - h - 6);
+    }
+  });
+
+  g.fillStyle = CV.sub; g.font = '14px "Pretendard Variable", Pretendard, sans-serif'; g.textAlign = 'center';
+  HB_EDGES.forEach(v => g.fillText((v > 0 ? '+' : '') + v, X(v), H - 6));
+
+  if (n) {
+    const mean = meanOf(e), mx0 = X(mean);
+    g.strokeStyle = CV.center; g.lineWidth = 2; g.setLineDash([6, 4]);
+    g.beginPath(); g.moveTo(mx0, top - 6); g.lineTo(mx0, bottom); g.stroke();
+    g.setLineDash([]); g.lineWidth = 1;
+    g.fillStyle = CV.center; g.font = '15px "Pretendard Variable", Pretendard, sans-serif';
+    const txt = isCalibrated ? '내 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(0) + 'ms' : '내 평균(기준)';
+    g.fillText(txt, Math.max(70, Math.min(W - 70, mx0)), top - 12);
+  }
+  g.textAlign = 'left';
+}
+
+function drawSeries() {
+  const c = $('series'), [W, H] = LOG.series, g = hd(c, W, H);
+  g.clearRect(0, 0, W, H);
+  const ctr = center();
+  const pts = hits.filter(h => h.rawMs !== null).slice(-60).map(h => errOf(h) - ctr);
+  const Y = v => H / 2 - Math.max(-100, Math.min(100, v)) / 100 * (H / 2 - 10);
+  g.fillStyle = CV.zone2;
+  g.fillRect(0, Y(GOOD_MS), W, Y(-GOOD_MS) - Y(GOOD_MS));
+  g.strokeStyle = CV.grid; g.beginPath(); g.moveTo(0, H / 2); g.lineTo(W, H / 2); g.stroke();
+  if (!pts.length) return;
+  const step = W / Math.max(1, pts.length - 1);
+  g.strokeStyle = CV.line; g.beginPath();
+  pts.forEach((v, i) => { i ? g.lineTo(i * step, Y(v)) : g.moveTo(i * step, Y(v)); });
+  g.stroke();
+  pts.forEach((v, i) => {
+    g.fillStyle = Math.abs(v) <= GOOD_MS ? CV.good : (v > 0 ? CV.late : CV.early);
+    g.beginPath(); g.arc(i * step, Y(v), 4, 0, Math.PI * 2); g.fill();
+  });
+}
+
+// 박별 분석: 박마다 평균 오차를 "전체 평균 대비"로 비교. 보정값이 틀려도 달라지지 않는 상대 차이예요.
+function beatStats() {
+  const rows = hits.filter(h => h.rawMs !== null);
+  const errs = rows.map(errOf);
+  const overall = errs.length ? meanOf(errs) : 0;
+  const per = []; let best = null, enough = 0;
+  for (let b = 1; b <= beatsPerBar; b++) {
+    const mine = rows.filter(h => h.beatInBar === b).map(errOf), n = mine.length;
+    const m = n ? meanOf(mine) - overall : 0;
+    per.push({ b, n, m });
+    if (n >= 3) { enough++; if (!best || Math.abs(m) > Math.abs(best.m)) best = { b, m }; }
+  }
+  return { per, best, enough };
+}
+
+function drawBeats() {
+  const c = $('beatChart');
+  const rowH = 36, top = 28, W = 720, H = top + rowH * beatsPerBar + 8;
+  const g = hd(c, W, H);
+  g.clearRect(0, 0, W, H);
+  const { per, enough } = beatStats();
+  const cx = W / 2 + 10, hw = 220, scale = hw / 40;      // 표시 범위 ±40ms
+
+  g.fillStyle = CV.sub; g.font = '14px "Pretendard Variable", Pretendard, sans-serif'; g.textAlign = 'center';
+  g.fillText('← 내 평균보다 빠름', cx - hw / 2, 16);
+  g.fillText('늦음 →', cx + hw / 2, 16);
+  g.strokeStyle = CV.grid; g.beginPath(); g.moveTo(cx, top - 4); g.lineTo(cx, H - 6); g.stroke();
+
+  for (const { b, n, m } of per) {
+    const y = top + (b - 1) * rowH;
+    g.globalAlpha = n >= 3 ? 1 : 0.35;                  // 타격이 3번 미만이면 흐리게
+    g.fillStyle = CV.fg; g.font = '16px "Pretendard Variable", Pretendard, sans-serif'; g.textAlign = 'left';
+    g.fillText(b + '박', 14, y + 23);
+    if (n) {
+      const len = Math.max(-40, Math.min(40, m)) * scale;
+      g.fillStyle = Math.abs(m) < 8 ? CV.good : m > 0 ? CV.late : CV.early;
+      g.fillRect(Math.min(cx, cx + len), y + 6, Math.abs(len), 22);
+    }
+    g.fillStyle = CV.fg; g.font = '15px "Pretendard Variable", Pretendard, sans-serif'; g.textAlign = 'right';
+    g.fillText(n ? (m >= 0 ? '+' : '') + m.toFixed(0) + 'ms (' + n + '타)' : '—', W - 10, y + 23);
+    g.globalAlpha = 1;
+  }
+  g.textAlign = 'left';
+
+  $('beatText').textContent = enough < 2 ? '박마다 3번 이상 쳐야 막대가 진하게 보여요.' : '';
+}
+
+function drawCharts() { drawHist(); drawSeries(); drawBeats(); }
+function refreshAll() { updateStats(); drawCharts(); drawBar(); }
+refreshAll();
+window.addEventListener('resize', drawCharts);
+$('detailBox').addEventListener('toggle', drawCharts);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshAll);   // 글꼴을 불러온 뒤 그래프 글씨 다시 그림
+
+function drawLevel() {
+  $('level').style.width = Math.min(100, latestRms * 8 * 100) + '%';
+  drawBar();
+  requestAnimationFrame(drawLevel);
+}
+
+// ===== CSV / 초기화 =====
+$('btnCsv').onclick = () => {
+  const head = 'hit_id,time_s,bpm,beat_in_bar,raw_ms,offset_ms,error_ms,calibrated,rms\n';
+  const rows = hits.map(h => [h.id, h.time, h.bpm, h.beatInBar ?? '',
+    h.rawMs === null ? '' : h.rawMs.toFixed(2), off(), h.rawMs === null ? '' : errOf(h).toFixed(2),
+    isCalibrated ? 1 : 0, h.rms].join(','));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([head + rows.join('\n')], { type: 'text/csv' }));
+  a.download = 'drum_session_' + Date.now() + '.csv'; a.click();
+};
+$('btnClear').onclick = () => {
+  hits.length = 0; recentHits.length = 0;
+  $('last').textContent = '—'; $('last').className = 'big'; $('last').style.fontSize = '34px';
+  refreshAll();
+};
+</script>
+<script type="module">
+// ===== PDF 재료 추출 (pdf.js) =====
+// PDF 한 페이지에서 악보 판독에 필요한 재료를 pdf.js로 뽑는다 (브라우저/Node 공용).
+// pdf.js 의 그리기 명령 목록(operator list)을 직접 따라가며 위치를 계산한다.
+//  - glyphs: 글자(기호 글꼴 포함)의 글꼴 이름, 크기, 문자, 기준점, 대략적인 상자
+//  - lines : 선으로 그린 직선 (오선, 마디선, 기둥, 괄호선)
+//  - rects : 축에 나란한 사각형 (가로 빔, 굵은 마디선)
+//  - polys : 채워진 4각형 등 (기울어진 빔)
+// 좌표는 페이지 왼쪽 위가 (0,0), 아래로 갈수록 y 증가 (pt 단위).
+
+const mulM = (a, b) => [   // a 다음에 b 를 적용 (PDF 행렬 곱: a × b)
+  a[0] * b[0] + a[1] * b[2], a[0] * b[1] + a[1] * b[3],
+  a[2] * b[0] + a[3] * b[2], a[2] * b[1] + a[3] * b[3],
+  a[4] * b[0] + a[5] * b[2] + b[4], a[4] * b[1] + a[5] * b[3] + b[5],
+];
+const apply = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+const r2 = v => Math.round(v * 100) / 100;
+
+function collector() {
+  const lines = [], rects = [], polys = [];
+  function axisRect(pts) {
+    let p = pts.slice();
+    if (p.length === 5 && Math.abs(p[0][0] - p[4][0]) < 0.01 && Math.abs(p[0][1] - p[4][1]) < 0.01) p = p.slice(0, 4);
+    if (p.length !== 4) return null;
+    const xs = [...new Set(p.map(q => r2(q[0])))], ys = [...new Set(p.map(q => r2(q[1])))];
+    if (xs.length === 2 && ys.length === 2) return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) };
+    return null;
+  }
+  // sps: [{pts:[[x,y]...] (이미 페이지 좌표), closed, curved}]
+  function add(sps, fill, strokeW) {
+    for (const sp of sps) {
+      if (sp.curved || !sp.pts.length) continue;
+      const rect = (sp.closed || sp.pts.length >= 4) ? axisRect(sp.pts) : null;
+      if (rect && (fill || sp.closed)) { rects.push({ ...rect, fill: !!fill }); continue; }
+      if (fill && !strokeW) {
+        const uniq = [];
+        for (const q of sp.pts) { const k = [r2(q[0]), r2(q[1])]; if (!uniq.some(u => u[0] === k[0] && u[1] === k[1])) uniq.push(k); }
+        polys.push(uniq);
+        continue;
+      }
+      for (let i = 1; i < sp.pts.length; i++) {
+        const a = sp.pts[i - 1], b = sp.pts[i];
+        lines.push({ x1: r2(a[0]), y1: r2(a[1]), x2: r2(b[0]), y2: r2(b[1]), w: r2(strokeW || 0) });
+      }
+      if (sp.closed && sp.pts.length > 2) {
+        const a = sp.pts[sp.pts.length - 1], b = sp.pts[0];
+        lines.push({ x1: r2(a[0]), y1: r2(a[1]), x2: r2(b[0]), y2: r2(b[1]), w: r2(strokeW || 0) });
+      }
+    }
+  }
+  return { lines, rects, polys, add };
+}
+
+async function extractPagePdfjs(pdfjsLib, page) {
+  const OPS = pdfjsLib.OPS;
+  const vp = page.getViewport({ scale: 1 });
+  const base = vp.transform;                       // PDF 좌표 → 왼쪽 위 기준 좌표
+  const opList = await page.getOperatorList();
+  const col = collector();
+  const glyphs = [];
+  const fontCache = new Map();
+  const fontOf = ref => {
+    if (!fontCache.has(ref)) {
+      let f = null;
+      try { f = page.commonObjs.get(ref); } catch (e) { f = null; }
+      fontCache.set(ref, f);
+    }
+    return fontCache.get(ref);
+  };
+
+  let gs = { ctm: [1, 0, 0, 1, 0, 0], lineWidth: 1 };
+  const stack = [];
+  const ts = { tm: [1, 0, 0, 1, 0, 0], x: 0, y: 0, lineX: 0, lineY: 0, leading: 0, cs: 0, ws: 0, hs: 1, rise: 0, font: null, size: 0, dir: 1 };
+  const scaleOf = m => Math.sqrt(Math.abs(m[0] * m[3] - m[1] * m[2]));
+
+  function decodePath(data, ctm) {
+    const toPage = mulM(ctm, base);
+    const out = []; let cur = null;
+    for (let i = 0; i < data.length;) {
+      const op = data[i++];
+      if (op === 0) { cur = { pts: [apply(toPage, data[i], data[i + 1])], closed: false, curved: false }; out.push(cur); i += 2; }
+      else if (op === 1) { if (!cur) { cur = { pts: [], closed: false, curved: false }; out.push(cur); } cur.pts.push(apply(toPage, data[i], data[i + 1])); i += 2; }
+      else if (op === 2) { if (cur) { cur.curved = true; cur.pts.push(apply(toPage, data[i + 4], data[i + 5])); } i += 6; }
+      else if (op === 3) { if (cur) { cur.curved = true; cur.pts.push(apply(toPage, data[i + 2], data[i + 3])); } i += 4; }
+      else if (op === 4) { if (cur) cur.closed = true; }
+      else break;
+    }
+    return out;
+  }
+
+  function showText(items) {
+    const font = ts.font;
+    if (!font || !ts.size) return;
+    const fm = font.fontMatrix || [0.001, 0, 0, 0.001, 0, 0];
+    const name = String(font.name || '').replace(/^[A-Z]{6}\+/, '');
+    const hscale = ts.hs * ts.dir;
+    const m = mulM(ts.tm, mulM(gs.ctm, base));     // 텍스트 공간 → 페이지 좌표
+    const sizePage = ts.size * Math.hypot(m[2], m[3]);
+    let x = 0;
+    for (const g of items) {
+      if (typeof g === 'number') { x += -g * ts.size / 1000; continue; }
+      const spacing = (g.isSpace ? ts.ws : 0) + ts.cs;
+      const w = g.width * ts.size * fm[0];
+      const [px, py] = apply(m, ts.x + x * hscale, ts.y + ts.rise);
+      const c = g.unicode || '';
+      if (c && (c.trim() || c === '') && c !== ' ') {
+        const adv = w * hscale * Math.hypot(m[0], m[1]);
+        glyphs.push({ font: name, size: Math.round(sizePage * 10) / 10, c, code: '0x' + c.codePointAt(0).toString(16), x: r2(px), y: r2(py), bbox: [r2(px), r2(py - sizePage * 0.8), r2(px + adv), r2(py + sizePage * 0.2)] });
+      }
+      x += w + spacing * ts.dir;
+    }
+    ts.x += x * hscale;
+  }
+
+  const { fnArray, argsArray } = opList;
+  for (let k = 0; k < fnArray.length; k++) {
+    const fn = fnArray[k], a = argsArray[k];
+    switch (fn) {
+      case OPS.save: stack.push(gs); gs = { ...gs }; break;
+      case OPS.restore: if (stack.length) gs = stack.pop(); break;
+      case OPS.transform: gs.ctm = mulM(a, gs.ctm); break;
+      case OPS.setLineWidth: gs.lineWidth = a[0]; break;
+      case OPS.paintFormXObjectBegin:
+        stack.push(gs); gs = { ...gs };
+        if (a && a[0]) gs.ctm = mulM(a[0], gs.ctm);
+        break;
+      case OPS.paintFormXObjectEnd: if (stack.length) gs = stack.pop(); break;
+      case OPS.constructPath: {
+        const paint = a[0], data = a[1] && a[1][0];
+        if (!data) break;
+        const sps = decodePath(data, gs.ctm);
+        const fills = [OPS.fill, OPS.eoFill, OPS.fillStroke, OPS.eoFillStroke, OPS.closeFillStroke, OPS.closeEOFillStroke];
+        const strokes = [OPS.stroke, OPS.closeStroke, OPS.fillStroke, OPS.eoFillStroke, OPS.closeFillStroke, OPS.closeEOFillStroke];
+        if ([OPS.closeStroke, OPS.closeFillStroke, OPS.closeEOFillStroke].includes(paint)) for (const sp of sps) sp.closed = true;
+        if (fills.includes(paint)) col.add(sps, true, 0);
+        if (strokes.includes(paint)) col.add(sps, false, gs.lineWidth * scaleOf(gs.ctm));
+        break;
+      }
+      case OPS.beginText: ts.tm = [1, 0, 0, 1, 0, 0]; ts.x = ts.y = ts.lineX = ts.lineY = 0; break;
+      case OPS.setFont: {
+        ts.font = fontOf(a[0]);
+        let size = a[1];
+        ts.dir = size < 0 ? -1 : 1; ts.size = Math.abs(size);
+        break;
+      }
+      case OPS.setTextMatrix: ts.tm = a.length === 6 ? a : a[0]; ts.x = ts.y = ts.lineX = ts.lineY = 0; break;
+      case OPS.moveText: ts.x = ts.lineX += a[0]; ts.y = ts.lineY += a[1]; break;
+      case OPS.setLeadingMoveText: ts.leading = a[1]; ts.x = ts.lineX += a[0]; ts.y = ts.lineY += a[1]; break;
+      case OPS.setLeading: ts.leading = -a[0]; break;
+      case OPS.nextLine: ts.x = ts.lineX; ts.y = ts.lineY += ts.leading; break;
+      case OPS.setCharSpacing: ts.cs = a[0]; break;
+      case OPS.setWordSpacing: ts.ws = a[0]; break;
+      case OPS.setHScale: ts.hs = a[0] / 100; break;
+      case OPS.setTextRise: ts.rise = a[0]; break;
+      case OPS.showText: case OPS.showSpacedText: showText(a[0]); break;
+      case OPS.nextLineShowText: ts.x = ts.lineX; ts.y = ts.lineY += ts.leading; showText(a[0]); break;
+      case OPS.nextLineSetSpacingShowText: ts.ws = a[0]; ts.cs = a[1]; ts.x = ts.lineX; ts.y = ts.lineY += ts.leading; showText(a[2]); break;
+      default: break;
+    }
+  }
+  return { glyphs, lines: col.lines, rects: col.rects, polys: col.polys, curves: [], w: vp.width, h: vp.height };
+}
+
+async function extractDocumentPdfjs(pdfjsLib, bytes) {
+  // fontExtraProperties: 실제 글꼴 이름(Maestro 등)을 받으려면 필요
+  const doc = await pdfjsLib.getDocument({ data: bytes, isEvalSupported: false, fontExtraProperties: true }).promise;
+  const pages = [];
+  for (let i = 1; i <= doc.numPages; i++) pages.push(await extractPagePdfjs(pdfjsLib, await doc.getPage(i)));
+  return { doc, pages };
+}
+
+// ===== 악보바다 드럼 악보 판독 =====
+// 악보바다(Finale · Maestro 글꼴) 드럼 PDF 판독기.
+// extract.mjs 가 뽑은 페이지 재료(글리프, 선, 사각형, 다각형)를 받아서
+// 마디마다 음표의 박 위치, 길이, 악기, 표시 기호를 계산하고
+// 도돌이표 · 1/2번 괄호를 따라 연주 순서를 만든다.
+
+const HEAD = { 'œ': 'normal', 'y': 'x' };                         // MaestroPercussion 음표 머리
+const RESTS = { 'Œ': 1.0, '‰': 0.5, '≈': 0.25, '': 2.0 };   // 쉼표 → 박 수 (∑ 온쉼표는 따로)
+const FLAGS = { 'j': 1, 'J': 1, 'r': 2, 'R': 2 };                 // 꼬리 개수 (8분=1, 16분=2)
+const MARKS = { '>': 'accent', 'o': 'open', '+': 'closed' };
+const CLEF = '';
+const STEP_NAME = ['E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6'];
+
+// 오선 위치(아래 첫 줄 = 0, 칸·줄마다 1) → 악보바다 드럼 표기 관례
+function instrument(step, head) {
+  if (head === 'x') return ({ 11: 'crash', 10: 'crash', 9: 'hihat', 8: 'ride', 7: 'hihat', 5: 'cross-stick', [-1]: 'hihat-pedal', [-2]: 'hihat-pedal' })[step] || 'cymbal';
+  return ({ 7: 'tom-high', 6: 'tom-mid', 5: 'snare', 4: 'tom-low', 3: 'tom-floor', 2: 'tom-floor', 1: 'kick', 0: 'kick' })[step] || 'drum';
+}
+const posName = step => (step >= 0 && step < STEP_NAME.length ? STEP_NAME[step] : String(step));
+const r1 = v => Math.round(v * 10) / 10;
+const isVert = l => Math.abs(l.x1 - l.x2) < 0.3;
+const isHorz = l => Math.abs(l.y1 - l.y2) < 0.3;
+const minBy = (arr, f) => arr.reduce((b, x) => (b === undefined || f(x) < f(b) ? x : b), undefined);
+const digits = gs => gs.slice().sort((a, b) => a.x - b.x).map(g => g.c).join('');
+
+function findStaves(page) {
+  const ys = new Map();
+  for (const l of page.lines) {
+    if (isHorz(l) && Math.abs(l.x1 - l.x2) > 30) {
+      const k = r1(l.y1);
+      if (!ys.has(k)) ys.set(k, []);
+      ys.get(k).push([Math.min(l.x1, l.x2), Math.max(l.x1, l.x2)]);
+    }
+  }
+  const keys = [...ys.keys()].sort((a, b) => a - b);
+  const staves = [];
+  let i = 0;
+  while (i + 4 < keys.length) {
+    const g = keys.slice(i, i + 5);
+    const d = [0, 1, 2, 3].map(k => g[k + 1] - g[k]);
+    if (Math.max(...d) - Math.min(...d) < 0.6 && d[0] > 3 && d[0] < 8) {
+      const segs = ys.get(g[0]);
+      staves.push({ top: g[0], bottom: g[4], sp: (g[4] - g[0]) / 4, x0: Math.min(...segs.map(s => s[0])), x1: Math.max(...segs.map(s => s[1])) });
+      i += 5;
+    } else i += 1;
+  }
+  return staves;
+}
+
+function parseMeasures(pages) {
+  const measures = [];
+  pages.forEach((page, pno) => {
+    const G = page.glyphs;
+    const mg = G.filter(g => g.font.startsWith('Maestro'));
+    const staves = findStaves(page);
+    const nheads = st => mg.filter(g => g.font === 'MaestroPercussion' && g.size > 12 && st.top - 4.5 * st.sp < g.y && g.y < st.bottom + 4.5 * st.sp).length;
+
+    // 시스템 시작의 세로줄이 여러 보표를 잇고 있으면 같은 시스템 → 음표 머리가 가장 많은 보표가 드럼 보표
+    const links = page.lines.filter(isVert).map(l => [l.x1, Math.min(l.y1, l.y2), Math.max(l.y1, l.y2)]);
+    const systems = [];
+    for (const st of staves) {
+      const prev = systems.length ? systems[systems.length - 1][0] : null;
+      const joined = prev && links.some(([x, a, b]) => Math.abs(x - st.x0) < 4 && Math.abs(a - prev.top) < 1 && Math.abs(b - st.bottom) < 1);
+      if (joined) systems[systems.length - 1].push(st); else systems.push([st]);
+    }
+    const chosen = systems.map(sy => {
+      let best = sy[0];
+      for (const s of sy) if (nheads(s) > nheads(best)) best = s;
+      return { ...best, sysTop: sy[0].top };
+    });
+
+    chosen.forEach((st, si) => {
+      const { top, bottom: bot, sp } = st;
+      const yLo = top - 4.5 * sp, yHi = bot + 4.5 * sp;
+      const heads = mg.filter(g => g.font === 'MaestroPercussion' && yLo < g.y && g.y < yHi && g.size > 12);
+      const others = mg.filter(g => g.font === 'Maestro' && yLo < g.y && g.y < yHi);
+
+      // ---- 마디선 ----
+      const bars = [];
+      for (const l of page.lines) {
+        if (isVert(l)) {
+          const a = Math.min(l.y1, l.y2), b = Math.max(l.y1, l.y2);
+          if (Math.abs(a - top) < 1 && Math.abs(b - bot) < 1) bars.push([l.x1, 'thin']);
+        }
+      }
+      for (const r of page.rects) {
+        if (r.fill && Math.abs(r.y0 - top) < 1 && Math.abs(r.y1 - bot) < 1 && r.x1 - r.x0 > 1 && r.x1 - r.x0 < 6) bars.push([(r.x0 + r.x1) / 2, 'thick']);
+      }
+      bars.sort((a, b) => a[0] - b[0]);
+      const clusters = [];
+      for (const [x, k] of bars) {
+        const last = clusters[clusters.length - 1];
+        if (last && x - last.x1 < 6) { last.x1 = x; last.kinds.add(k); }
+        else clusters.push({ x0: x, x1: x, kinds: new Set([k]) });
+      }
+      if (!clusters.length || clusters[0].x0 - st.x0 > 15) clusters.unshift({ x0: st.x0, x1: st.x0, kinds: new Set(['start']) });
+
+      // 도돌이 점 = 같은 x에 세로로 한 칸 간격인 점 2개
+      const dots = others.filter(g => g.c === '.' && top < g.y && g.y < bot);
+      const pairs = dots.filter(d => dots.some(e => e !== d && Math.abs(e.x - d.x) < 0.6 && Math.abs(e.y - d.y) > 0.6 * sp && Math.abs(e.y - d.y) < 1.4 * sp));
+      for (const c of clusters) {
+        c.fwd = pairs.some(d => c.x1 < d.x && d.x < c.x1 + 9);
+        c.bwd = pairs.some(d => c.x0 - 9 < d.x && d.x < c.x0);
+      }
+      const repDotX = new Set(pairs.map(d => d.x));
+
+      // 시스템 첫 마디 번호 (이탤릭 숫자)
+      const nums = G.filter(g => g.font.includes('Italic') && st.x0 - 20 < g.x && g.x < st.x0 + 25 && st.sysTop - 30 < g.y && g.y < st.sysTop);
+      const sysNum = nums.length && /^\d+$/.test(digits(nums)) ? parseInt(digits(nums), 10) : null;
+      const multiDigits = others.filter(g => /\d/.test(g.c) && g.y < top);
+
+      // ---- 기둥, 빔, 꼬리 ----
+      const stems = [];
+      for (const l of page.lines) {
+        if (isVert(l) && l.w > 0.4 && l.w < 1.2) {
+          const a = Math.min(l.y1, l.y2), b = Math.max(l.y1, l.y2);
+          if (b - a > 5 && !(Math.abs(a - top) < 1 && Math.abs(b - bot) < 1) && yLo - 20 < a && b < yHi + 20) stems.push({ x: l.x1, a, b });
+        }
+      }
+      const beams = [];
+      for (const r of page.rects) {
+        if (r.fill && r.y1 - r.y0 > 1.5 && r.y1 - r.y0 < 3.5 && r.x1 - r.x0 > 2 && yLo - 25 < r.y0 && r.y0 < yHi + 25) {
+          const yc = (r.y0 + r.y1) / 2; beams.push({ x0: r.x0, x1: r.x1, ya: yc, yb: yc });
+        }
+      }
+      for (const q of page.polys || []) {
+        if (q.length !== 4) continue;
+        const xs = [...new Set(q.map(([x]) => r1(x)))].sort((a, b) => a - b);
+        if (xs.length !== 2 || xs[1] - xs[0] < 2) continue;
+        const left = q.filter(([x]) => r1(x) === xs[0]).map(p => p[1]).sort((a, b) => a - b);
+        const right = q.filter(([x]) => r1(x) === xs[1]).map(p => p[1]).sort((a, b) => a - b);
+        if (left.length !== 2 || right.length !== 2 || !(left[1] - left[0] > 1.5 && left[1] - left[0] < 3.5)) continue;
+        const ya = (left[0] + left[1]) / 2, yb = (right[0] + right[1]) / 2;
+        if (yLo - 25 < Math.min(ya, yb) && Math.max(ya, yb) < yHi + 25) beams.push({ x0: xs[0], x1: xs[1], ya, yb });
+      }
+      const beamY = (b, x) => b.ya + (b.yb - b.ya) * (x - b.x0) / Math.max(1e-6, b.x1 - b.x0);
+      const flags = others.filter(g => g.c in FLAGS && g.size > 12);
+      const aug = others.filter(g => g.c === '.' && !repDotX.has(g.x));
+
+      let firstDone = false;
+      for (let mi = 0; mi < clusters.length - 1; mi++) {
+        const L = clusters[mi].x1, R = clusters[mi + 1].x0;
+        if (R - L < 25) continue;   // 시스템 시작 괄호와 도돌이표 사이 같은 좁은 틈은 마디가 아님
+        const inside = g => L < g.x && g.x < R;
+        const m = {
+          page: pno + 1, staff: si, x0: L, x1: R, top, bottom: bot,
+          fwd_repeat: clusters[mi].fwd || (mi > 0 && clusters[mi - 1].fwd && clusters[mi].x0 - clusters[mi - 1].x1 < 25),
+          bwd_repeat: clusters[mi + 1].bwd,
+          sys_first: !firstDone, sys_num: firstDone ? null : sysNum, notes: [], multi: 1, issues: [],
+        };
+        firstDone = true;
+        const md = multiDigits.filter(inside);
+        if (md.length) m.multi = parseInt(digits(md), 10);
+        const whole = others.filter(g => g.c === '∑' && inside(g));
+
+        // 음표 머리 → 기둥별 화음
+        const mh = heads.filter(inside);
+        const chords = [];
+        for (const h of mh) {
+          const hw = h.bbox[2] - h.bbox[0];
+          const cand = stems.filter(s => h.x - 1 <= s.x && s.x <= h.x + hw + 1 && s.a - 1.5 * sp <= h.y && h.y <= s.b + 1.5 * sp);
+          if (!cand.length) { m.issues.push(`기둥 없는 음표 x=${h.x.toFixed(0)}`); continue; }
+          // 위로 뻗는 기둥은 머리 오른쪽, 아래로 뻗는 기둥은 머리 왼쪽에 붙음
+          const fit = s => {
+            const up = Math.abs(s.b - h.y) < Math.abs(s.a - h.y);
+            const edge = up ? h.bbox[2] : h.bbox[0];
+            return Math.abs(s.x - edge) + 0.2 * Math.min(Math.abs(s.a - h.y), Math.abs(s.b - h.y));
+          };
+          const s = minBy(cand, fit);
+          const up = Math.abs(s.b - h.y) < Math.abs(s.a - h.y);
+          const key = `${r1(s.x)},${r1(s.a)}`;
+          let ch = chords.find(c => c.key === key);
+          if (!ch) { ch = { key, x: s.x, stem: s, up, heads: [] }; chords.push(ch); }
+          ch.heads.push(h);
+        }
+        for (const ch of chords) {
+          const s = ch.stem, end = ch.up ? s.a : s.b;
+          const ys = [...new Set(beams.filter(b => b.x0 - 0.8 <= s.x && s.x <= b.x1 + 0.8 && Math.abs(beamY(b, s.x) - end) < 4.2 * sp).map(b => r1(beamY(b, s.x))))];
+          const nb = ys.filter(y => (ch.up && y < end + 3.5 * sp) || (!ch.up && y > end - 3.5 * sp)).length;
+          const nf = flags.filter(f => Math.abs(f.x - s.x) < 3.5 && Math.abs(f.y - end) < 5 * sp).reduce((a, f) => a + FLAGS[f.c], 0);
+          let dur = 1 / 2 ** Math.max(nb, nf);
+          const hx = Math.max(...ch.heads.map(h => h.bbox[2]));
+          if (aug.some(d => hx - 0.5 < d.x && d.x < hx + 7 && ch.heads.some(h => Math.abs(d.y - h.y) < sp))) dur *= 1.5;
+          ch.dur = dur; ch.voice = ch.up ? 1 : 2;
+        }
+
+        // 쉼표 → 성부 (가운데 줄 위 = 1성부, 아래 = 2성부)
+        const mid = top + 2 * sp;
+        const rests = [];
+        for (const g of others) {
+          if (g.c in RESTS && inside(g)) {
+            let d = RESTS[g.c];
+            if (aug.some(a => g.x + 2 < a.x && a.x < g.x + 9 && Math.abs(a.y - g.y) < 2 * sp)) d *= 1.5;
+            rests.push({ x: g.x, dur: d, voice: g.y < mid + 0.5 * sp ? 1 : 2 });
+          }
+        }
+
+        const beatsPerBar = 4;
+        if (whole.length && !mh.length) m.rest_measure = true;
+        else {
+          for (const v of [1, 2]) {
+            const ev = [
+              ...chords.filter(c => c.voice === v).map(c => ({ x: c.x - 3, c })),
+              ...rests.filter(r => r.voice === v).map(r => ({ x: r.x, r })),
+            ].sort((a, b) => a.x - b.x);
+            let t = 0;
+            for (const e of ev) {
+              if (e.r) { t += e.r.dur; continue; }
+              for (const h of e.c.heads) {
+                const step = Math.round((bot - h.y) / (sp / 2));
+                const head = HEAD[h.c] || '?';
+                m.notes.push({ t: Math.round(t * 1e4) / 1e4, dur: e.c.dur, voice: v, step, pos: posName(step), head, inst: instrument(step, head), marks: [], hx: h.x, hy: h.y, hw: h.bbox[2] - h.bbox[0] });
+              }
+              t += e.c.dur;
+            }
+            if (ev.length && Math.abs(t - beatsPerBar) > 1e-6) m.issues.push(`${v}성부 박자 합 ${+t.toFixed(4)}박`);
+          }
+        }
+        measures.push(m);
+      }
+    });
+  });
+  return measures;
+}
+
+function numberMeasures(ms) {
+  let n = null;
+  for (const m of ms) {
+    if (m.sys_num) n = m.sys_num; else if (n === null) n = 1;
+    m.number = n; n += m.multi;
+  }
+}
+
+function attachMarks(pages, ms) {
+  for (const m of ms) {
+    const page = pages[m.page - 1], sp = (m.bottom - m.top) / 4;
+    const mk = page.glyphs.filter(g => g.font === 'Maestro' && g.c in MARKS && m.x0 < g.x && g.x < m.x1 && m.top - 9 * sp < g.y && g.y < m.bottom + 4 * sp);
+    for (const g of mk) {
+      const cx = (g.bbox[0] + g.bbox[2]) / 2;
+      const cand = m.notes.filter(n => Math.abs(n.hx + n.hw / 2 - cx) < 5 && n.hy > g.y - sp);
+      if (!cand.length) continue;
+      const n = minBy(cand, n => n.hy - g.y);       // 기호 바로 아래 음표
+      const kind = MARKS[g.c];
+      if ((kind === 'open' || kind === 'closed') && !n.inst.startsWith('hihat')) continue;   // 오픈/닫힘은 하이햇에만
+      n.marks.push(kind);
+    }
+  }
+}
+
+function addGrace(pages, ms) {
+  // 꾸밈음(작은 음표 머리)은 바로 오른쪽 음표와 같은 박에 붙임 (플램 = 채점에서는 한 번의 타격)
+  for (const m of ms) {
+    const page = pages[m.page - 1], sp = (m.bottom - m.top) / 4;
+    const small = page.glyphs.filter(g => g.font === 'MaestroPercussion' && g.size <= 12 && m.x0 < g.x && g.x < m.x1 && m.top - 5 * sp < g.y && g.y < m.bottom + 5 * sp);
+    for (const g of small) {
+      const right = m.notes.filter(n => n.hx - g.x > 0 && n.hx - g.x < 20 && !n.grace);
+      if (!right.length) { m.issues.push(`짝 없는 꾸밈음 x=${g.x.toFixed(0)}`); continue; }
+      const main = minBy(right, n => (n.hx - g.x) + Math.abs(n.hy - g.y) * 0.2);
+      const step = Math.round((m.bottom - g.y) / (sp / 2)), head = HEAD[g.c] || '?';
+      m.notes.push({ t: main.t, dur: 0, voice: main.voice, step, pos: posName(step), head, inst: instrument(step, head), marks: [], grace: true, hx: g.x, hy: g.y, hw: g.bbox[2] - g.bbox[0] });
+    }
+  }
+}
+
+function findEndings(pages, ms) {
+  // 1·2번 괄호: 보표 위 가로선. 왼쪽 갈고리+번호 = 시작, 오른쪽 갈고리 = 끝.
+  // 여러 줄에 걸친 괄호는 중간 줄의 선이 생략될 수 있어서, 시작 → 다음 끝 갈고리까지를 한 괄호로 봄.
+  const segs = [];
+  const byStaff = new Map();
+  ms.forEach((m, k) => { const key = `${m.page}|${m.top}`; if (!byStaff.has(key)) byStaff.set(key, []); byStaff.get(key).push(k); });
+  for (const idx of byStaff.values()) {
+    const { page: pg, top, bottom } = ms[idx[0]];
+    const page = pages[pg - 1], sp = (bottom - top) / 4;
+    const vl = page.lines.filter(isVert);
+    for (const l of page.lines) {
+      if (!(isHorz(l) && top - 9 * sp < l.y1 && l.y1 < top - 0.5 * sp && Math.abs(l.x1 - l.x2) > 15)) continue;
+      const y = l.y1, xa = Math.min(l.x1, l.x2), xb = Math.max(l.x1, l.x2);
+      const hook = x => vl.some(v => Math.abs(v.x1 - x) < 0.6 && Math.abs(Math.min(v.y1, v.y2) - y) < 0.6 && Math.abs(v.y1 - v.y2) > 3);
+      const num = page.glyphs.filter(g => /\d/.test(g.c) && !g.font.startsWith('Maestro') && !g.font.includes('Italic') && xa - 1 < g.x && g.x < xa + 14 && y < g.y && g.y < y + 5 * sp);
+      const ks = idx.filter(k => ms[k].x0 < xb - 3 && ms[k].x1 > xa + 3);
+      if (ks.length) segs.push({ first: Math.min(...ks), last: Math.max(...ks), left: hook(xa), right: hook(xb), number: num.length ? parseInt(digits(num), 10) : null });
+    }
+  }
+  segs.sort((a, b) => a.first - b.first);
+  const endings = [];
+  let cur = null;
+  for (const s of segs) {
+    if (s.left && s.number) { if (cur) endings.push(cur); cur = { number: s.number, first: s.first, last: s.last }; }
+    else if (cur) cur.last = s.last;
+    if (cur && s.right) { endings.push(cur); cur = null; }
+  }
+  if (cur) endings.push(cur);
+  for (const e of endings) for (let k = e.first; k <= e.last; k++) ms[k].ending = e.number;
+  return endings;
+}
+
+function playOrder(ms) {
+  // 도돌이 구간은 기본 2회. 회차와 번호가 다른 괄호는 건너뜀.
+  const order = [];
+  let i = 0, start = 0, rnd = 1;
+  const finished = new Set();
+  while (i < ms.length && order.length < 20000) {
+    const m = ms[i];
+    if (m.fwd_repeat && rnd === 1) start = i;
+    const e = m.ending ?? null;
+    if (e !== null && e !== rnd) { while (i < ms.length && (ms[i].ending ?? null) === e) i++; continue; }
+    order.push(i);
+    if (m.bwd_repeat && !finished.has(i) && rnd === 1) { finished.add(i); rnd = 2; i = start; continue; }
+    const nxt = ms[i + 1];
+    if (rnd === 2 && (m.bwd_repeat || (e !== null && (!nxt || (nxt.ending ?? null) !== e)))) rnd = 1;
+    i++;
+  }
+  return order;
+}
+
+function findTempo(pages) {
+  // '♩ = 81' : Maestro 'q'(4분음표) 오른쪽 숫자
+  for (const page of pages) {
+    for (const q of page.glyphs) {
+      if (q.font.startsWith('Maestro') && q.c === 'q') {
+        const ds = page.glyphs.filter(g => /\d/.test(g.c) && !g.font.startsWith('Maestro') && g.x - q.x > 0 && g.x - q.x < 45 && Math.abs(g.y - q.y) < 3);
+        if (ds.length) return parseInt(digits(ds), 10);
+      }
+    }
+  }
+  return null;
+}
+
+// 악보바다(Maestro 글꼴) PDF인지 확인: 타악기 음표 머리 글꼴이 있어야 함
+function isSupported(pages) {
+  return pages.some(p => p.glyphs.some(g => g.font === 'MaestroPercussion'));
+}
+
+function parseScore(pages) {
+  if (!isSupported(pages)) return { supported: false };
+  const measures = parseMeasures(pages);
+  numberMeasures(measures);
+  attachMarks(pages, measures);
+  addGrace(pages, measures);
+  const endings = findEndings(pages, measures);
+  const order = playOrder(measures);
+  const tempo = findTempo(pages);
+  return { supported: true, tempo, endings, order, measures };
+}
+
+// ===== 악보 연습: 불러오기 · 구간 선택 · 따라 치기 채점 =====
+// 기존 화면 스크립트의 전역 값과 함수(ctx, bpm, setBpm, startMetro, stopMetro, nextBeatTime,
+// micStream, startMic, off, isCalibrated, beatsPerBar, renderDots, $)를 그대로 씀.
+
+const PDFJS_BASE = new URLSearchParams(location.search).get('pdfjs') || 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.4.299/build';
+let pdfjsLib = null;
+const SC = { res: null, doc: null, pages: null, from: 0, to: 0, picking: false, boxes: [], last: null };
+const S = window.scoreSession = { active: false, hits: [], onHit(t) { if (this.active) this.hits.push(t); } };
+
+const el = id => document.getElementById(id);
+const msg = (text, isErr) => { el('scoreMsg').textContent = text; el('scoreMsg').className = 'hint' + (isErr ? ' err' : ''); };
+const numLabel = m => (m.multi > 1 ? `${m.number}–${m.number + m.multi - 1}` : String(m.number));
+
+async function loadPdfjs() {
+  if (!pdfjsLib) {
+    el('scoreStatus').textContent = 'PDF 판독 엔진을 불러오는 중이에요. 처음 한 번만 약 1.7MB를 받아요.';
+    pdfjsLib = await import(`${PDFJS_BASE}/pdf.min.mjs`);
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `${PDFJS_BASE}/pdf.worker.min.mjs`;
+  }
+  return pdfjsLib;
+}
+
+el('scoreFile').addEventListener('change', async ev => {
+  const f = ev.target.files[0];
+  if (!f) return;
+  if (S.active) finishScore();
+  try {
+    const lib = await loadPdfjs();
+    el('scoreStatus').textContent = '악보를 읽는 중이에요…';
+    const { doc, pages } = await extractDocumentPdfjs(lib, new Uint8Array(await f.arrayBuffer()));
+    const res = parseScore(pages);
+    if (!res.supported) {
+      el('scoreStatus').textContent = '이 PDF는 읽을 수 없어요. 악보바다에서 받은 드럼 악보 PDF만 지원해요. 스캔하거나 사진으로 만든 PDF는 지원하지 않아요.';
+      el('scoreStatus').style.color = 'var(--late)';
+      return;
+    }
+    el('scoreStatus').style.color = '';
+    Object.assign(SC, { res, doc, pages, last: null });
+    // 곡 제목 = 첫 쪽에서 가장 큰 글자 (없으면 파일 이름)
+    const tg = pages[0].glyphs.filter(g => !g.font.startsWith('Maestro'));
+    const big = tg.length ? Math.max(...tg.map(g => g.size)) : 0;
+    const title = tg.filter(g => g.size === big).sort((a, b) => a.y - b.y || a.x - b.x).map(g => g.c).join('').trim();
+    el('scoreName').textContent = big >= 16 && title ? title : f.name.replace(/\.pdf$/i, '');
+    const ms = res.measures, total = ms.reduce((a, m) => a + m.multi, 0);
+    const issues = ms.filter(m => m.issues.length);
+    el('scoreInfo').textContent = `${total}마디 · 템포 ${res.tempo ?? '표시 없음'}` + (issues.length ? ` · 박자가 안 맞게 읽힌 마디 ${issues.length}개(${issues.map(m => m.number).join(', ')})` : '');
+    el('btnScoreTempo').textContent = res.tempo ? `악보 템포(${res.tempo})로` : '악보 템포 없음';
+    el('btnScoreTempo').disabled = !res.tempo;
+    el('scoreEmpty').hidden = true;
+    el('scoreLoaded').hidden = false;
+    el('scoreResult').innerHTML = '';
+    // 처음 연주가 시작되는 마디부터 끝까지를 기본 구간으로
+    setRange(firstPlayed(), ms.length - 1);
+    msg('');
+    await renderPages();
+  } catch (e) {
+    console.error(e);
+    el('scoreStatus').textContent = `PDF를 읽지 못했어요: ${e.message}`;
+    el('scoreStatus').style.color = 'var(--late)';
+  }
+});
+
+async function renderPages() {
+  const wrap = el('scorePages');
+  wrap.innerHTML = '';
+  SC.boxes = [];
+  const cssW = Math.max(300, wrap.clientWidth - 40);
+  for (let i = 0; i < SC.pages.length; i++) {
+    const page = await SC.doc.getPage(i + 1);
+    const base = page.getViewport({ scale: 1 });
+    const k = Math.min(4, (cssW / base.width) * (window.devicePixelRatio || 1));
+    const vp = page.getViewport({ scale: k });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+    await page.render({ canvas, canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    canvas.setAttribute('aria-label', `악보 ${i + 1}쪽`);
+    const div = document.createElement('div');
+    div.className = 'score-page';
+    div.appendChild(canvas);
+    const { w, h } = SC.pages[i];
+    SC.res.measures.forEach((m, idx) => {
+      if (m.page !== i + 1) return;
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'mb';
+      b.setAttribute('aria-label', `${numLabel(m)}마디`);
+      Object.assign(b.style, { left: `${m.x0 / w * 100}%`, width: `${(m.x1 - m.x0) / w * 100}%`, top: `${(m.top - 22) / h * 100}%`, height: `${(m.bottom - m.top + 38) / h * 100}%` });
+      b.innerHTML = `<span class="n">${numLabel(m)}</span><span class="r" hidden></span>`;
+      b.addEventListener('click', () => pickMeasure(idx));
+      SC.boxes[idx] = b;
+      div.appendChild(b);
+    });
+    wrap.appendChild(div);
+  }
+  paintBoxes();
+}
+
+// ---- 구간 선택 ----
+function setRange(a, b) {
+  SC.from = Math.min(a, b); SC.to = Math.max(a, b);
+  const ms = SC.res.measures;
+  el('rangeFrom').value = ms[SC.from].number;
+  el('rangeTo').value = ms[SC.to].number + ms[SC.to].multi - 1;
+  paintBoxes();
+}
+function pickMeasure(idx) {
+  if (S.active) return;
+  if (!SC.picking) { SC.picking = true; setRange(idx, idx); msg(`${numLabel(SC.res.measures[idx])}마디부터예요. 끝낼 마디를 누르세요. 한 마디만 연습하려면 같은 마디를 한 번 더 누르세요.`); }
+  else { SC.picking = false; setRange(SC.from, idx); msg(`${rangeText()}를 연습해요.`); }
+}
+function idxOfNumber(n) {
+  const ms = SC.res.measures;
+  const k = ms.findIndex(m => n >= m.number && n < m.number + m.multi);
+  return k >= 0 ? k : (n < ms[0].number ? 0 : ms.length - 1);
+}
+['rangeFrom', 'rangeTo'].forEach(id => el(id).addEventListener('change', () => {
+  if (!SC.res || S.active) return;
+  SC.picking = false;
+  setRange(idxOfNumber(+el('rangeFrom').value || 1), idxOfNumber(+el('rangeTo').value || 1));
+  msg(`${rangeText()}를 연습해요.`);
+}));
+el('btnRangeAll').addEventListener('click', () => { if (!SC.res || S.active) return; SC.picking = false; setRange(firstPlayed(), SC.res.measures.length - 1); msg('곡 전체를 도돌이표 순서대로 연습해요.'); });
+el('btnScoreTempo').addEventListener('click', () => { if (SC.res && SC.res.tempo && !S.active) setBpm(SC.res.tempo); });
+
+const firstPlayed = () => Math.max(0, SC.res.measures.findIndex(m => m.notes.length));
+// 첫 연주 마디(또는 그 앞)부터 마지막 마디까지 고르면 '곡 전체' = 도돌이표 순서대로 진행
+const isWhole = () => SC.from <= firstPlayed() && SC.to === SC.res.measures.length - 1;
+function rangeText() {
+  const ms = SC.res.measures;
+  return isWhole() ? '곡 전체' : `${ms[SC.from].number}~${ms[SC.to].number + ms[SC.to].multi - 1}마디`;
+}
+
+// 마디 상자 색: 연습 구간(sel) / 진행 중(cur) / 결과(good·ok·bad)
+function paintBoxes(curIdx = -1) {
+  SC.boxes.forEach((b, idx) => {
+    if (!b) return;
+    const r = SC.last && SC.last.byMeasure.get(idx);
+    b.className = 'mb' + (idx >= SC.from && idx <= SC.to && !r ? ' sel' : '') + (r ? ' ' + r.grade : '') + (idx === curIdx ? ' cur' : '');
+    const tag = b.querySelector('.r');
+    if (r && !S.active) {
+      tag.hidden = false;
+      tag.textContent = r.grade === 'good' ? '✓' : [r.missed ? `놓침 ${r.missed}` : '', r.extra ? `더침 ${r.extra}` : '', !r.missed && !r.extra ? `${r.meanAbs.toFixed(0)}ms` : ''].filter(Boolean).join(' ');
+      b.title = `${numLabel(SC.res.measures[idx])}마디: 음 ${r.expected}개 중 ${r.hit}개 맞춤` + (r.missed ? `, 놓침 ${r.missed}` : '') + (r.extra ? `, 더 침 ${r.extra}` : '') + (r.hit ? `, 평균 오차 ${r.mean >= 0 ? '+' : ''}${r.mean.toFixed(0)}ms` : '');
+    } else { tag.hidden = true; b.title = ''; }
+  });
+}
+
+// ---- 채점 연습 ----
+el('btnScoreStart').addEventListener('click', async () => {
+  if (S.active) { finishScore(); return; }
+  if (!SC.res) return;
+  if (!micStream) {
+    msg('마이크를 켜는 중이에요…');
+    await startMic();
+    if (!micStream) { msg('마이크를 켜야 채점할 수 있어요. 위의 마이크 상태 문구를 확인해 주세요.', true); return; }
+  }
+  startScore();
+});
+
+function buildPlan() {
+  const ms = SC.res.measures;
+  let seq = [];
+  if (isWhole()) {
+    seq = SC.res.order.slice();
+    while (seq.length && !ms[seq[0]].notes.length) seq.shift();     // 앞쪽 쉬는 마디(전주)는 건너뜀
+  }
+  else for (let k = SC.from; k <= SC.to; k++) seq.push(k);
+  const plan = [];
+  let beat = 0;
+  for (const idx of seq) {
+    const m = ms[idx], len = 4 * m.multi;
+    const onsets = [...new Set(m.notes.filter(n => !n.grace).map(n => n.t))].sort((a, b) => a - b);
+    plan.push({ idx, start: beat, len, onsets });
+    beat += len;
+  }
+  return { plan, totalBeats: beat };
+}
+
+let raf = 0;
+function startScore() {
+  if (metroOn) stopMetro();
+  ensureCtx();
+  // 악보는 4/4 기준
+  if (beatsPerBar !== 4) { beatsPerBar = 4; el('beats').value = 4; renderDots(); }
+  const { plan, totalBeats } = buildPlan();
+  if (!plan.some(p => p.onsets.length)) { msg('이 구간에는 칠 음표가 없어요. 다른 구간을 골라주세요.', true); return; }
+  SC.last = null;
+  el('scoreResult').innerHTML = '';
+  startMetro();
+  const beatDur = 60 / bpm;
+  Object.assign(S, { active: true, hits: [], plan, totalBeats, beatDur, t0: nextBeatTime + 4 * beatDur, bpm });
+  S.end = S.t0 + totalBeats * beatDur;
+  el('btnScoreStart').textContent = '그만하고 채점 보기';
+  ['btnRangeAll', 'btnScoreTempo', 'rangeFrom', 'rangeTo', 'scoreFile'].forEach(id => { el(id).disabled = true; });
+  msg(`한 마디(4박) 예비 박을 듣고 ${rangeText()}를 ${bpm} BPM으로 시작해요.`);
+  let lastCur = -2;
+  const tick = () => {
+    if (!S.active) return;
+    const now = ctx.currentTime, pos = (now - S.t0) / S.beatDur;
+    if (pos < 0) {
+      const left = Math.ceil(-pos);
+      el('scoreMsg').textContent = `예비 박 ${left}… ${rangeText()} 시작 준비`;
+    } else if (now > S.end + 0.5) { finishScore(); return; }
+    const cur = S.plan.find(p => pos >= p.start && pos < p.start + p.len);
+    const curIdx = cur ? cur.idx : -1;
+    if (curIdx !== lastCur) {
+      paintBoxes(curIdx);
+      if (cur) {
+        el('scoreMsg').textContent = `${numLabel(SC.res.measures[curIdx])}마디 연주 중 · 타격 ${S.hits.length}회 감지`;
+        const b = SC.boxes[curIdx];
+        if (b && (lastCur < 0 || SC.res.measures[curIdx].top !== SC.res.measures[lastCur]?.top)) {
+          const r = b.getBoundingClientRect();
+          if (r.top < 80 || r.bottom > innerHeight - 40) b.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+      }
+      lastCur = curIdx;
+    }
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+}
+
+window.onMetroStop = () => { if (S.active) finishScore(); };
+
+function finishScore() {
+  if (!S.active) return;
+  S.active = false;
+  cancelAnimationFrame(raf);
+  if (metroOn) stopMetro();
+  el('btnScoreStart').textContent = '채점하며 연습 시작';
+  ['btnRangeAll', 'btnScoreTempo', 'rangeFrom', 'rangeTo', 'scoreFile'].forEach(id => { el(id).disabled = false; });
+  el('btnScoreTempo').disabled = !SC.res.tempo;
+  const played = Math.min(S.end, ctx.currentTime);
+  SC.last = evaluate(S, played);
+  paintBoxes();
+  showResult(SC.last);
+}
+
+// 악보 음표와 타격 짝짓기: 가까운 쌍부터 차례로 확정 (각 음표·타격은 한 번만)
+function matchPairs(exp, hits, centerMs) {
+  const pairs = [];
+  exp.forEach((e, i) => {
+    hits.forEach((h, j) => {
+      const err = (h - e.time) * 1000 - centerMs;
+      if (Math.abs(err) <= e.win) pairs.push({ i, j, err });
+    });
+  });
+  pairs.sort((a, b) => Math.abs(a.err) - Math.abs(b.err));
+  const ue = new Set(), uh = new Set(), out = new Map();
+  for (const p of pairs) {
+    if (ue.has(p.i) || uh.has(p.j)) continue;
+    ue.add(p.i); uh.add(p.j); out.set(p.i, p);
+  }
+  return { byExp: out, usedHits: uh };
+}
+
+const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0; };
+
+function evaluate(sess, playedUntil) {
+  const exp = [];
+  for (const p of sess.plan) {
+    for (const t of p.onsets) {
+      const time = sess.t0 + (p.start + t) * sess.beatDur;
+      if (time > playedUntil + 0.05) continue;           // 중간에 멈추면 거기까지만 채점
+      exp.push({ time, idx: p.idx, step: p });
+    }
+  }
+  exp.sort((a, b) => a.time - b.time);
+  // 허용 범위: 이웃 음표까지 거리의 절반, 40~120ms
+  exp.forEach((e, i) => {
+    const gaps = [i > 0 ? e.time - exp[i - 1].time : Infinity, i < exp.length - 1 ? exp[i + 1].time - e.time : Infinity];
+    e.win = Math.max(40, Math.min(120, Math.min(...gaps) * 1000 / 2));
+  });
+  const hits = sess.hits.filter(h => h > sess.t0 - sess.beatDur / 2 && h < playedUntil + 0.2);
+  // 1차: 시스템 지연 추정값으로 맞추고, 보정 전이면 내 평균만큼 기준을 옮겨서 2차로 다시 맞춤
+  let center = off();
+  let m1 = matchPairs(exp.map(e => ({ ...e, win: Math.max(e.win, 100) })), hits, center);
+  if (!isCalibrated && m1.byExp.size >= 4) center += median([...m1.byExp.values()].map(p => p.err));
+  const { byExp, usedHits } = matchPairs(exp, hits, center);
+
+  const byMeasure = new Map();
+  const get = idx => {
+    if (!byMeasure.has(idx)) byMeasure.set(idx, { expected: 0, hit: 0, missed: 0, extra: 0, errs: [] });
+    return byMeasure.get(idx);
+  };
+  exp.forEach((e, i) => {
+    const r = get(e.idx); r.expected++;
+    const p = byExp.get(i);
+    if (p) { r.hit++; r.errs.push(p.err); } else r.missed++;
+  });
+  // 짝이 없는 타격 = 더 친 음. 그 시각이 속한 마디에 넣음
+  hits.forEach((h, j) => {
+    if (usedHits.has(j)) return;
+    const pos = ((h - center / 1000) - sess.t0) / sess.beatDur;
+    const p = sess.plan.find(q => pos >= q.start - 0.25 && pos < q.start + q.len - 0.25) || null;
+    if (p && p.onsets.length) get(p.idx).extra++;
+  });
+  let allErr = [];
+  for (const r of byMeasure.values()) {
+    r.mean = r.errs.length ? r.errs.reduce((a, b) => a + b, 0) / r.errs.length : 0;
+    r.meanAbs = r.errs.length ? r.errs.reduce((a, b) => a + Math.abs(b), 0) / r.errs.length : 0;
+    allErr = allErr.concat(r.errs);
+    const slips = r.missed + r.extra;
+    r.grade = slips === 0 && r.meanAbs <= 20 ? 'good' : (slips <= 1 && r.meanAbs <= 35 ? 'ok' : 'bad');
+    if (!r.expected) r.grade = r.extra ? 'bad' : 'good';
+  }
+  const total = exp.length, hit = byExp.size;
+  const meanErr = allErr.length ? allErr.reduce((a, b) => a + b, 0) / allErr.length : 0;
+  const sd = allErr.length ? Math.sqrt(allErr.reduce((a, b) => a + (b - meanErr) ** 2, 0) / allErr.length) : 0;
+  return { byMeasure, total, hit, missed: total - hit, extra: [...byMeasure.values()].reduce((a, r) => a + r.extra, 0), meanErr, sd, calibrated: isCalibrated, bpm: sess.bpm };
+}
+
+function showResult(r) {
+  const ms = SC.res.measures;
+  if (!r.total) { el('scoreResult').innerHTML = ''; msg('채점할 만큼 연주하지 않았어요. 예비 박 4번 뒤에 시작돼요.'); return; }
+  const rate = Math.round(r.hit / r.total * 100);
+  const entries = [...r.byMeasure.entries()].filter(([, v]) => v.expected);
+  const bad = entries.filter(([, v]) => v.grade !== 'good').sort((a, b) => (b[1].missed + b[1].extra) - (a[1].missed + a[1].extra) || b[1].meanAbs - a[1].meanAbs).slice(0, 3);
+  const goodN = entries.filter(([, v]) => v.grade === 'good').length;
+  const head = r.missed + r.extra === 0 && r.sd < 20 ? '음표를 하나도 놓치지 않았어요.' :
+    bad.length ? `${numLabel(ms[bad[0][0]])}마디가 가장 불안했어요.` : '대부분의 마디를 잘 쳤어요.';
+  el('scoreResult').innerHTML = `
+    <p id="scoreHeadline" style="font-size:19px;font-weight:700;margin:0 0 4px">${head}</p>
+    <p class="hint">${rangeText()} · ${r.bpm} BPM · 마디 ${entries.length}개 중 ${goodN}개 깔끔하게 침</p>
+    <div class="stats">
+      <div class="stat"><b>${rate}%</b><span>맞춘 음 (${r.hit}/${r.total})</span></div>
+      <div class="stat"><b>${r.missed} / ${r.extra}</b><span>놓친 음 / 더 친 음</span></div>
+      <div class="stat"><b>±${r.sd.toFixed(0)}ms</b><span>안정성 (들쭉날쭉한 정도)</span></div>
+    </div>
+    <p class="hint" style="margin-top:8px">${r.calibrated ? `평균적으로 박자보다 ${Math.abs(r.meanErr).toFixed(0)}ms ${r.meanErr >= 0 ? '늦게' : '빠르게'} 쳤어요.` : '시간 보정 전이라 타이밍은 내 평균을 기준으로 봤어요. 놓친 음과 더 친 음은 보정과 상관없이 정확해요.'}</p>
+    ${bad.length ? `<ul class="weak">${bad.map(([idx, v]) => `<li><b>${numLabel(ms[idx])}마디</b><span class="hint">${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', `평균 오차 ${v.meanAbs.toFixed(0)}ms`].filter(Boolean).join(' · ')}</span><button type="button" data-idx="${idx}">이 마디만 연습</button></li>`).join('')}</ul>` : ''}
+    <div class="score-legend"><span><i style="background:#1e9e66"></i>깔끔함</span><span><i style="background:#c98a00"></i>조금 흔들림</span><span><i style="background:#d42a55"></i>놓치거나 더 친 음 많음</span></div>`;
+  el('scoreResult').querySelectorAll('button[data-idx]').forEach(b => b.addEventListener('click', () => {
+    const idx = +b.dataset.idx;
+    SC.picking = false; SC.last = null; setRange(idx, idx); el('scoreResult').innerHTML = '';
+    msg(`${numLabel(ms[idx])}마디만 연습해요. 템포를 조금 낮춰서 시작해 보세요.`);
+  }));
+  msg('악보의 마디 색으로 결과를 확인하세요. 마디에 마우스를 올리면 자세한 결과가 보여요.');
+}
+
+</script>
+<script>
+// ===== 화면 이동(탭) =====
+(function () {
+  const screens = ['practice', 'score', 'analysis'];
+  const tabs = [...document.querySelectorAll('.tabbar .tab')];
+  function show(name) {
+    screens.forEach(n => { document.getElementById('screen-' + n).hidden = n !== name; });
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+    document.getElementById('dock-practice').hidden = name !== 'practice';
+    document.getElementById('dock-score').hidden = name !== 'score';
+    document.getElementById('app').classList.toggle('wide', name === 'score');
+    document.body.dataset.screen = name;
+    window.scrollTo(0, 0);
+    try { localStorage.setItem('dtl_tab', name); } catch (e) {}
+    // 숨어 있던 그래프는 보일 때 실제 크기에 맞춰 다시 그림
+    if (typeof drawCharts === 'function') { drawCharts(); drawBar(); }
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.tab)));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => show(b.dataset.go)));
+  let start = 'practice';
+  try { const v = localStorage.getItem('dtl_tab'); if (screens.includes(v)) start = v; } catch (e) {}
+  show(start);
+
+  // 악보를 불러오면 '다른 악보' 버튼과 시작 버튼을 켜고, 채점 결과가 생기면 결과 카드를 보여줌
+  const loaded = document.getElementById('scoreLoaded'), result = document.getElementById('scoreResult');
+  const sync = () => {
+    const isLoaded = !loaded.hidden;
+    document.getElementById('scoreFileBtn').hidden = !isLoaded;
+    document.getElementById('btnScoreStart').disabled = !isLoaded;
+    document.getElementById('scoreResultCard').hidden = !result.innerHTML.trim();
+  };
+  new MutationObserver(sync).observe(loaded, { attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(sync).observe(result, { childList: true });
+  sync();
+  // 상태 줄: 마이크 켜짐 여부와 보정 상태를 따라 표시
+  const mic = document.getElementById('btnMic'), cal = document.getElementById('calState');
+  const syncStatus = () => {
+    const on = mic.disabled;
+    document.getElementById('micState').textContent = on ? '마이크 켜짐' : '마이크 꺼짐';
+    document.getElementById('micDot').classList.toggle('on', on);
+    mic.hidden = on;
+    document.getElementById('calMirror').textContent = cal.textContent;
+  };
+  new MutationObserver(syncStatus).observe(mic, { attributes: true, attributeFilter: ['disabled'] });
+  new MutationObserver(syncStatus).observe(cal, { childList: true, characterData: true, subtree: true });
+  syncStatus();
+  // 큰 'PDF 불러오기' 버튼을 키보드로도 열 수 있게
+  document.getElementById('scoreFileBig').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('scoreFile').click(); } });
+})();
+</script>
+</body>
+</html>
