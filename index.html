@@ -399,6 +399,8 @@
   .sc-song .cap { display:block; margin-top:2px; }
   .sc-range { border-top:1px solid var(--ds-line); border-bottom:0; }
   #rangeWarn { margin:0 0 12px; color:var(--ds-t1); }
+  .sc-range-rep { display:inline-flex; align-items:center; gap:8px; font-size:15px; color:var(--ds-t2); }
+  .sc-range-rep select { height:40px; padding:0 8px; border:0; background:var(--ds-bg2); color:var(--ds-t1); font:inherit; font-weight:600; }
   .sc-range .row-label { font-weight:600; }
   .sc-range-go { font-size:14px; font-weight:500; }
   .sc-range-inputs { display:flex; align-items:center; gap:12px; }
@@ -636,6 +638,9 @@
               <label>끝 <input type="number" id="rangeTo" min="1"></label>
               <span class="cap" style="margin:0">마디</span>
             </div>
+            <label class="sc-range-rep">반복
+              <select id="rangeRepeat" aria-label="구간 반복 횟수"><option value="1">1번</option><option value="2">2번</option><option value="4">4번</option><option value="8">8번</option></select>
+            </label>
             <div class="sc-range-btns">
               <button id="btnRangeAll">곡 전체</button>
               <button id="btnScoreTempo">악보 템포로</button>
@@ -1953,7 +1958,8 @@ function parseScore(pages) {
 
 const PDFJS_BASE = new URLSearchParams(location.search).get('pdfjs') || 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.4.299/build';
 let pdfjsLib = null;
-const SC = { res: null, doc: null, pages: null, from: 0, to: 0, picking: false, boxes: [], last: null, repeat: 1 };   // repeat: '이 마디 연습'이면 4번 반복
+const SC = { res: null, doc: null, pages: null, from: 0, to: 0, picking: false, boxes: [], last: null, repeat: 1 };
+const REPEAT_N = 4;   // 구간·마디 연습의 기본 반복 횟수   // repeat: '이 마디 연습'이면 4번 반복
 // hits: 타격 시각, hitRms: 그 타격의 세기, levels: 소리 크기 기록 [시각, 크기, …] ('다른 소리에 묻힘' 판단용)
 const S = window.scoreSession = {
   active: false, hits: [], hitRms: [], levels: [],
@@ -2054,7 +2060,8 @@ async function renderPages() {
 // ---- 구간 선택 ----
 function setRange(a, b) {
   SC.from = Math.min(a, b); SC.to = Math.max(a, b);
-  SC.repeat = 1;
+  SC.repeat = isWhole() ? 1 : REPEAT_N;               // 구간 연습은 기본 4번 반복, 곡 전체는 1번
+  el('rangeRepeat').value = String(SC.repeat);
   applySectionTempo();
   const ms = SC.res.measures;
   el('rangeFrom').value = ms[SC.from].number;
@@ -2114,11 +2121,10 @@ function hideDetail() {
 el('mDetailClose').addEventListener('click', hideDetail);
 el('mDetailGo').addEventListener('click', () => { if (SC.detail != null) practiceOnly(SC.detail); });
 // 한 마디만 연습: 결과를 지우고 그 마디를 구간으로
-const REPEAT_N = 4;
 function practiceOnly(idx) {
   SC.picking = false; SC.last = null; hideDetail(); setRange(idx, idx); el('scoreResult').innerHTML = '';
-  SC.repeat = REPEAT_N; updateRangeSummary();
-  msg(`${numLabel(SC.res.measures[idx])}마디를 ${REPEAT_N}번 반복해요. 예비 박 4번 뒤에 시작돼요.`);
+  updateRangeSummary();
+  msg(`${numLabel(SC.res.measures[idx])}마디를 ${SC.repeat}번 반복해요. 예비 박 4번 뒤에 시작돼요.`);
   SC.boxes[idx]?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   el('btnScoreStart').click();                       // 누르면 바로 예비 박 → 반복 연습 시작
 }
@@ -2147,6 +2153,7 @@ function idxOfNumber(n) {
   msg(`${rangeText()}를 연습해요.`);
 }));
 el('btnRangeAll').addEventListener('click', () => { if (!SC.res || S.active) return; SC.picking = false; setRange(firstPlayed(), SC.res.measures.length - 1); msg('곡 전체를 도돌이표 순서대로 연습해요.'); });
+el('rangeRepeat').addEventListener('change', () => { if (S.active) return; SC.repeat = +el('rangeRepeat').value || 1; updateRangeSummary(); });
 el('btnScoreTempo').addEventListener('click', () => { const t = sectionTempo(); if (t && !S.active) { setBpm(t); updateRangeSummary(); } });
 
 const firstPlayed = () => Math.max(0, SC.res.measures.findIndex(m => m.notes.length));
@@ -2388,7 +2395,12 @@ function evaluate(sess, playedUntil) {
   const { byExp, usedHits } = matchPairs(exp, hits, center);
   markMasked(exp, byExp, hitRms, sess.levels || [], center);
 
-  const byMeasure = new Map(), byRep = new Map();
+  const byMeasure = new Map(), byRep = new Map(), byMR = new Map();
+  const getMR = (idx, k) => {
+    const key = idx + ':' + k;
+    if (!byMR.has(key)) byMR.set(key, { idx, expected: 0, hit: 0, missed: 0, extra: 0, skipped: 0, errs: [] });
+    return byMR.get(key);
+  };
   const getRep = k => {
     if (!byRep.has(k)) byRep.set(k, { expected: 0, hit: 0, missed: 0, extra: 0, skipped: 0, errs: [] });
     return byRep.get(k);
@@ -2399,7 +2411,7 @@ function evaluate(sess, playedUntil) {
   };
   exp.forEach((e, i) => {
     const p = byExp.get(i);
-    for (const r of [get(e.idx), getRep(e.rep)]) {
+    for (const r of [get(e.idx), getRep(e.rep), getMR(e.idx, e.rep)]) {
       if (p) { r.expected++; r.hit++; r.errs.push(p.err); }
       else if (e.masked) r.skipped++;                    // 다른 소리에 묻혀 판정 제외 (놓침으로 세지 않음)
       else { r.expected++; r.missed++; }
@@ -2410,7 +2422,7 @@ function evaluate(sess, playedUntil) {
     if (usedHits.has(j)) return;
     const pos = ((h - center / 1000) - sess.t0) / sess.beatDur;
     const p = sess.plan.find(q => pos >= q.start - 0.25 && pos < q.start + q.len - 0.25) || null;
-    if (p && p.onsets.length) { get(p.idx).extra++; getRep(p.rep || 0).extra++; }
+    if (p && p.onsets.length) { get(p.idx).extra++; getRep(p.rep || 0).extra++; getMR(p.idx, p.rep || 0).extra++; }
   });
   let allErr = [];
   const grade = r => {
@@ -2424,10 +2436,12 @@ function evaluate(sess, playedUntil) {
   const reps = byRep.size;
   byRep.forEach(grade);
   // 반복 연습이면 마디 색은 '몇 번 깔끔했나'로: 전부 깔끔 = 초록, 절반 이상 = 노랑, 그 밖 = 빨강
-  if (reps > 1) for (const r of byMeasure.values()) {
-    const good = [...byRep.values()].filter(x => x.grade === 'good').length;
-    r.goodReps = good; r.reps = reps;
-    r.grade = good === reps ? 'good' : good >= reps / 2 ? 'ok' : 'bad';
+  byMR.forEach(grade);
+  if (reps > 1) for (const [idx, r] of byMeasure) {
+    const mine = [...byMR.values()].filter(x => x.idx === idx);
+    const good = mine.filter(x => x.grade === 'good').length;
+    r.goodReps = good; r.reps = mine.length;
+    r.grade = good === mine.length ? 'good' : good >= mine.length / 2 ? 'ok' : 'bad';
   }
   const skipped = exp.filter(e => e.masked).length, total = exp.length - skipped, hit = byExp.size;
   const meanErr = allErr.length ? allErr.reduce((a, b) => a + b, 0) / allErr.length : 0;
@@ -2440,7 +2454,7 @@ function showResult(r) {
   if (!r.total) { el('scoreResult').innerHTML = ''; msg('채점할 만큼 연주하지 않았어요. 예비 박 4번 뒤에 시작돼요.'); return; }
   const rate = Math.round(r.hit / r.total * 100);
   const entries = [...r.byMeasure.entries()].filter(([, v]) => v.expected);
-  const bad = entries.filter(([, v]) => v.grade !== 'good').sort((a, b) => (b[1].missed + b[1].extra) - (a[1].missed + a[1].extra) || b[1].meanAbs - a[1].meanAbs).slice(0, 3);
+  const bad = entries.filter(([, v]) => v.grade !== 'good').sort((a, b) => ((a[1].goodReps ?? 0) - (b[1].goodReps ?? 0)) || (b[1].missed + b[1].extra) - (a[1].missed + a[1].extra) || b[1].meanAbs - a[1].meanAbs).slice(0, 3);
   const goodN = entries.filter(([, v]) => v.grade === 'good').length;
   const repList = r.reps > 1 ? [...r.byRep.entries()].sort((a, b) => a[0] - b[0]) : [];
   const goodReps = repList.filter(([, v]) => v.grade === 'good').length;
@@ -2465,8 +2479,8 @@ function showResult(r) {
     ${r.reps > 1 ? `<h3 class="res-sub">반복별 결과</h3>
     <ul class="res-list">${repList.map(([k, v]) => `<li><div><b><i class="res-dot ${v.grade}"></i>${k + 1}번째</b><span>${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', v.missed || v.extra ? '' : '놓치거나 더 친 음 없음', v.hit ? `평균 오차 ${v.meanAbs.toFixed(0)}ms` : ''].filter(Boolean).join(' · ')}</span></div><span class="res-grade">${({ good: '깔끔함', ok: '조금 흔들림', bad: '많이 틀림' })[v.grade]}</span></li>`).join('')}</ul>
     <button type="button" class="res-again" id="btnRepeatAgain">한 번 더 반복</button>` : ''}
-    ${bad.length && !(r.reps > 1) ? `<h3 class="res-sub">다시 볼 마디</h3>
-    <ul class="res-list">${bad.map(([idx, v]) => `<li><div><b>${numLabel(ms[idx])}마디</b><span>${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', `평균 오차 ${v.meanAbs.toFixed(0)}ms`].filter(Boolean).join(' · ')}</span></div><button type="button" class="res-go" data-idx="${idx}">이 마디 연습</button></li>`).join('')}</ul>` : ''}
+    ${bad.length && !(r.reps > 1 && entries.length === 1) ? `<h3 class="res-sub">다시 볼 마디</h3>
+    <ul class="res-list">${bad.map(([idx, v]) => `<li><div><b>${numLabel(ms[idx])}마디</b><span>${[v.reps > 1 ? `${v.reps}번 중 ${v.goodReps}번 깔끔` : '', v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', `평균 오차 ${v.meanAbs.toFixed(0)}ms`].filter(Boolean).join(' · ')}</span></div><button type="button" class="res-go" data-idx="${idx}">이 마디 연습</button></li>`).join('')}</ul>` : ''}
     ${notes.length ? `<p class="cap faint res-notes">${notes.join(' ')}</p>` : ''}`;
   // 보정값이 낡았을 때: 연습 탭으로 가서 시간 보정 칸을 펼침
   const goCalib = el('btnGoCalib');
