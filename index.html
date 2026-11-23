@@ -300,6 +300,9 @@
   .cap.faint { color:var(--ds-t3); }
 
   /* 아래 버튼 · 탭 바: 단색 바탕 + 1px 선, 그라데이션 없음 */
+  /* 탭 바 높이를 56px + 위 선 1px로 고정하고, 아래 버튼을 그 바로 위에 딱 붙임 (틈으로 뒤 글자가 비치지 않게) */
+  .tabbar-inner { height:56px; }
+  .dock { bottom:calc(57px + env(safe-area-inset-bottom)); }
   .dock-inner { background:var(--ds-bg); border-top:1px solid var(--ds-line); padding:12px 20px; }
   .dock button { padding:0; height:52px; border-radius:var(--r-md); font-size:16px; font-weight:600; }
   .tabbar { background:var(--ds-bg); border-top:1px solid var(--ds-line); }
@@ -317,6 +320,18 @@
   .st-sep { display:inline-block; width:1px; height:10px; background:var(--ds-line); margin:0 8px; vertical-align:-1px; }
   .btn-sm { margin-left:auto; height:32px; padding:0 12px; border-radius:var(--r-sm); font-size:13px; font-weight:600; background:var(--ds-bg2); color:var(--ds-t1); }
   .btn-sm:hover { background:var(--ds-line); }
+  /* 상태 줄의 '보정 전/보정됨': 누르면 시간 보정 칸으로 이동 (밑줄로 누를 수 있음을 표시) */
+  .st-link { display:inline-flex; align-items:center; height:44px; margin:0 -4px; padding:0 4px; background:none; border-radius:var(--r-sm); font:inherit; font-size:13px; font-weight:400; color:var(--ds-t2); text-decoration:underline; text-decoration-color:var(--ds-t3); text-underline-offset:3px; }
+  .st-link:hover { background:none; color:var(--ds-t1); }
+  .st-link:active { transform:none; }
+  /* 보정 안내 한 줄: 회색 바탕 + 실행은 파란 글자 */
+  .cal-tip { display:flex; align-items:center; gap:8px; margin:4px 0 0; padding:8px 4px 8px 16px; background:var(--ds-bg2); border-radius:var(--r-md); }
+  .cal-tip p { flex:1; margin:0; font-size:13px; line-height:18px; color:var(--ds-t1); }
+  .cal-tip-go { flex:none; height:32px; padding:0 8px; background:none; font-size:14px; font-weight:600; color:var(--ds-accent); }
+  .cal-tip-go:hover { background:none; color:var(--ds-accent-press); }
+  .cal-tip-x { flex:none; width:32px; height:32px; padding:0; display:grid; place-items:center; background:none; color:var(--ds-t3); }
+  .cal-tip-x:hover { background:none; color:var(--ds-t1); }
+  .cal-tip button:active { transform:none; }
 
   .tempo-block { text-align:center; padding:12px 0 28px; }
   .bpm-line { display:inline-flex; align-items:baseline; gap:6px; }
@@ -350,6 +365,83 @@
 
   .p #last { font-size:28px !important; line-height:32px; font-weight:700; letter-spacing:-.02em; margin-bottom:12px; color:var(--ds-t1); }
   .p #last.late { color:var(--ds-late); } .p #last.early { color:var(--ds-early); } .p #last.ok { color:var(--ds-ontime); }
+  /* ===== 채점 결과 (디자인 v2: 카드 속 카드 없이 숫자 3칸 + 1px 선 + 리스트, 색은 실행 버튼과 마디 색 의미에만) ===== */
+  #scoreResult .res-head { font-size:18px; line-height:26px; font-weight:600; letter-spacing:-.01em; color:var(--ds-t1); margin:0; }
+  #scoreResult .cap { margin-top:4px; }
+  #scoreResult .res-tip { margin:16px 0 0; }
+  #scoreResult .metric b small { font-size:15px; font-weight:600; color:var(--ds-t2); letter-spacing:0; }
+  .res-legend { display:flex; flex-wrap:wrap; gap:4px 16px; margin-top:12px; font-size:12px; line-height:16px; color:var(--ds-t2); }
+  .res-legend i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+  .res-legend i.g { background:var(--ds-ontime); } .res-legend i.o { background:var(--ds-mark); } .res-legend i.b { background:var(--ds-late); }
+  .res-sub { font-size:15px; line-height:22px; font-weight:600; color:var(--ds-t1); margin:24px 0 0; padding-bottom:8px; border-bottom:1px solid var(--ds-line); }
+  .res-list { list-style:none; margin:0; padding:0; }
+  .res-list li { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:56px; padding:8px 0; border-bottom:1px solid var(--ds-line); }
+  .res-list li b { display:block; font-size:15px; line-height:22px; font-weight:600; color:var(--ds-t1); }
+  .res-list li span { display:block; font-size:13px; line-height:18px; color:var(--ds-t2); }
+  .res-go { flex:none; height:32px; padding:0 4px; background:none; font-size:14px; font-weight:600; color:var(--ds-accent); }
+  .res-go:hover { background:none; color:var(--ds-accent-press); }
+  .res-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:2px; }
+  .res-dot.good { background:var(--ds-ontime); } .res-dot.ok { background:var(--ds-mark); } .res-dot.bad { background:var(--ds-late); }
+  .res-grade { flex:none; font-size:13px; color:var(--ds-t2); }
+  .res-again { margin-top:16px; width:100%; height:44px; background:var(--ds-bg2); color:var(--ds-t1); font-size:15px; font-weight:600; border-radius:var(--r-md); }
+  .res-again:hover { background:var(--ds-line); }
+  .res-notes { margin-top:16px; }
+  /* ===== 악보 화면 (디자인 v2) ===== */
+  body[data-screen="score"] { background:var(--ds-bg); }
+  body[data-screen="score"] .app { padding-bottom:calc(220px + env(safe-area-inset-bottom)); }   /* 아래 고정 영역(문구+버튼)과 탭 바 높이만큼 */
+  .sc-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:12px; }
+  .sc-head .btn-sm { margin-left:0; display:inline-flex; align-items:center; cursor:pointer; }
+  .sc .empty { padding:48px 0 40px; }
+  .sc .empty svg { color:var(--ds-t3); }
+  .sc .empty b { font-size:18px; line-height:26px; font-weight:600; color:var(--ds-t1); margin:16px 0 4px; }
+  .sc-song { padding:4px 0 8px; }
+  .sc-song b { display:block; font-size:18px; line-height:26px; font-weight:600; color:var(--ds-t1); }
+  .sc-song .cap { display:block; margin-top:2px; }
+  .sc-range { border-top:1px solid var(--ds-line); border-bottom:0; }
+  #rangeWarn { margin:0 0 12px; color:var(--ds-t1); }
+  .sc-range .row-label { font-weight:600; }
+  .sc-range-go { font-size:14px; font-weight:500; }
+  .sc-range-inputs { display:flex; align-items:center; gap:12px; }
+  .sc-range-inputs label { display:inline-flex; align-items:center; gap:8px; font-size:15px; color:var(--ds-t2); }
+  .sc-range-inputs input { width:72px; height:40px; padding:0 8px; border:0; background:var(--ds-bg2); color:var(--ds-t1); font:inherit; font-weight:600; text-align:center; }
+  .sc-range-btns { display:flex; gap:8px; }
+  .sc-range-btns button { height:40px; padding:0 16px; background:var(--ds-bg2); color:var(--ds-t1); font-size:14px; font-weight:600; border-radius:var(--r-md); }
+  .sc-range-btns button:hover { background:var(--ds-line); }
+  #scoreResultCard .sec { padding-top:20px; }
+  #sheetBand { margin-bottom:16px; }
+  .score-pages { gap:16px; }
+  .score-page { border-radius:var(--r-sm); box-shadow:0 0 0 1px var(--ds-line); }
+  /* 마디 상자: 구간(파랑) / 진행 중(진한 파랑) / 결과(초록·노랑·빨강) — 결과 설명과 같은 토큰 색 */
+  .mb { border-radius:var(--r-sm); }
+  .mb:hover { border-color:color-mix(in srgb, var(--ds-accent) 55%, transparent); }
+  .mb .n { color:var(--ds-accent); }
+  .mb.sel { background:color-mix(in srgb, var(--ds-accent) 9%, transparent); border-color:color-mix(in srgb, var(--ds-accent) 45%, transparent); }
+  .mb.cur { background:color-mix(in srgb, var(--ds-accent) 20%, transparent); border:2.5px solid var(--ds-accent); }
+  .mb.good { background:color-mix(in srgb, var(--ds-ontime) 14%, transparent); border-color:color-mix(in srgb, var(--ds-ontime) 75%, transparent); }
+  .mb.good .r { background:var(--ds-ontime); }
+  .mb.ok { background:color-mix(in srgb, var(--ds-mark) 18%, transparent); border-color:color-mix(in srgb, var(--ds-mark) 85%, transparent); }
+  .mb.ok .r { background:var(--ds-mark); }
+  .mb.bad { background:color-mix(in srgb, var(--ds-late) 13%, transparent); border-color:color-mix(in srgb, var(--ds-late) 80%, transparent); }
+  .mb.bad .r { background:var(--ds-late); }
+  .mb.focus { outline:2px solid var(--ds-accent); outline-offset:2px; }
+  .mb:focus-visible { outline:2px solid var(--ds-accent); }
+  /* 아래 고정 영역: 진행 문구 + 마디 상세 + 시작 버튼 */
+  #dock-score .dock-inner { flex-direction:column; align-items:stretch; gap:8px; max-width:960px; }
+  #scoreMsg.dock-status { min-height:0; margin:0; }
+  .dock-status { margin:0; font-size:13px; line-height:18px; color:var(--ds-t2); text-align:center; }
+  .dock-status:empty { display:none; }
+  .dock-status.err { color:var(--ds-late); }
+  /* 아래 영역 공통 버튼 규칙(큰 버튼, 가로로 나눠 차지)이 세로 배치·작은 버튼에 적용되지 않게 */
+  #dock-score #btnScoreStart { flex:none; width:100%; }
+  #dock-score .m-detail button { flex:none; height:32px; font-size:14px; border-radius:var(--r-sm); box-shadow:none; }
+  #dock-score .m-detail .res-go { padding:0 8px; background:none; }
+  #dock-score .m-detail .m-detail-x { width:32px; padding:0; background:none; }
+  .m-detail { display:flex; align-items:center; gap:8px; padding:8px 4px 8px 16px; background:var(--ds-bg2); border-radius:var(--r-md); }
+  .m-detail-text { flex:1; min-width:0; }
+  .m-detail-text b { display:block; font-size:15px; line-height:22px; font-weight:600; color:var(--ds-t1); }
+  .m-detail-text span { display:block; font-size:13px; line-height:18px; color:var(--ds-t2); }
+  .m-detail-x { flex:none; width:32px; height:32px; padding:0; display:grid; place-items:center; background:none; color:var(--ds-t3); }
+  .m-detail-x:hover { background:none; color:var(--ds-t1); }
   .p #bar { background:var(--ds-bg2); border-radius:var(--r-md); }
 
   .p #headline { font-size:18px; line-height:26px; font-weight:600; color:var(--ds-t1); margin:0; letter-spacing:-.01em; }
@@ -391,6 +483,11 @@
   .p .precise button { height:40px; padding:0 14px; font-size:14px; background:var(--ds-bg2); color:var(--ds-t1); }
   .p .precise button:hover { background:var(--ds-line); }
   .p #deviceInfo { font-size:13px; line-height:18px; }
+  /* 보정 진행 상황·결과: 보정 버튼 바로 아래 */
+  .p #calStatus { margin:0; color:var(--ds-t1); }
+  .p .precise button:disabled { color:var(--ds-t3); cursor:default; }
+  .p .precise button:disabled:hover { background:var(--ds-bg2); }
+  .p #calStatus:empty { display:none; }
 
   @media (max-width:420px) {
     .app { padding-left:20px; padding-right:20px; }
@@ -411,8 +508,15 @@
     <!-- 상태 줄: 마이크와 보정 상태를 늘 보이게 -->
     <div class="status-row" role="status">
       <span class="st-dot" id="micDot" aria-hidden="true"></span>
-      <span class="st-text"><span id="micState">마이크 꺼짐</span><span class="st-sep" aria-hidden="true"></span><span id="calMirror">보정 전</span></span>
+      <span class="st-text"><span id="micState">마이크 꺼짐</span><span class="st-sep" aria-hidden="true"></span><button type="button" class="st-link" id="calMirror" data-open-calib aria-label="시간 보정 열기">보정 전</button></span>
       <button id="btnMic" class="btn-sm">마이크 켜기</button>
+    </div>
+
+    <!-- 마이크를 켰는데 아직 보정 전일 때만 보이는 안내 한 줄 -->
+    <div class="cal-tip" id="calTip" hidden>
+      <p>루프백 보정을 한 번 하면 박자 기준으로 빠름·늦음을 볼 수 있어요.</p>
+      <button type="button" class="cal-tip-go" data-open-calib>보정하기</button>
+      <button type="button" class="cal-tip-x" id="calTipClose" aria-label="안내 닫기"><svg class="ic ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
 
     <!-- 템포 -->
@@ -490,6 +594,7 @@
           <button id="btnLoop">루프백 보정</button>
           <button id="btnCalib">직접 치기 보정</button>
         </div>
+        <p class="cap" id="calStatus" role="status" aria-live="polite"></p>
         <p class="hint">루프백 보정은 이어폰이나 스피커에서 나는 소리를 컴퓨터에 달린 마이크가 다시 듣게 해서 지연을 재요. 소리 나는 쪽을 컴퓨터 마이크 가까이 대세요. 마이크를 먼저 켜 주세요.</p>
         <div id="deviceInfo"></div>
         <label><input type="checkbox" id="btFlag">블루투스 이어폰 사용 중</label>
@@ -500,43 +605,54 @@
   </section>
 
   <!-- ===== 악보 ===== -->
-  <section class="screen" id="screen-score" aria-labelledby="h-score" hidden>
-    <header class="screen-head">
-      <div>
-        <h1 id="h-score">악보 연습 <span class="beta">베타</span></h1>
-        <p>악보를 보면서 따라 치면 마디별로 채점해요.</p>
-      </div>
-      <label class="btn" for="scoreFile" id="scoreFileBtn" hidden>다른 악보</label>
+  <!-- 디자인 v2: 카드 없이 한 장의 바탕. 순서 = 제목 → 곡·구간 한 줄 → (채점 결과) → 악보 -->
+  <section class="screen sc" id="screen-score" aria-labelledby="h-score" hidden>
+    <header class="p-head sc-head">
+      <h1 id="h-score">악보 <span class="beta">베타</span></h1>
+      <label class="btn-sm" for="scoreFile" id="scoreFileBtn" hidden>다른 악보</label>
     </header>
 
-    <div class="card" id="scoreBox">
+    <div id="scoreBox">
       <div id="scoreEmpty">
         <div class="empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 12h6M10 15h6M10 18h4"/></svg>
           <b>악보 PDF를 불러와 주세요</b>
-          <p class="hint">악보바다에서 받은 드럼 악보 PDF를 읽을 수 있어요.<br>PDF는 이 기기 안에서만 읽고 어디로도 보내지 않아요.</p>
+          <p class="cap">악보바다에서 받은 드럼 악보 PDF를 읽을 수 있어요.<br>PDF는 이 기기 안에서만 읽고 어디로도 보내지 않아요.</p>
           <label class="btn primary" for="scoreFile" id="scoreFileBig" tabindex="0">PDF 불러오기</label>
-          <p class="hint" id="scoreStatus" style="margin-top:12px"></p>
+          <p class="cap" id="scoreStatus" style="margin-top:12px"></p>
         </div>
       </div>
       <div id="scoreLoaded" hidden>
-        <div class="score-title"><b id="scoreName"></b><span class="hint" id="scoreInfo"></span></div>
-        <div class="score-row">
-          <label>구간 <input type="number" id="rangeFrom" min="1"> ~ <input type="number" id="rangeTo" min="1"> 마디</label>
-        </div>
-        <div class="score-row" style="margin-top:10px">
-          <button id="btnRangeAll">곡 전체</button>
-          <button id="btnScoreTempo">악보 템포로</button>
-        </div>
-        <p class="hint" style="margin-top:12px">악보에서 마디를 누르면 구간 시작, 한 번 더 누르면 구간 끝이 정해져요. 곡 전체를 고르면 도돌이표와 1·2번 괄호 순서대로 진행해요.</p>
-        <p class="hint" id="scoreMsg" role="status"></p>
+        <div class="sc-song"><b id="scoreName"></b><span class="cap" id="scoreInfo"></span></div>
+        <!-- 연습 구간: 평소엔 한 줄 요약, 펼친 동안에만 악보에서 마디를 눌러 구간을 고름 -->
+        <details class="row-dis sc-range" id="rangeRow">
+          <summary>
+            <span class="row-label" id="rangeSummary">곡 전체</span>
+            <span class="row-value sc-range-go">구간 바꾸기<svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          </summary>
+          <div class="row-body">
+            <div class="sc-range-inputs">
+              <label>시작 <input type="number" id="rangeFrom" min="1"></label>
+              <label>끝 <input type="number" id="rangeTo" min="1"></label>
+              <span class="cap" style="margin:0">마디</span>
+            </div>
+            <div class="sc-range-btns">
+              <button id="btnRangeAll">곡 전체</button>
+              <button id="btnScoreTempo">악보 템포로</button>
+            </div>
+            <p class="cap" style="margin:0">펼쳐 둔 동안 악보에서 마디를 누르면 구간 시작, 한 번 더 누르면 끝이 정해져요. 곡 전체는 도돌이표와 1·2번 괄호 순서대로 진행해요.</p>
+          </div>
+        </details>
+        <p class="cap" id="rangeWarn" hidden></p>
       </div>
     </div>
 
-    <div class="card" id="scoreResultCard" hidden>
-      <div id="scoreResult"></div>
+    <div id="scoreResultCard" hidden>
+      <div class="band" aria-hidden="true"></div>
+      <section class="sec" aria-label="채점 결과"><div id="scoreResult"></div></section>
     </div>
 
+    <div class="band" id="sheetBand" aria-hidden="true" hidden></div>
     <div class="score-pages" id="scorePages"></div>
   </section>
 
@@ -593,6 +709,13 @@
 </div>
 <div class="dock" id="dock-score" hidden>
   <div class="dock-inner">
+    <!-- 채점 진행 문구 / 마디를 눌렀을 때 상세 결과: 악보를 따라 스크롤해도 항상 보이게 아래에 고정 -->
+    <div class="m-detail" id="mDetail" hidden>
+      <div class="m-detail-text"><b id="mDetailTitle"></b><span id="mDetailBody"></span></div>
+      <button type="button" class="res-go" id="mDetailGo">이 마디 연습</button>
+      <button type="button" class="m-detail-x" id="mDetailClose" aria-label="마디 결과 닫기"><svg class="ic ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <p class="dock-status" id="scoreMsg" role="status" aria-live="polite"></p>
     <button id="btnScoreStart" class="primary" disabled>채점하며 연습 시작</button>
   </div>
 </div>
@@ -706,6 +829,10 @@ function startMetro() {
 function stopMetro() {
   clearInterval(timerId); metroOn = false;
   if (window.onMetroStop) window.onMetroStop();       // 악보 채점 중이면 채점을 끝냄
+  if (calibrating) {                                  // 직접 치기 보정 중에 메트로놈을 멈추면 보정도 취소
+    calibrating = false; setCalibBusy(null);
+    calMsg('직접 치기 보정을 멈췄어요. 다시 하려면 버튼을 눌러 주세요.');
+  }
   $('btnMetro').textContent = '시작';
   for (const d of $('beatDots').children) d.classList.remove('on');
 }
@@ -733,27 +860,53 @@ function finishCalib() {
   const s = [...calibRaw].sort((a, b) => a - b), n = s.length;
   const med = n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
   const sd = Math.sqrt(s.reduce((a, b) => a + (b - med) ** 2, 0) / n);
-  calibrating = false;
+  calibrating = false; setCalibBusy(null);
   if (sd > 25) {                             // 품질 검사: 너무 들쭉날쭉하면 거절
-    flash('직접 치기 보정 실패: 타격이 너무 들쭉날쭉해요 (±' + sd.toFixed(0) + 'ms). 다시 해보거나 루프백 보정을 쓰세요.');
+    calMsg('직접 치기 보정 실패: 타격이 너무 들쭉날쭉해요 (±' + sd.toFixed(0) + 'ms). 다시 해보거나 루프백 보정을 쓰세요.');
     return;
   }
   $('offset').value = Math.round(med);
+  deviceNote = '직접 치기 보정값 ' + Math.round(med) + 'ms 사용 중 (저장 안 됨 — 루프백 보정을 하면 장치별로 저장돼요)';
+  renderDeviceInfo();
   setCalibrated(true);
-  flash('직접 치기 보정 완료: ' + Math.round(med) + 'ms 반영 (저장되지 않아요. 연주 습관이 섞일 수 있어서 루프백 보정이 더 정확해요)');
+  calMsg('직접 치기 보정 완료: ' + Math.round(med) + 'ms 반영 (저장되지 않아요. 연주 습관이 섞일 수 있어서 루프백 보정이 더 정확해요)');
 }
-$('btnCalib').onclick = () => {
-  if (!micStream) { setStatus('먼저 마이크를 켜주세요'); return; }
+
+// ===== 보정 진행 표시: 메시지는 보정 버튼 바로 아래, 진행 중에는 누른 버튼 글자가 바뀌고 두 버튼 모두 잠김 =====
+function calMsg(text) { $('calStatus').textContent = text; }
+const CALIB_LABEL = { btnLoop: '루프백 보정', btnCalib: '직접 치기 보정' };
+function setCalibBusy(id, label) {
+  for (const k in CALIB_LABEL) {
+    $(k).disabled = !!id;
+    $(k).textContent = k === id ? label : CALIB_LABEL[k];
+  }
+}
+function showCalibProgress() {
+  setCalibBusy('btnCalib', '치는 중 ' + calibRaw.length + '/8');
+  calMsg('클릭 소리에 최대한 정확히 맞춰 8번 쳐 주세요 (' + calibRaw.length + '/8). 그만하려면 아래 정지 버튼을 누르세요.');
+}
+// 마이크가 꺼져 있으면 먼저 켜고, 켜지면 true
+async function ensureMicForCalib() {
+  if (micStream) return true;
+  calMsg('마이크를 켜는 중이에요… (브라우저 팝업에서 "허용"을 눌러주세요)');
+  await startMic();
+  if (!micStream) { calMsg('마이크를 켜지 못해서 보정을 시작할 수 없어요. 맨 위 상태 줄과 "마이크 감지" 칸의 안내를 확인해 주세요.'); return false; }
+  return true;
+}
+$('btnCalib').onclick = async () => {
+  if (calibrating || loop) return;
+  if (!(await ensureMicForCalib())) return;
   if (!metroOn) startMetro();
   calibRaw = []; calibrating = true;
+  showCalibProgress();
 };
 window.addEventListener('unhandledrejection', e => setStatus('오류: ' + ((e.reason && e.reason.message) || e.reason)));
 window.addEventListener('error', e => setStatus('오류: ' + e.message));
 
 // ===== 상태 메시지 / 장치 프로파일 / 루프백 보정 =====
-let flashMsg = '', flashUntil = 0, loop = null, loopMsg = '';
+let loop = null, loopTimer = null;
 let devKey = '', deviceNote = '', inLabelCache = '', outLabelCache = '';
-function flash(msg, ms = 9000) { flashMsg = msg; flashUntil = Date.now() + ms; setStatus(msg); }
+const flash = calMsg;   // 보정 결과 메시지는 모두 보정 버튼 아래에 표시
 
 const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
 const BT_RE = /bluetooth|블루투스|airpods|buds|beats|hands-?free/i;   // 장치 이름으로 블루투스 추정 (체크박스로 수정 가능)
@@ -763,7 +916,13 @@ function saveProfile(key, offset, bt) {
 }
 
 function setCalibrated(v) { isCalibrated = v; refreshAll(); }
-$('offset').oninput = () => setCalibrated(true);      // 직접 입력해도 보정한 것으로 보고, 기존 기록도 함께 정정
+let manualOffset = false;                             // 사용자가 보정값을 직접 입력했는지 (마이크를 처음 켤 때 덮어쓰지 않으려고)
+$('offset').oninput = () => {                         // 직접 입력해도 보정한 것으로 보고, 기존 기록도 함께 정정
+  manualOffset = true;
+  deviceNote = '직접 입력한 보정값 ' + (+$('offset').value || 0) + 'ms 사용 중 (저장 안 됨 — 루프백 보정을 하면 장치별로 저장돼요)';
+  if (micStream) renderDeviceInfo();                  // 마이크를 켜기 전에는 장치 정보 자체를 아직 안 보여줌
+  setCalibrated(true);
+};
 
 function renderDeviceInfo() {
   let t = '입력: ' + (inLabelCache || '알 수 없음') + ' · 출력: ' + (outLabelCache || '알 수 없음') + '\n' + deviceNote;
@@ -790,6 +949,14 @@ async function refreshDevice() {
 
   const inLat = (tr.getSettings && tr.getSettings().latency) || 0;
   const est = Math.round(((ctx.outputLatency || 0) + (ctx.baseLatency || 0) + inLat) * 1000);
+  // 마이크를 켜기 전에 직접 넣은 값은 처음 켤 때 그대로 둠. 장치가 바뀌면(prevKey 있음) 지연이 달라지므로 아래 기본 규칙을 따름
+  if (manualOffset && !prevKey) {
+    deviceNote = '직접 입력한 보정값 ' + off() + 'ms 사용 중 (저장 안 됨 — 루프백 보정을 하면 장치별로 저장돼요)';
+    renderDeviceInfo();
+    setCalibrated(true);
+    return;
+  }
+  manualOffset = false;
   const p = loadProfiles()[devKey];
   if (p) {
     $('offset').value = p.offset;
@@ -812,21 +979,23 @@ function playLoopClick(time) {
   osc.connect(g).connect(ctx.destination);
   osc.start(time); osc.stop(time + 0.04);
 }
-function startLoopback() {
-  if (!micStream) { setStatus('먼저 마이크를 켜주세요'); return; }
-  if (loop) return;
+async function startLoopback() {
+  if (loop || calibrating) return;
+  if (!(await ensureMicForCalib())) return;
   ensureCtx();
   if (metroOn) stopMetro();
-  calibrating = false;
-  const N = 10, gap = 0.7, T0 = ctx.currentTime + 1.0;
+  const N = 10, gap = 0.7, T0 = ctx.currentTime + 1.0, total = 1.0 + N * gap + 0.8;
   loop = { T0, clicks: Array.from({ length: N }, (_, i) => T0 + i * gap), blocks: [] };
   loop.clicks.forEach(T => playLoopClick(T));
-  loopMsg = '루프백 측정 중… 소리가 나는 이어폰(또는 스피커)을 컴퓨터 마이크 가까이 대고 약 9초간 조용히 계세요';
-  setStatus(loopMsg);
-  setTimeout(finishLoopback, (1.0 + N * gap + 0.8) * 1000);
+  calMsg('루프백 측정 중… 소리가 나는 이어폰(또는 스피커)을 컴퓨터 마이크 가까이 대고 조용히 기다려 주세요.');
+  const endAt = Date.now() + total * 1000;
+  const tick = () => setCalibBusy('btnLoop', '측정 중… ' + Math.max(1, Math.ceil((endAt - Date.now()) / 1000)) + '초');
+  tick(); loopTimer = setInterval(tick, 250);
+  setTimeout(finishLoopback, total * 1000);
 }
 function finishLoopback() {
   const L = loop; loop = null;
+  clearInterval(loopTimer); setCalibBusy(null);
   const noise = Math.max(0, ...L.blocks.filter(b => b.t < L.T0 - 0.1).map(b => b.rms));
   const thr = Math.max(noise * 3, 0.003);
   let lats = [];
@@ -860,6 +1029,10 @@ async function startMic() {
     });
   } catch (e) {
     setStatus('마이크 접근 실패: ' + e.name + ' — ' + e.message + ' (주소창 왼쪽 자물쇠/마이크 아이콘에서 권한 확인)');
+    // 위 상태 줄에도 짧은 이유를 보여주고, 자세한 이유가 보이게 '마이크 감지' 칸을 펼침
+    $('micState').textContent = e.name === 'NotAllowedError' ? '마이크 권한이 꺼져 있어요'
+      : e.name === 'NotFoundError' ? '마이크를 찾을 수 없어요' : '마이크를 켜지 못했어요';
+    $('micRow').open = true;
     return;
   }
 
@@ -894,10 +1067,8 @@ async function startMic() {
   requestAnimationFrame(drawLevel);
 
   setInterval(() => {
-    if (loop) setStatus(loopMsg);
-    else if (calibrating) setStatus('보정 중 ' + calibRaw.length + '/8 — 클릭 소리에 최대한 정확히 맞춰 쳐주세요');
-    else if (flashUntil > Date.now()) setStatus(flashMsg);
-    else if (blocks === 0) setStatus('마이크 신호가 들어오지 않아요 (AudioContext: ' + ctx.state + ', 방식: ' + micMode + ')');
+    // 보정 진행 상황은 보정 버튼 아래(calStatus)에 따로 표시하고, 여기는 마이크 상태만 보여줌
+    if (blocks === 0) setStatus('마이크 신호가 들어오지 않아요 (AudioContext: ' + ctx.state + ', 방식: ' + micMode + ')');
     else setStatus('' + label + ' · 방식: ' + micMode + ' · 현재 레벨 ' + latestRms.toFixed(3) +
       ' · 임계값 ' + (+$('thr').value).toFixed(3) + ' · 감지 ' + hits.length + '회' +
       (latestRms === 0 ? ' (레벨이 계속 0이면 OS 설정에서 입력 장치/볼륨 확인)' : ''));
@@ -906,21 +1077,32 @@ async function startMic() {
 $('btnMic').onclick = startMic;
 
 // 블록(약 3ms)마다 호출되는 간단한 에너지 기반 onset 감지
+// 타격 감지: '직전보다 소리가 갑자기 커졌는가'로 판단 (모의 시험으로 고른 방식)
+// - 지금 크기 = 최근 4블록(약 10ms) 에너지 평균, 직전 크기 = 약 10~30ms 전 같은 값들 중 가장 큰 것
+//   (탐·킥처럼 저음이 출렁이며 줄어드는 소리가 다시 커진 것처럼 보여 두 번 잡히는 것을 막음)
+// - 지금 블록이 감지 기준(슬라이더)을 넘고, 지금 크기가 직전 크기의 1.4배를 넘으면 새 타격
+// - 같은 타격(플램 포함)이 두 번 잡히지 않게 60ms 동안은 무시 → 16분음표 기준 약 250BPM까지 구분
+// 예전 방식(최근 평균의 4배)은 연주가 촘촘하면 기준이 타격보다 높아져 절반 이상을 놓쳤음
+const lvBuf = new Float32Array(16);
+let lvIdx = 0, onsetArmed = true;
+const lvAt = back => { let s = 0; for (let j = 1; j <= 4; j++) s += lvBuf[(lvIdx - back - j) & 15]; return Math.sqrt(s / 4); };
 function onBlock(t, rms) {
   latestRms = Math.max(latestRms * 0.9, rms);
   if (loop) { loop.blocks.push({ t, rms }); return; }      // 루프백 측정 중에는 타격 감지 대신 신호만 기록
-  const thr = Math.max(+$('thr').value, avgRms * 4);
-  if (rms > thr && rms > prevRms && t - lastOnset > 0.08) {
-    lastOnset = t;
+  lvBuf[lvIdx & 15] = rms * rms; lvIdx++;
+  const now = lvAt(0), before = Math.max(lvAt(4), lvAt(8)), thr = +$('thr').value;
+  if (window.scoreSession && window.scoreSession.active) window.scoreSession.onLevel(t, now);   // 채점: '다른 소리에 묻힘' 판단용
+  if (!onsetArmed && now < before * 1.2) onsetArmed = true;         // 소리가 더 이상 커지지 않으면 다음 타격 받을 준비
+  if (onsetArmed && rms > thr && now > Math.max(before * 1.25, thr * 0.5) && t - lastOnset > 0.06) {
+    lastOnset = t; onsetArmed = false;
     onHit(t, rms);
   }
-  avgRms = avgRms * 0.995 + rms * 0.005;
   prevRms = rms;
 }
 
 function onHit(t, rms) {
   // 악보 채점 중에는 타격을 악보 채점으로만 보냄 (박 단위 통계에 섞이지 않게)
-  if (window.scoreSession && window.scoreSession.active && !calibrating) { window.scoreSession.onHit(t); return; }
+  if (window.scoreSession && window.scoreSession.active && !calibrating) { window.scoreSession.onHit(t, rms); return; }
   let rawMs = null, beatInBar = null;
   if (metroOn && beatLog.length) {
     let best = beatLog[0];
@@ -929,7 +1111,7 @@ function onHit(t, rms) {
     beatInBar = (best.index % beatsPerBar) + 1;
     if (calibrating) {                       // 보정 중에는 기록에 넣지 않고 원시 오차만 모음
       calibRaw.push(rawMs);
-      if (calibRaw.length >= 8) finishCalib();
+      if (calibRaw.length >= 8) finishCalib(); else showCalibProgress();
       return;
     }
   }
@@ -1713,17 +1895,36 @@ function playOrder(ms) {
   return order;
 }
 
-function findTempo(pages) {
-  // '♩ = 81' : Maestro 'q'(4분음표) 오른쪽 숫자
-  for (const page of pages) {
+// 템포 표시 '♩ = 81' 전부 찾기: Maestro 'q'(4분음표) 오른쪽 숫자. 곡 중간에 템포가 바뀌는 악보도 있어서 위치와 함께 모두 모음
+function findTempos(pages) {
+  const out = [];
+  pages.forEach((page, pi) => {
     for (const q of page.glyphs) {
       if (q.font.startsWith('Maestro') && q.c === 'q') {
         const ds = page.glyphs.filter(g => /\d/.test(g.c) && !g.font.startsWith('Maestro') && g.x - q.x > 0 && g.x - q.x < 45 && Math.abs(g.y - q.y) < 3);
-        if (ds.length) return parseInt(digits(ds), 10);
+        if (ds.length) out.push({ page: pi + 1, x: q.x, y: q.y, bpm: parseInt(digits(ds), 10) });
       }
     }
+  });
+  return out;
+}
+function findTempo(pages) { const t = findTempos(pages); return t.length ? t[0].bpm : null; }
+// 템포 표시를 마디에 붙이기: 표시는 보통 그 구간 첫 마디 위에 있으므로, 같은 쪽에서 표시보다 아래의 가장 가까운 줄 중
+// 가로로 가장 가까운 마디에 붙임. 그 마디부터 다음 표시 전까지 같은 템포(m.tempo). 첫 표시 앞 마디는 첫 표시 템포
+function assignTempos(measures, marks) {
+  const at = new Map();
+  for (const t of marks) {
+    const below = measures.map((m, i) => ({ m, i })).filter(({ m }) => m.page === t.page && m.top > t.y - 10);
+    if (!below.length) continue;
+    const topMin = Math.min(...below.map(c => c.m.top));
+    const row = below.filter(c => c.m.top - topMin < 5);
+    const dx = c => (t.x < c.m.x0 ? c.m.x0 - t.x : t.x > c.m.x1 ? t.x - c.m.x1 : 0);
+    const best = row.reduce((a, b) => (dx(b) < dx(a) ? b : a));
+    if (!at.has(best.i)) at.set(best.i, t.bpm);
   }
-  return null;
+  if (!at.size) { measures.forEach(m => { m.tempo = null; }); return; }
+  let cur = at.get(Math.min(...at.keys()));
+  measures.forEach((m, i) => { if (at.has(i)) cur = at.get(i); m.tempo = cur; });
 }
 
 // 악보바다(Maestro 글꼴) PDF인지 확인: 타악기 음표 머리 글꼴이 있어야 함
@@ -1739,8 +1940,11 @@ function parseScore(pages) {
   addGrace(pages, measures);
   const endings = findEndings(pages, measures);
   const order = playOrder(measures);
-  const tempo = findTempo(pages);
-  return { supported: true, tempo, endings, order, measures };
+  const tempoMarks = findTempos(pages);
+  assignTempos(measures, tempoMarks);
+  const tempo = tempoMarks.length ? tempoMarks[0].bpm : null;
+  const tempos = [...new Set(measures.map(m => m.tempo).filter(Boolean))];
+  return { supported: true, tempo, tempos, endings, order, measures };
 }
 
 // ===== 악보 연습: 불러오기 · 구간 선택 · 따라 치기 채점 =====
@@ -1749,11 +1953,18 @@ function parseScore(pages) {
 
 const PDFJS_BASE = new URLSearchParams(location.search).get('pdfjs') || 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.4.299/build';
 let pdfjsLib = null;
-const SC = { res: null, doc: null, pages: null, from: 0, to: 0, picking: false, boxes: [], last: null };
-const S = window.scoreSession = { active: false, hits: [], onHit(t) { if (this.active) this.hits.push(t); } };
+const SC = { res: null, doc: null, pages: null, from: 0, to: 0, picking: false, boxes: [], last: null, repeat: 1 };   // repeat: '이 마디 연습'이면 4번 반복
+// hits: 타격 시각, hitRms: 그 타격의 세기, levels: 소리 크기 기록 [시각, 크기, …] ('다른 소리에 묻힘' 판단용)
+const S = window.scoreSession = {
+  active: false, hits: [], hitRms: [], levels: [],
+  onHit(t, rms) { if (this.active) { this.hits.push(t); this.hitRms.push(rms || 0); } },
+  onLevel(t, lv) { if (this.active) this.levels.push(t, lv); },
+};
 
 const el = id => document.getElementById(id);
-const msg = (text, isErr) => { el('scoreMsg').textContent = text; el('scoreMsg').className = 'hint' + (isErr ? ' err' : ''); };
+const msg = (text, isErr) => { el('scoreMsg').textContent = text; el('scoreMsg').className = 'dock-status' + (isErr ? ' err' : ''); };
+// 평균 오차 표시: +12ms / -4ms / 0ms ('-0ms'가 나오지 않게)
+const signMs = v => { const n = Math.round(v) || 0; return `${n > 0 ? '+' : ''}${n}ms`; };
 const numLabel = m => (m.multi > 1 ? `${m.number}–${m.number + m.multi - 1}` : String(m.number));
 
 async function loadPdfjs() {
@@ -1788,15 +1999,16 @@ el('scoreFile').addEventListener('change', async ev => {
     el('scoreName').textContent = big >= 16 && title ? title : f.name.replace(/\.pdf$/i, '');
     const ms = res.measures, total = ms.reduce((a, m) => a + m.multi, 0);
     const issues = ms.filter(m => m.issues.length);
-    el('scoreInfo').textContent = `${total}마디 · 템포 ${res.tempo ?? '표시 없음'}` + (issues.length ? ` · 박자가 안 맞게 읽힌 마디 ${issues.length}개(${issues.map(m => m.number).join(', ')})` : '');
-    el('btnScoreTempo').textContent = res.tempo ? `악보 템포(${res.tempo})로` : '악보 템포 없음';
-    el('btnScoreTempo').disabled = !res.tempo;
+    el('scoreInfo').textContent = `${total}마디 · 템포 ${res.tempos && res.tempos.length > 1 ? res.tempos.join('→') : (res.tempo ?? '표시 없음')}` + (issues.length ? ` · 박자가 안 맞게 읽힌 마디 ${issues.length}개(${issues.map(m => m.number).join(', ')})` : '');
     el('scoreEmpty').hidden = true;
     el('scoreLoaded').hidden = false;
+    el('sheetBand').hidden = false;
+    el('rangeRow').open = false;
+    hideDetail();
     el('scoreResult').innerHTML = '';
     // 처음 연주가 시작되는 마디부터 끝까지를 기본 구간으로
     setRange(firstPlayed(), ms.length - 1);
-    msg('');
+    msg('아래 버튼을 누르면 예비 박 4번 뒤에 채점이 시작돼요.');
     await renderPages();
   } catch (e) {
     console.error(e);
@@ -1830,7 +2042,7 @@ async function renderPages() {
       b.setAttribute('aria-label', `${numLabel(m)}마디`);
       Object.assign(b.style, { left: `${m.x0 / w * 100}%`, width: `${(m.x1 - m.x0) / w * 100}%`, top: `${(m.top - 22) / h * 100}%`, height: `${(m.bottom - m.top + 38) / h * 100}%` });
       b.innerHTML = `<span class="n">${numLabel(m)}</span><span class="r" hidden></span>`;
-      b.addEventListener('click', () => pickMeasure(idx));
+      b.addEventListener('click', () => onMeasureTap(idx));
       SC.boxes[idx] = b;
       div.appendChild(b);
     });
@@ -1842,11 +2054,82 @@ async function renderPages() {
 // ---- 구간 선택 ----
 function setRange(a, b) {
   SC.from = Math.min(a, b); SC.to = Math.max(a, b);
+  SC.repeat = 1;
+  applySectionTempo();
   const ms = SC.res.measures;
   el('rangeFrom').value = ms[SC.from].number;
   el('rangeTo').value = ms[SC.to].number + ms[SC.to].multi - 1;
+  updateRangeSummary();
   paintBoxes();
 }
+// 구간 템포 = 구간 첫 마디(곡 전체면 첫 연주 마디)에 적힌 템포. 표시가 없으면 null
+function sectionTempo() {
+  if (!SC.res) return null;
+  const m = SC.res.measures[isWhole() ? firstPlayed() : SC.from];
+  return (m && m.tempo) || SC.res.tempo || null;
+}
+// 구간이 정해지면 메트로놈을 그 구간 템포로 맞춤 (그 뒤 연습 탭에서 일부러 바꾼 템포는 다음 구간 변경 전까지 유지)
+function applySectionTempo() {
+  const t = sectionTempo();
+  if (t && !S.active && t !== bpm) setBpm(t);
+  // 구간 안에서 템포가 바뀌면 알림 (메트로놈·채점은 아직 한 템포로만 돌아서 시작 템포로 쭉 진행됨)
+  const seq = isWhole() ? SC.res.order : SC.res.measures.map((_, i) => i).filter(i => i >= SC.from && i <= SC.to);
+  const ts = [...new Set(seq.map(i => SC.res.measures[i].tempo).filter(Boolean))];
+  el('rangeWarn').hidden = ts.length < 2;
+  el('rangeWarn').textContent = ts.length < 2 ? '' : `이 구간은 중간에 템포가 바뀌어요(${ts.join('→')}). 아직은 시작 템포로 끝까지 연습돼요. 템포별로 구간을 나눠 연습하면 정확해요.`;
+  const btn = el('btnScoreTempo');
+  btn.textContent = t ? `악보 템포(${t})로` : '악보 템포 없음';
+  btn.disabled = !t || S.active;
+}
+// 구간 한 줄 요약: '곡 전체 · 81 BPM'
+function updateRangeSummary() { if (SC.res) el('rangeSummary').textContent = `${rangeText()}${SC.repeat > 1 ? ` × ${SC.repeat}번` : ''} · ${bpm} BPM`; }
+// 마디를 누르면: '구간 바꾸기'를 펼친 동안에는 구간 고르기, 아니면 그 마디의 채점 결과를 아래에 보여줌
+function onMeasureTap(idx) {
+  if (S.active) return;
+  if (el('rangeRow').open) { pickMeasure(idx); return; }
+  showDetail(idx);
+}
+function showDetail(idx) {
+  const m = SC.res.measures[idx], r = SC.last && SC.last.byMeasure.get(idx);
+  SC.detail = idx;
+  SC.boxes.forEach((b, k) => b && b.classList.toggle('focus', k === idx));
+  el('mDetailTitle').textContent = `${numLabel(m)}마디`;
+  if (r && r.reps > 1) {
+    el('mDetailBody').textContent = `${r.reps}번 중 ${r.goodReps}번 깔끔 · 놓침 ${r.missed} · 더 침 ${r.extra}` + (r.hit ? ` · 평균 ${signMs(r.mean)}` : '');
+  } else if (r && (r.expected || r.extra)) {
+    el('mDetailBody').textContent = [`음 ${r.expected}개 중 ${r.hit}개 맞춤`, r.missed ? `놓침 ${r.missed}` : '', r.extra ? `더 침 ${r.extra}` : '', r.skipped ? `판정 제외 ${r.skipped}` : '', r.hit ? `평균 ${signMs(r.mean)}` : ''].filter(Boolean).join(' · ');
+  } else if (SC.last) {
+    el('mDetailBody').textContent = '이번에 채점한 구간 밖의 마디예요.';
+  } else {
+    el('mDetailBody').textContent = '채점하면 이 마디의 결과가 여기에 보여요. 구간을 바꾸려면 위의 "구간 바꾸기"를 펼쳐 주세요.';
+  }
+  el('mDetail').hidden = false;
+  msg('');
+}
+function hideDetail() {
+  SC.detail = null;
+  el('mDetail').hidden = true;
+  SC.boxes.forEach(b => b && b.classList.remove('focus'));
+}
+el('mDetailClose').addEventListener('click', hideDetail);
+el('mDetailGo').addEventListener('click', () => { if (SC.detail != null) practiceOnly(SC.detail); });
+// 한 마디만 연습: 결과를 지우고 그 마디를 구간으로
+const REPEAT_N = 4;
+function practiceOnly(idx) {
+  SC.picking = false; SC.last = null; hideDetail(); setRange(idx, idx); el('scoreResult').innerHTML = '';
+  SC.repeat = REPEAT_N; updateRangeSummary();
+  msg(`${numLabel(SC.res.measures[idx])}마디를 ${REPEAT_N}번 반복해요. 예비 박 4번 뒤에 시작돼요.`);
+  SC.boxes[idx]?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  el('btnScoreStart').click();                       // 누르면 바로 예비 박 → 반복 연습 시작
+}
+// 구간 칸을 열고 닫을 때: 열면 고르기 안내, 닫으면 고르던 중인 상태를 끝냄
+el('rangeRow').addEventListener('toggle', () => {
+  if (!SC.res) return;
+  if (el('rangeRow').open) { hideDetail(); msg('악보에서 시작 마디를 누르세요. 한 번 더 누르면 끝 마디가 정해져요.'); }
+  else { SC.picking = false; msg(''); }
+});
+// 다른 탭에서 템포를 바꾸고 돌아와도 요약이 맞게
+document.querySelector('.tabbar .tab[data-tab="score"]').addEventListener('click', updateRangeSummary);
 function pickMeasure(idx) {
   if (S.active) return;
   if (!SC.picking) { SC.picking = true; setRange(idx, idx); msg(`${numLabel(SC.res.measures[idx])}마디부터예요. 끝낼 마디를 누르세요. 한 마디만 연습하려면 같은 마디를 한 번 더 누르세요.`); }
@@ -1864,14 +2147,16 @@ function idxOfNumber(n) {
   msg(`${rangeText()}를 연습해요.`);
 }));
 el('btnRangeAll').addEventListener('click', () => { if (!SC.res || S.active) return; SC.picking = false; setRange(firstPlayed(), SC.res.measures.length - 1); msg('곡 전체를 도돌이표 순서대로 연습해요.'); });
-el('btnScoreTempo').addEventListener('click', () => { if (SC.res && SC.res.tempo && !S.active) setBpm(SC.res.tempo); });
+el('btnScoreTempo').addEventListener('click', () => { const t = sectionTempo(); if (t && !S.active) { setBpm(t); updateRangeSummary(); } });
 
 const firstPlayed = () => Math.max(0, SC.res.measures.findIndex(m => m.notes.length));
 // 첫 연주 마디(또는 그 앞)부터 마지막 마디까지 고르면 '곡 전체' = 도돌이표 순서대로 진행
 const isWhole = () => SC.from <= firstPlayed() && SC.to === SC.res.measures.length - 1;
 function rangeText() {
   const ms = SC.res.measures;
-  return isWhole() ? '곡 전체' : `${ms[SC.from].number}~${ms[SC.to].number + ms[SC.to].multi - 1}마디`;
+  if (isWhole()) return '곡 전체';
+  const a = ms[SC.from].number, b = ms[SC.to].number + ms[SC.to].multi - 1;
+  return a === b ? `${a}마디` : `${a}~${b}마디`;
 }
 
 // 마디 상자 색: 연습 구간(sel) / 진행 중(cur) / 결과(good·ok·bad)
@@ -1883,8 +2168,8 @@ function paintBoxes(curIdx = -1) {
     const tag = b.querySelector('.r');
     if (r && !S.active) {
       tag.hidden = false;
-      tag.textContent = r.grade === 'good' ? '✓' : [r.missed ? `놓침 ${r.missed}` : '', r.extra ? `더침 ${r.extra}` : '', !r.missed && !r.extra ? `${r.meanAbs.toFixed(0)}ms` : ''].filter(Boolean).join(' ');
-      b.title = `${numLabel(SC.res.measures[idx])}마디: 음 ${r.expected}개 중 ${r.hit}개 맞춤` + (r.missed ? `, 놓침 ${r.missed}` : '') + (r.extra ? `, 더 침 ${r.extra}` : '') + (r.hit ? `, 평균 오차 ${r.mean >= 0 ? '+' : ''}${r.mean.toFixed(0)}ms` : '');
+      tag.textContent = r.reps > 1 ? `깔끔 ${r.goodReps}/${r.reps}` : r.grade === 'good' ? '✓' : [r.missed ? `놓침 ${r.missed}` : '', r.extra ? `더침 ${r.extra}` : '', !r.missed && !r.extra ? `${r.meanAbs.toFixed(0)}ms` : ''].filter(Boolean).join(' ');
+      b.title = `${numLabel(SC.res.measures[idx])}마디: 음 ${r.expected}개 중 ${r.hit}개 맞춤` + (r.missed ? `, 놓침 ${r.missed}` : '') + (r.extra ? `, 더 침 ${r.extra}` : '') + (r.skipped ? `, 판정 제외 ${r.skipped}(큰 울림에 묻힘)` : '') + (r.hit ? `, 평균 오차 ${signMs(r.mean)}` : '');
     } else { tag.hidden = true; b.title = ''; }
   });
 }
@@ -1911,11 +2196,14 @@ function buildPlan() {
   else for (let k = SC.from; k <= SC.to; k++) seq.push(k);
   const plan = [];
   let beat = 0;
-  for (const idx of seq) {
-    const m = ms[idx], len = 4 * m.multi;
-    const onsets = [...new Set(m.notes.filter(n => !n.grace).map(n => n.t))].sort((a, b) => a - b);
-    plan.push({ idx, start: beat, len, onsets });
-    beat += len;
+  for (let rep = 0; rep < (SC.repeat || 1); rep++) {      // '이 마디 연습'이면 같은 구간을 여러 번 이어서
+    for (const idx of seq) {
+      const m = ms[idx], len = 4 * m.multi;
+      const onsets = [...new Set(m.notes.filter(n => !n.grace).map(n => n.t))].sort((a, b) => a - b);
+      const insts = onsets.map(t => [...new Set(m.notes.filter(n => !n.grace && n.t === t).map(n => n.inst))]);   // 박마다 치는 악기들
+      plan.push({ idx, rep, start: beat, len, onsets, insts });
+      beat += len;
+    }
   }
   return { plan, totalBeats: beat };
 }
@@ -1930,27 +2218,32 @@ function startScore() {
   if (!plan.some(p => p.onsets.length)) { msg('이 구간에는 칠 음표가 없어요. 다른 구간을 골라주세요.', true); return; }
   SC.last = null;
   el('scoreResult').innerHTML = '';
+  hideDetail();
+  el('rangeRow').open = false;
+  updateRangeSummary();
   startMetro();
   const beatDur = 60 / bpm;
-  Object.assign(S, { active: true, hits: [], plan, totalBeats, beatDur, t0: nextBeatTime + 4 * beatDur, bpm });
+  Object.assign(S, { active: true, hits: [], hitRms: [], levels: [], plan, totalBeats, beatDur, t0: nextBeatTime + 4 * beatDur, bpm });
   S.end = S.t0 + totalBeats * beatDur;
   el('btnScoreStart').textContent = '그만하고 채점 보기';
   ['btnRangeAll', 'btnScoreTempo', 'rangeFrom', 'rangeTo', 'scoreFile'].forEach(id => { el(id).disabled = true; });
-  msg(`한 마디(4박) 예비 박을 듣고 ${rangeText()}를 ${bpm} BPM으로 시작해요.`);
-  let lastCur = -2;
+  el('rangeRow').querySelector('summary').style.pointerEvents = 'none';
+  msg(`예비 박 4번에 맞춰 아무 드럼이나 쳐 주세요(안 쳐도 돼요). 이 기기의 지연을 재는 데 써요. 그다음 ${rangeText()}를 ${bpm} BPM으로 시작해요.`);
+  let lastCur = -2, lastKey = -2;
   const tick = () => {
     if (!S.active) return;
     const now = ctx.currentTime, pos = (now - S.t0) / S.beatDur;
     if (pos < 0) {
       const left = Math.ceil(-pos);
-      el('scoreMsg').textContent = `예비 박 ${left}… ${rangeText()} 시작 준비`;
+      el('scoreMsg').textContent = `예비 박 ${left}… 박에 맞춰 쳐 주세요 (안 쳐도 돼요)`;
     } else if (now > S.end + 0.5) { finishScore(); return; }
     const cur = S.plan.find(p => pos >= p.start && pos < p.start + p.len);
-    const curIdx = cur ? cur.idx : -1;
-    if (curIdx !== lastCur) {
+    const curIdx = cur ? cur.idx : -1, curKey = cur ? cur.start : -1;
+    if (curKey !== lastKey) {
+      lastKey = curKey;
       paintBoxes(curIdx);
       if (cur) {
-        el('scoreMsg').textContent = `${numLabel(SC.res.measures[curIdx])}마디 연주 중 · 타격 ${S.hits.length}회 감지`;
+        el('scoreMsg').textContent = `${numLabel(SC.res.measures[curIdx])}마디 연주 중` + (SC.repeat > 1 ? ` · ${cur.rep + 1}/${SC.repeat}번째` : '') + ` · 타격 ${S.hits.length}회 감지`;
         const b = SC.boxes[curIdx];
         if (b && (lastCur < 0 || SC.res.measures[curIdx].top !== SC.res.measures[lastCur]?.top)) {
           const r = b.getBoundingClientRect();
@@ -1973,7 +2266,8 @@ function finishScore() {
   if (metroOn) stopMetro();
   el('btnScoreStart').textContent = '채점하며 연습 시작';
   ['btnRangeAll', 'btnScoreTempo', 'rangeFrom', 'rangeTo', 'scoreFile'].forEach(id => { el(id).disabled = false; });
-  el('btnScoreTempo').disabled = !SC.res.tempo;
+  el('rangeRow').querySelector('summary').style.pointerEvents = '';
+  el('btnScoreTempo').disabled = !sectionTempo();
   const played = Math.min(S.end, ctx.currentTime);
   SC.last = evaluate(S, played);
   paintBoxes();
@@ -2000,14 +2294,82 @@ function matchPairs(exp, hits, centerMs) {
 
 const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0; };
 
+// '판정 제외': 크래시 같은 큰 울림이 이어지는 동안 작게 친 하이햇·라이드는 마이크로 구분할 수 없음.
+// 그래서 못 잡은 작은 심벌 음 가운데, 그 순간 직전 소리가 이미 그 심벌 타격만큼 컸던 것은 놓침으로 세지 않음.
+const SOFT_INST = new Set(['hihat', 'ride', 'hihat-pedal']);
+function markMasked(exp, byExp, hitRms, levels, centerMs) {
+  const isSoft = e => e.insts.length > 0 && e.insts.every(i => SOFT_INST.has(i));
+  // 기준 세기: 이번 연주에서 실제로 잡힌 작은 심벌 타격의 보통(중앙값) 세기. 3개 미만이면 잡힌 타격 전체의 절반
+  const soft = [], all = [];
+  byExp.forEach((p, i) => { all.push(hitRms[p.j]); if (isSoft(exp[i])) soft.push(hitRms[p.j]); });
+  const ref = soft.length >= 3 ? median(soft) : all.length ? median(all) * 0.5 : 0;
+  if (!ref || !levels.length) return;
+  // 소리 크기 기록에서 [a, b] 구간의 가장 큰 값 (기록은 [시각, 크기, …] 순서로 쌓여 있음)
+  const maxLevel = (a, b) => {
+    let lo = 0, hi = levels.length / 2;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (levels[2 * m] < a) lo = m + 1; else hi = m; }
+    let mx = 0;
+    for (let k = lo; k < levels.length / 2 && levels[2 * k] <= b; k++) mx = Math.max(mx, levels[2 * k + 1]);
+    return mx;
+  };
+  exp.forEach((e, i) => {
+    if (byExp.has(i) || !isSoft(e)) return;
+    const T = e.time + centerMs / 1000;                  // 이 음을 쳤다면 마이크에 들어왔을 시각
+    if (maxLevel(T - 0.03, T - 0.005) > ref * 0.8) e.masked = true;
+  });
+}
+
+// 기준점 찾기 (모의 시험으로 고른 방식)
+// 1) 예비 박 4번에 맞춰 친 타격이 3개 이상 있으면, 그 지연의 중앙값을 씀 (악보 모양과 상관없이 가장 확실함)
+// 2) 없으면 -100~450ms를 5ms씩 대 보며 '±30ms 안에 타격이 있는 음표 수'가 가장 많은 지연을 고름.
+//    8분음표 한 칸 밀린 자리처럼 비슷하게 맞는 후보가 여럿이면, 킥·스네어·탐·크래시 자리의 타격이
+//    하이햇·라이드 자리보다 크게 들리는 후보를 고름 (악보의 악기 정보 + 타격 세기)
+// 보정해 둔 값과 60ms 넘게 다르면 보정값이 낡은 것으로 보고 이번 채점은 찾은 값으로 맞춤(stale)
+function findCenter(sess, exp, hits, hitRms) {
+  const est = off();
+  const decide = (c, from) => {
+    if (!isCalibrated) return { center: c, stale: false, from };
+    if (Math.abs(c - est) > 60) return { center: c, stale: true, from };
+    return { center: est, stale: false, from: 'calib' };
+  };
+  const ci = [];
+  for (let k = 1; k <= 4; k++) {
+    const c = sess.t0 - k * sess.beatDur, h = sess.hits.find(x => x > c - 0.1 && x < c + 0.5);
+    if (h !== undefined) ci.push((h - c) * 1000);
+  }
+  if (ci.length >= 3) return decide(median(ci), 'countin');
+  if (!exp.length || hits.length < 4) return { center: est, stale: false, from: 'estimate' };
+  const firstAt = x => { let lo = 0, hi = hits.length; while (lo < hi) { const m = (lo + hi) >> 1; if (hits[m] < x) lo = m + 1; else hi = m; } return lo; };
+  const near = T => { const k = firstAt(T - 0.03); return k < hits.length && hits[k] <= T + 0.03 ? k : -1; };
+  const cands = []; let best = 0;
+  for (let s = -100; s <= 450; s += 5) {
+    let n = 0; for (const e of exp) if (near(e.time + s / 1000) >= 0) n++;
+    cands.push([s, n]); best = Math.max(best, n);
+  }
+  if (best < 4) return { center: est, stale: false, from: 'estimate' };
+  const quiet = e => e.insts.length > 0 && e.insts.every(i => SOFT_INST.has(i));
+  const contrast = s => {
+    let lo = 0, ln = 0, qo = 0, qn = 0;
+    for (const e of exp) { const k = near(e.time + s / 1000); if (k < 0) continue; if (quiet(e)) { qo += hitRms[k]; qn++; } else { lo += hitRms[k]; ln++; } }
+    return ln && qn ? lo / ln - qo / qn : 0;
+  };
+  const groups = [];                              // ±20ms 안의 후보는 같은 자리로 묶고, 묶음마다 가장 많이 맞는 지점을 대표로
+  for (const c of cands.filter(c => c[1] >= best * 0.9)) {
+    const g = groups.find(g => Math.abs(g.s - c[0]) <= 20);
+    if (!g) groups.push({ s: c[0], n: c[1] }); else if (c[1] > g.n) { g.s = c[0]; g.n = c[1]; }
+  }
+  const pick = groups.length > 1 ? groups.map(g => ({ ...g, c: contrast(g.s) })).sort((a, b) => b.c - a.c)[0].s : groups[0].s;
+  return decide(pick, 'search');
+}
+
 function evaluate(sess, playedUntil) {
   const exp = [];
   for (const p of sess.plan) {
-    for (const t of p.onsets) {
+    p.onsets.forEach((t, k) => {
       const time = sess.t0 + (p.start + t) * sess.beatDur;
-      if (time > playedUntil + 0.05) continue;           // 중간에 멈추면 거기까지만 채점
-      exp.push({ time, idx: p.idx, step: p });
-    }
+      if (time > playedUntil + 0.05) return;             // 중간에 멈추면 거기까지만 채점
+      exp.push({ time, idx: p.idx, rep: p.rep || 0, step: p, insts: (p.insts && p.insts[k]) || [] });
+    });
   }
   exp.sort((a, b) => a.time - b.time);
   // 허용 범위: 이웃 음표까지 거리의 절반, 40~120ms
@@ -2015,43 +2377,62 @@ function evaluate(sess, playedUntil) {
     const gaps = [i > 0 ? e.time - exp[i - 1].time : Infinity, i < exp.length - 1 ? exp[i + 1].time - e.time : Infinity];
     e.win = Math.max(40, Math.min(120, Math.min(...gaps) * 1000 / 2));
   });
-  const hits = sess.hits.filter(h => h > sess.t0 - sess.beatDur / 2 && h < playedUntil + 0.2);
-  // 1차: 시스템 지연 추정값으로 맞추고, 보정 전이면 내 평균만큼 기준을 옮겨서 2차로 다시 맞춤
-  let center = off();
+  const hits = [], hitRms = [];
+  sess.hits.forEach((h, j) => { if (h > sess.t0 - sess.beatDur / 2 && h < playedUntil + 0.2) { hits.push(h); hitRms.push((sess.hitRms || [])[j] || 0); } });
+  // 기준점(이 기기의 지연) 찾기. 지연을 크게 잘못 잡으면 모든 음이 한 칸씩 어긋나 전부 빨강이 되므로 먼저 정확히 찾음
+  const { center: c0, stale, from: centerFrom } = findCenter(sess, exp, hits, hitRms);
+  let center = c0;
+  // 2차: 찾은 기준 근처(±100ms)에서 짝지은 뒤, 보정 전(또는 보정값이 낡았으면) 내 평균만큼 기준을 미세 조정
   let m1 = matchPairs(exp.map(e => ({ ...e, win: Math.max(e.win, 100) })), hits, center);
-  if (!isCalibrated && m1.byExp.size >= 4) center += median([...m1.byExp.values()].map(p => p.err));
+  if ((!isCalibrated || stale) && m1.byExp.size >= 4) center += median([...m1.byExp.values()].map(p => p.err));
   const { byExp, usedHits } = matchPairs(exp, hits, center);
+  markMasked(exp, byExp, hitRms, sess.levels || [], center);
 
-  const byMeasure = new Map();
+  const byMeasure = new Map(), byRep = new Map();
+  const getRep = k => {
+    if (!byRep.has(k)) byRep.set(k, { expected: 0, hit: 0, missed: 0, extra: 0, skipped: 0, errs: [] });
+    return byRep.get(k);
+  };
   const get = idx => {
-    if (!byMeasure.has(idx)) byMeasure.set(idx, { expected: 0, hit: 0, missed: 0, extra: 0, errs: [] });
+    if (!byMeasure.has(idx)) byMeasure.set(idx, { expected: 0, hit: 0, missed: 0, extra: 0, skipped: 0, errs: [] });
     return byMeasure.get(idx);
   };
   exp.forEach((e, i) => {
-    const r = get(e.idx); r.expected++;
     const p = byExp.get(i);
-    if (p) { r.hit++; r.errs.push(p.err); } else r.missed++;
+    for (const r of [get(e.idx), getRep(e.rep)]) {
+      if (p) { r.expected++; r.hit++; r.errs.push(p.err); }
+      else if (e.masked) r.skipped++;                    // 다른 소리에 묻혀 판정 제외 (놓침으로 세지 않음)
+      else { r.expected++; r.missed++; }
+    }
   });
   // 짝이 없는 타격 = 더 친 음. 그 시각이 속한 마디에 넣음
   hits.forEach((h, j) => {
     if (usedHits.has(j)) return;
     const pos = ((h - center / 1000) - sess.t0) / sess.beatDur;
     const p = sess.plan.find(q => pos >= q.start - 0.25 && pos < q.start + q.len - 0.25) || null;
-    if (p && p.onsets.length) get(p.idx).extra++;
+    if (p && p.onsets.length) { get(p.idx).extra++; getRep(p.rep || 0).extra++; }
   });
   let allErr = [];
-  for (const r of byMeasure.values()) {
+  const grade = r => {
     r.mean = r.errs.length ? r.errs.reduce((a, b) => a + b, 0) / r.errs.length : 0;
     r.meanAbs = r.errs.length ? r.errs.reduce((a, b) => a + Math.abs(b), 0) / r.errs.length : 0;
-    allErr = allErr.concat(r.errs);
     const slips = r.missed + r.extra;
     r.grade = slips === 0 && r.meanAbs <= 20 ? 'good' : (slips <= 1 && r.meanAbs <= 35 ? 'ok' : 'bad');
     if (!r.expected) r.grade = r.extra ? 'bad' : 'good';
+  };
+  for (const r of byMeasure.values()) { grade(r); allErr = allErr.concat(r.errs); }
+  const reps = byRep.size;
+  byRep.forEach(grade);
+  // 반복 연습이면 마디 색은 '몇 번 깔끔했나'로: 전부 깔끔 = 초록, 절반 이상 = 노랑, 그 밖 = 빨강
+  if (reps > 1) for (const r of byMeasure.values()) {
+    const good = [...byRep.values()].filter(x => x.grade === 'good').length;
+    r.goodReps = good; r.reps = reps;
+    r.grade = good === reps ? 'good' : good >= reps / 2 ? 'ok' : 'bad';
   }
-  const total = exp.length, hit = byExp.size;
+  const skipped = exp.filter(e => e.masked).length, total = exp.length - skipped, hit = byExp.size;
   const meanErr = allErr.length ? allErr.reduce((a, b) => a + b, 0) / allErr.length : 0;
   const sd = allErr.length ? Math.sqrt(allErr.reduce((a, b) => a + (b - meanErr) ** 2, 0) / allErr.length) : 0;
-  return { byMeasure, total, hit, missed: total - hit, extra: [...byMeasure.values()].reduce((a, r) => a + r.extra, 0), meanErr, sd, calibrated: isCalibrated, bpm: sess.bpm };
+  return { byMeasure, byRep, reps, total, hit, missed: total - hit, skipped, stale, staleDiff: stale ? Math.round(center - off()) : 0, centerFrom, extra: [...byMeasure.values()].reduce((a, r) => a + r.extra, 0), meanErr, sd, calibrated: isCalibrated, bpm: sess.bpm };
 }
 
 function showResult(r) {
@@ -2061,25 +2442,44 @@ function showResult(r) {
   const entries = [...r.byMeasure.entries()].filter(([, v]) => v.expected);
   const bad = entries.filter(([, v]) => v.grade !== 'good').sort((a, b) => (b[1].missed + b[1].extra) - (a[1].missed + a[1].extra) || b[1].meanAbs - a[1].meanAbs).slice(0, 3);
   const goodN = entries.filter(([, v]) => v.grade === 'good').length;
-  const head = r.missed + r.extra === 0 && r.sd < 20 ? '음표를 하나도 놓치지 않았어요.' :
+  const repList = r.reps > 1 ? [...r.byRep.entries()].sort((a, b) => a[0] - b[0]) : [];
+  const goodReps = repList.filter(([, v]) => v.grade === 'good').length;
+  const head = r.reps > 1 ? (goodReps === r.reps ? `${r.reps}번 모두 깔끔하게 쳤어요.` : `${r.reps}번 중 ${goodReps}번 깔끔하게 쳤어요.`) :
+    r.missed + r.extra === 0 && r.sd < 20 ? '음표를 하나도 놓치지 않았어요.' :
     bad.length ? `${numLabel(ms[bad[0][0]])}마디가 가장 불안했어요.` : '대부분의 마디를 잘 쳤어요.';
+  const notes = [
+    r.stale ? '' : (r.calibrated ? `평균적으로 박자보다 ${Math.abs(r.meanErr).toFixed(0)}ms ${r.meanErr >= 0 ? '늦게' : '빠르게'} 쳤어요.` : '시간 보정 전이라 타이밍은 내 평균을 기준으로 봤어요. 놓친 음과 더 친 음은 보정과 상관없이 정확해요.'),
+    r.skipped ? `크래시 같은 큰 울림에 묻혀 마이크로 구분할 수 없었던 하이햇·라이드 ${r.skipped}개는 판정에서 뺐어요.` : '',
+  ].filter(Boolean);
+  // 결과: 한 줄 결론 → 숫자 3칸(1px 구분선) → (보정 안내) → 색 설명 → 다시 볼 마디 리스트 → 참고 문구
   el('scoreResult').innerHTML = `
-    <p id="scoreHeadline" style="font-size:19px;font-weight:700;margin:0 0 4px">${head}</p>
-    <p class="hint">${rangeText()} · ${r.bpm} BPM · 마디 ${entries.length}개 중 ${goodN}개 깔끔하게 침</p>
-    <div class="stats">
-      <div class="stat"><b>${rate}%</b><span>맞춘 음 (${r.hit}/${r.total})</span></div>
-      <div class="stat"><b>${r.missed} / ${r.extra}</b><span>놓친 음 / 더 친 음</span></div>
-      <div class="stat"><b>±${r.sd.toFixed(0)}ms</b><span>안정성 (들쭉날쭉한 정도)</span></div>
+    <p class="res-head" id="scoreHeadline">${head}</p>
+    <p class="cap">${r.reps > 1 ? `${rangeText()} × ${r.reps}번 · ${r.bpm} BPM` : `${rangeText()} · ${r.bpm} BPM · 깔끔한 마디 ${goodN}/${entries.length}`}</p>
+    ${r.stale ? `<div class="cal-tip res-tip"><p>이어폰이나 마이크를 바꾸셨나요? 저장된 보정값과 약 ${Math.abs(r.staleDiff)}ms 달라서 이번 채점은 자동으로 맞췄어요.</p><button type="button" class="cal-tip-go" id="btnGoCalib">보정하기</button></div>` : ''}
+    <div class="metrics">
+      <div class="metric"><b>${rate}<small>%</small></b><span>맞춘 음 ${r.hit}/${r.total}</span></div>
+      <div class="metric"><b>${r.missed}<small> / </small>${r.extra}</b><span>놓침 / 더 침</span></div>
+      <div class="metric"><b>±${r.sd.toFixed(0)}<small>ms</small></b><span>안정성</span></div>
     </div>
-    <p class="hint" style="margin-top:8px">${r.calibrated ? `평균적으로 박자보다 ${Math.abs(r.meanErr).toFixed(0)}ms ${r.meanErr >= 0 ? '늦게' : '빠르게'} 쳤어요.` : '시간 보정 전이라 타이밍은 내 평균을 기준으로 봤어요. 놓친 음과 더 친 음은 보정과 상관없이 정확해요.'}</p>
-    ${bad.length ? `<ul class="weak">${bad.map(([idx, v]) => `<li><b>${numLabel(ms[idx])}마디</b><span class="hint">${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', `평균 오차 ${v.meanAbs.toFixed(0)}ms`].filter(Boolean).join(' · ')}</span><button type="button" data-idx="${idx}">이 마디만 연습</button></li>`).join('')}</ul>` : ''}
-    <div class="score-legend"><span><i style="background:#1e9e66"></i>깔끔함</span><span><i style="background:#c98a00"></i>조금 흔들림</span><span><i style="background:#d42a55"></i>놓치거나 더 친 음 많음</span></div>`;
-  el('scoreResult').querySelectorAll('button[data-idx]').forEach(b => b.addEventListener('click', () => {
-    const idx = +b.dataset.idx;
-    SC.picking = false; SC.last = null; setRange(idx, idx); el('scoreResult').innerHTML = '';
-    msg(`${numLabel(ms[idx])}마디만 연습해요. 템포를 조금 낮춰서 시작해 보세요.`);
-  }));
-  msg('악보의 마디 색으로 결과를 확인하세요. 마디에 마우스를 올리면 자세한 결과가 보여요.');
+    <div class="res-legend" aria-label="마디 색 설명"><span><i class="g"></i>깔끔함</span><span><i class="o"></i>조금 흔들림</span><span><i class="b"></i>놓치거나 더 친 음 많음</span></div>
+    ${r.reps > 1 ? `<h3 class="res-sub">반복별 결과</h3>
+    <ul class="res-list">${repList.map(([k, v]) => `<li><div><b><i class="res-dot ${v.grade}"></i>${k + 1}번째</b><span>${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', v.missed || v.extra ? '' : '놓치거나 더 친 음 없음', v.hit ? `평균 오차 ${v.meanAbs.toFixed(0)}ms` : ''].filter(Boolean).join(' · ')}</span></div><span class="res-grade">${({ good: '깔끔함', ok: '조금 흔들림', bad: '많이 틀림' })[v.grade]}</span></li>`).join('')}</ul>
+    <button type="button" class="res-again" id="btnRepeatAgain">한 번 더 반복</button>` : ''}
+    ${bad.length && !(r.reps > 1) ? `<h3 class="res-sub">다시 볼 마디</h3>
+    <ul class="res-list">${bad.map(([idx, v]) => `<li><div><b>${numLabel(ms[idx])}마디</b><span>${[v.missed ? `놓침 ${v.missed}` : '', v.extra ? `더 침 ${v.extra}` : '', `평균 오차 ${v.meanAbs.toFixed(0)}ms`].filter(Boolean).join(' · ')}</span></div><button type="button" class="res-go" data-idx="${idx}">이 마디 연습</button></li>`).join('')}</ul>` : ''}
+    ${notes.length ? `<p class="cap faint res-notes">${notes.join(' ')}</p>` : ''}`;
+  // 보정값이 낡았을 때: 연습 탭으로 가서 시간 보정 칸을 펼침
+  const goCalib = el('btnGoCalib');
+  if (goCalib) goCalib.addEventListener('click', () => {
+    document.querySelector('.tabbar .tab[data-tab="practice"]').click();
+    const card = el('calibCard'); card.open = true;
+    card.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    card.querySelector('summary').focus({ preventScroll: true });
+  });
+  el('scoreResult').querySelectorAll('button[data-idx]').forEach(b => b.addEventListener('click', () => practiceOnly(+b.dataset.idx)));
+  const again = el('btnRepeatAgain');
+  if (again) again.addEventListener('click', () => practiceOnly(SC.from));
+  msg('악보의 마디 색으로 결과를 확인하세요. 마디를 누르면 자세한 결과가 아래에 보여요.');
 }
 
 </script>
@@ -2125,7 +2525,18 @@ function showResult(r) {
     document.getElementById('micDot').classList.toggle('on', on);
     mic.hidden = on;
     document.getElementById('calMirror').textContent = cal.textContent;
+    // 보정 안내: 마이크가 켜져 있고, 보정 전이고, 이번 방문에서 닫지 않았을 때만
+    document.getElementById('calTip').hidden = !(on && cal.textContent === '보정 전' && !tipClosed);
   };
+  let tipClosed = false;
+  document.getElementById('calTipClose').addEventListener('click', () => { tipClosed = true; syncStatus(); });
+  // '보정 전' 글자나 '보정하기'를 누르면 시간 보정 칸을 펼치고 그 위치로 이동
+  document.querySelectorAll('[data-open-calib]').forEach(b => b.addEventListener('click', () => {
+    const card = document.getElementById('calibCard');
+    card.open = true;
+    card.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    card.querySelector('summary').focus({ preventScroll: true });
+  }));
   new MutationObserver(syncStatus).observe(mic, { attributes: true, attributeFilter: ['disabled'] });
   new MutationObserver(syncStatus).observe(cal, { childList: true, characterData: true, subtree: true });
   syncStatus();
