@@ -399,6 +399,7 @@
   .sc-song .cap { display:block; margin-top:2px; }
   .sc-range { border-top:1px solid var(--ds-line); border-bottom:0; }
   #rangeWarn { margin:0 0 12px; color:var(--ds-t1); }
+  #earHint { margin:0 0 4px; }
   .sc-range-rep { display:inline-flex; align-items:center; gap:8px; font-size:15px; color:var(--ds-t2); }
   .sc-range-rep select { height:40px; padding:0 8px; border:0; background:var(--ds-bg2); color:var(--ds-t1); font:inherit; font-weight:600; }
   .sc-range .row-label { font-weight:600; }
@@ -514,6 +515,7 @@
       <button id="btnMic" class="btn-sm">마이크 켜기</button>
     </div>
 
+    <p class="cap" id="earHint" hidden>메트로놈은 이어폰으로 들어 주세요. 스피커 소리는 타격으로 잡힐 수 있어요.</p>
     <!-- 마이크를 켰는데 아직 보정 전일 때만 보이는 안내 한 줄 -->
     <div class="cal-tip" id="calTip" hidden>
       <p>루프백 보정을 한 번 하면 박자 기준으로 빠름·늦음을 볼 수 있어요.</p>
@@ -577,7 +579,7 @@
         <div class="row-body">
           <p class="cap">칠 때만 입력 레벨이 노란 선을 넘도록 감지 기준을 맞춰요. 메트로놈은 이어폰으로 들어야 클릭 소리가 타격으로 잡히지 않아요.</p>
           <label class="field" for="thr">감지 기준</label>
-          <input type="range" id="thr" min="0.002" max="0.3" step="0.002" value="0.02" aria-label="감지 기준 (높을수록 큰 소리만 잡아요)">
+          <input type="range" id="thr" min="0.002" max="0.3" step="0.002" value="0.04" aria-label="감지 기준 (높을수록 큰 소리만 잡아요)">
           <p class="cap" id="status">마이크 꺼짐</p>
         </div>
       </details>
@@ -786,7 +788,10 @@ document.querySelectorAll('.bpmBtn').forEach(btn => {
 });
 $('beats').onchange = e => {
   if (window.scoreSession && window.scoreSession.active) { e.target.value = beatsPerBar; return; } beatsPerBar = Math.max(1, Math.min(12, +e.target.value || 4)); renderDots(); beatCount = 0; drawBeats(); };
-$('thr').oninput = updateThrMark;
+// 감지 기준: 기본 0.04 (스피커로 들은 메트로놈 소리가 타격으로 잡히는 것을 줄이려고 0.02에서 올림, 모의 시험으로 고른 값)
+// 사용자가 바꾼 값은 저장해서 다음에 열어도 유지
+try { const v = +localStorage.getItem('dtl_thr'); if (v >= 0.002 && v <= 0.3) $('thr').value = v; } catch (e) {}
+$('thr').oninput = () => { updateThrMark(); try { localStorage.setItem('dtl_thr', $('thr').value); } catch (e) {} };
 function updateThrMark() { $('thrMark').style.left = Math.min(100, (+$('thr').value * 8) * 100) + '%'; }
 updateThrMark();
 
@@ -2014,7 +2019,7 @@ el('scoreFile').addEventListener('change', async ev => {
     el('scoreResult').innerHTML = '';
     // 처음 연주가 시작되는 마디부터 끝까지를 기본 구간으로
     setRange(firstPlayed(), ms.length - 1);
-    msg('아래 버튼을 누르면 예비 박 4번 뒤에 채점이 시작돼요.');
+    msg('메트로놈은 이어폰으로 들어 주세요. 스피커 소리는 타격으로 잡힐 수 있어요.');
     await renderPages();
   } catch (e) {
     console.error(e);
@@ -2216,6 +2221,18 @@ function buildPlan() {
 }
 
 let raf = 0;
+// 악보 따라가기: 연주하는 줄이 바뀌었을 때, 그 줄이 보이는 영역(맨 위 ~ 아래 고정 영역 위)의 절반보다 아래거나
+// 영역 밖이면, 그 줄이 위에서 20% 자리에 오도록 넘김 → 지금 줄 아래로 다음 줄들이 보여서 미리 읽을 수 있음
+function followMeasure(b, rowChanged) {
+  if (!b) return;
+  const r = b.getBoundingClientRect();
+  const bandTop = 8, bandBottom = el('dock-score').getBoundingClientRect().top - 8;
+  const h = bandBottom - bandTop;
+  const outside = r.top < bandTop || r.bottom > bandBottom;
+  if (!outside && !(rowChanged && r.top > bandTop + h * 0.5)) return;
+  const y = window.scrollY + r.top - (bandTop + h * 0.2);
+  window.scrollTo({ top: Math.max(0, y), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
 function startScore() {
   if (metroOn) stopMetro();
   ensureCtx();
@@ -2251,11 +2268,8 @@ function startScore() {
       paintBoxes(curIdx);
       if (cur) {
         el('scoreMsg').textContent = `${numLabel(SC.res.measures[curIdx])}마디 연주 중` + (SC.repeat > 1 ? ` · ${cur.rep + 1}/${SC.repeat}번째` : '') + ` · 타격 ${S.hits.length}회 감지`;
-        const b = SC.boxes[curIdx];
-        if (b && (lastCur < 0 || SC.res.measures[curIdx].top !== SC.res.measures[lastCur]?.top)) {
-          const r = b.getBoundingClientRect();
-          if (r.top < 80 || r.bottom > innerHeight - 40) b.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-        }
+        const m = SC.res.measures[curIdx], pm = lastCur >= 0 ? SC.res.measures[lastCur] : null;
+        followMeasure(SC.boxes[curIdx], !pm || m.page !== pm.page || Math.abs(m.top - pm.top) > 5);
       }
       lastCur = curIdx;
     }
@@ -2541,6 +2555,7 @@ function showResult(r) {
     document.getElementById('calMirror').textContent = cal.textContent;
     // 보정 안내: 마이크가 켜져 있고, 보정 전이고, 이번 방문에서 닫지 않았을 때만
     document.getElementById('calTip').hidden = !(on && cal.textContent === '보정 전' && !tipClosed);
+    document.getElementById('earHint').hidden = !on;      // 마이크가 켜져 있는 동안 이어폰 안내
   };
   let tipClosed = false;
   document.getElementById('calTipClose').addEventListener('click', () => { tipClosed = true; syncStatus(); });
